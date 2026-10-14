@@ -1,0 +1,12 @@
+teacher_id,name_en,name_bn,designation,department,institution,is_internal,is_eligible,exclusion_status,exclusion_reason
+T_MONIR,Dr. Monir Morshed,ড. মনির মোর্শেদ,Professor,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_NARGIS,Dr. Mst. Nargis Aktar,ড. মোসাঃ নার্গিস আক্তার,Professor,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_SAJJAD,Professor Dr. Sajjad Waheed,প্রফেসর ড. সাজ্জাদ ওয়াহিদ,Professor,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_BADRUL,Dr. Mohammad Badrul Alam Miah,ড. মুহাম্মদ বদরুল আলম মিয়া,Professor,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_SHAHIN,Dr. Muhammad Shahin Uddin,ড. মুহাম্মদ শাহীন উদ্দিন,Professor,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_ABIR,Dr. Md. Abir Hossain,ড. মোঃ আবীর হোসেন,Associate Professor,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_NAZRUL,Dr. Nazrul Islam,ড. নজরুল ইসলাম,Associate Professor,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_ZIAUR,Dr. Ziaur Rahman,ড. জিয়াউর রহমান,Professor,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_MAHEDI,Mr. Mahedi Hasan,জনাব মেহেদী হাসান,Lecturer,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_ANOWAR,Mr. Md. Anowar Kabir,জনাব মোঃ আনোয়ার কবির,Lecturer,Dept. of ICT,MBSTU,TRUE,TRUE,Active Internal Faculty,N/A
+T_EXC_RAKIB_RAFIQ_KAMAL,Rakib Rafiq Ull Kamal,রাকিব রফিক উল কামাল,External Examiner,External Engineering Faculty,External Institutions (BDU/DUET/RUET),FALSE,FALSE,Excluded from Active Assignment,Explicit user request to exclude Rakib Rafiq Ull Kamal from all internal assignments and billing

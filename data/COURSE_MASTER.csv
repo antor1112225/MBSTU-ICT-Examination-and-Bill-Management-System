@@ -1,0 +1,46 @@
+course_id,semester_code,course_code,course_title,credits,course_type,syllabus_source,is_elective,elective_group
+CRS_1101,1Y 1S,ICT 1101,Basic Electrical Circuits,3,Theory,media_1791913723666_50af885d.png,FALSE,None
+CRS_1102,1Y 1S,ICT 1102,Basic Electrical Circuits Lab,1,Lab,media_1791913723666_50af885d.png,FALSE,None
+CRS_1103,1Y 1S,ICT 1103,Computer Programming,3,Theory,media_1791913723666_50af885d.png,FALSE,None
+CRS_1104,1Y 1S,ICT 1104,Computer Programming Lab,1,Lab,media_1791913723666_50af885d.png,FALSE,None
+CRS_1105,1Y 1S,ICT 1105,Physics,3,Theory,media_1791913723666_50af885d.png,FALSE,None
+CRS_1107,1Y 1S,ICT 1107,Differential and Integral Calculus,3,Theory,media_1791913723666_50af885d.png,FALSE,None
+CRS_1109,1Y 1S,ICT 1109,Chemistry,3,Theory,media_1791913723666_50af885d.png,FALSE,None
+CRS_2101,2Y 1S,ICT 2101,Computer Based Numerical Methods,3,Theory,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2102,2Y 1S,ICT 2102,Computer Based Numerical Methods Lab,1,Lab,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2103,2Y 1S,ICT 2103,Digital Logic Design,3,Theory,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2104,2Y 1S,ICT 2104,Digital Logic Design Lab,1,Lab,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2105,2Y 1S,ICT 2105,Object Oriented Programming,3,Theory,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2106,2Y 1S,ICT 2106,Object Oriented Programming Lab,1,Lab,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2107,2Y 1S,ICT 2107,Database Management System,3,Theory,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2108,2Y 1S,ICT 2108,Database Management System Lab,1,Lab,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2109,2Y 1S,ICT 2109,Differential Equations and Vector Calculus,3,Theory,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_2111,2Y 1S,ICT 2111,Statistics for Engineers,3,Theory,media_1791913730682_20c2e9ba.png,FALSE,None
+CRS_3101,3Y 1S,ICT 3101,Data Communication,3,Theory,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3102,3Y 1S,ICT 3102,Data Communication Lab,1,Lab,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3103,3Y 1S,ICT 3103,Microwave Engineering,3,Theory,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3104,3Y 1S,ICT 3104,Microwave Engineering Lab,1,Lab,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3105,3Y 1S,ICT 3105,Mobile Application Development,3,Theory,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3106,3Y 1S,ICT 3106,Mobile Application Development Lab,1,Lab,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3107,3Y 1S,ICT 3107,Microprocessor and Embedded System,3,Theory,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3108,3Y 1S,ICT 3108,Microprocessor and Embedded System Lab,1,Lab,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3109,3Y 1S,ICT 3109,Software Requirement Specification and Analysis,3,Theory,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3110,3Y 1S,ICT 3110,Software Requirement Specification and Analysis Lab,1,Lab,media_1791913738981_049b06bf.png,FALSE,None
+CRS_3100,3Y 1S,ICT 3100,Project - III,1,Project,media_1791913738981_049b06bf.png,FALSE,None
+CRS_4000,4Y 1S,ICT 4000,Project / Thesis,3,Project,media_1791913751291_8d898455.png,FALSE,None
+CRS_4101,4Y 1S,ICT 4101,Web Application Development,3,Theory,media_1791913751291_8d898455.png,FALSE,None
+CRS_4102,4Y 1S,ICT 4102,Web Application Development Lab,1,Lab,media_1791913751291_8d898455.png,FALSE,None
+CRS_4103,4Y 1S,ICT 4103,Digital Image Processing,3,Theory,media_1791913751291_8d898455.png,FALSE,None
+CRS_4104,4Y 1S,ICT 4104,Digital Image Processing Lab,1,Lab,media_1791913751291_8d898455.png,FALSE,None
+CRS_4105,4Y 1S,ICT 4105,Optical Communication,3,Theory,media_1791913751291_8d898455.png,FALSE,None
+CRS_4106,4Y 1S,ICT 4106,Optical Communication Lab,1,Lab,media_1791913751291_8d898455.png,FALSE,None
+CRS_4107,4Y 1S,ICT 4107,Research Methodology,1,Theory,media_1791913751291_8d898455.png,FALSE,None
+CRS_4109,4Y 1S,ICT 4109,Human Computer Interaction,3,Elective,media_1791913751291_8d898455.png,TRUE,Elective I
+CRS_4111,4Y 1S,ICT 4111,Parallel and Distributed Processing,3,Elective,media_1791913751291_8d898455.png,TRUE,Elective I
+CRS_4113,4Y 1S,ICT 4113,Bio-Informatics,3,Elective,media_1791913751291_8d898455.png,TRUE,Elective I
+CRS_4115,4Y 1S,ICT 4115,Cryptography and Cyber Law,3,Elective,media_1791913751291_8d898455.png,TRUE,Elective I
+CRS_4201,4Y 2S,ICT 4201,Distributed Systems and Cloud Computing,3,Theory,MBSTU Historical Dossier,FALSE,None
+CRS_4202,4Y 2S,ICT 4202,Distributed Systems Lab,1.5,Lab,MBSTU Historical Dossier,FALSE,None
+CRS_4203,4Y 2S,ICT 4203,Cyber Security and Cryptography,3,Theory,MBSTU Historical Dossier,FALSE,None
+CRS_4205,4Y 2S,ICT 4205,Digital Signal Processing,3,Theory,MBSTU Historical Dossier,FALSE,None
+CRS_4206,4Y 2S,ICT 4206,Digital Signal Processing Lab,1.5,Lab,MBSTU Historical Dossier,FALSE,None

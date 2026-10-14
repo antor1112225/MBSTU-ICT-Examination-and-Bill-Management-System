@@ -1,0 +1,977 @@
+/* ==========================================================================
+   MBSTU ICT Department Examination & Semester Bill Management System
+   CSS Stylesheet — Clean, Professional Academic Design
+   ========================================================================== */
+
+:root {
+    --primary: #1e3a8a;          /* Deep MBSTU Navy */
+    --primary-hover: #1e40af;
+    --primary-light: #eff6ff;
+    --secondary: #059669;        /* Forest Emerald Green */
+    --secondary-hover: #047857;
+    --secondary-light: #ecfdf5;
+    --accent: #d97706;           /* Amber/Gold */
+    --accent-light: #fffbeb;
+    --danger: #dc2626;           /* Crimson Red */
+    --danger-light: #fef2f2;
+    --dark: #0f172a;             /* Slate 900 */
+    --text-main: #1e293b;        /* Slate 800 */
+    --text-muted: #64748b;       /* Slate 500 */
+    --bg-main: #f8fafc;          /* Slate 50 */
+    --bg-card: #ffffff;
+    --border-color: #cbd5e1;     /* Slate 300 */
+    --border-focus: #3b82f6;
+    --font-sans: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: 'Consolas', 'Courier New', Courier, monospace;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(15,23,42,0.08);
+    --shadow-lg: 0 10px 25px rgba(15,23,42,0.12);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   Header & University Branding
+   -------------------------------------------------------------------------- */
+.app-header {
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    color: #ffffff;
+    padding: 14px 24px;
+    border-bottom: 3px solid #d97706;
+    box-shadow: var(--shadow-md);
+}
+
+.header-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.brand-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-logo-badge {
+    width: 48px;
+    height: 48px;
+    background: #ffffff;
+    color: #1e3a8a;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    border: 2px solid #d97706;
+}
+
+.brand-text h1 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    color: #ffffff;
+}
+
+.brand-text p {
+    font-size: 0.82rem;
+    color: #93c5fd;
+    font-weight: 600;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Matching the user's uploaded UI reference screenshot */
+.semester-selector-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(15, 23, 42, 0.45);
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.semester-selector-box label {
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #93c5fd;
+    letter-spacing: 0.5px;
+}
+
+.semester-select {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    min-width: 250px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.semester-select optgroup {
+    font-weight: 800;
+    color: #1e3a8a;
+    background: #f1f5f9;
+}
+
+/* --------------------------------------------------------------------------
+   Active Semester Scope Banner / Indicator Pill
+   -------------------------------------------------------------------------- */
+.scope-banner {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    padding: 8px 24px;
+    font-size: 0.82rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.scope-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    border: 1px solid #bfdbfe;
+    padding: 3px 10px;
+    border-radius: 14px;
+    font-weight: 800;
+    font-size: 0.78rem;
+}
+
+.scope-pill-dot {
+    width: 8px;
+    height: 8px;
+    background: #2563eb;
+    border-radius: 50%;
+}
+
+/* --------------------------------------------------------------------------
+   Navigation Tabs
+   -------------------------------------------------------------------------- */
+.nav-bar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.nav-tab {
+    padding: 12px 16px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.nav-tab:hover {
+    color: var(--primary);
+    background-color: var(--primary-light);
+}
+
+.nav-tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    background-color: var(--primary-light);
+}
+
+.tab-badge {
+    background: #e2e8f0;
+    color: #475569;
+    padding: 2px 7px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.nav-tab.active .tab-badge {
+    background: var(--primary);
+    color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   Main Content Layout
+   -------------------------------------------------------------------------- */
+.main-wrapper {
+    flex: 1;
+    max-width: 1440px;
+    width: 100%;
+    margin: 18px auto;
+    padding: 0 20px;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --------------------------------------------------------------------------
+   Stat Cards & Metrics Grid
+   -------------------------------------------------------------------------- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.kpi-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary);
+}
+
+.kpi-card.kpi-success::before { background: var(--secondary); }
+.kpi-card.kpi-warning::before { background: var(--accent); }
+.kpi-card.kpi-danger::before { background: var(--danger); }
+
+.kpi-title {
+    font-size: 0.73rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.4px;
+    margin-bottom: 4px;
+}
+
+.kpi-value {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1.2;
+}
+
+.kpi-sub {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Cards & Section Containers
+   -------------------------------------------------------------------------- */
+.content-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border-color);
+    background: #f8fafc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.card-title {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-body {
+    padding: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+    text-align: left;
+}
+
+.data-table th, .data-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.73rem;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.data-table td.amount-cell {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   Badges and Status Indicators
+   -------------------------------------------------------------------------- */
+.badge {
+    display: inline-block;
+    padding: 2.5px 7px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.badge-draft { background: #fef3c7; color: #92400e; }
+.badge-recorded { background: #e0f2fe; color: #0369a1; }
+.badge-approved { background: #dbeafe; color: #1e40af; }
+.badge-partially-paid { background: #fde68a; color: #b45309; }
+.badge-paid { background: #dcfce7; color: #15803d; }
+.badge-danger { background: #fee2e2; color: #b91c1c; }
+.badge-theory { background: #ede9fe; color: #6d28d9; }
+.badge-lab { background: #cffafe; color: #0e7490; }
+
+.badge-verified { background: #dcfce7; color: #166534; }
+.badge-needs-verification { background: #fef3c7; color: #92400e; }
+.badge-proposed { background: #ffedd5; color: #c2410c; }
+.badge-manual { background: #f3e8ff; color: #7e22ce; font-family: var(--font-mono); }
+
+/* --------------------------------------------------------------------------
+   Buttons & Form Controls
+   -------------------------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 13px;
+    font-size: 0.81rem;
+    font-weight: 700;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary { background: var(--primary); color: #ffffff; }
+.btn-primary:hover { background: var(--primary-hover); }
+
+.btn-secondary { background: var(--secondary); color: #ffffff; }
+.btn-secondary:hover { background: var(--secondary-hover); }
+
+.btn-warning { background: var(--accent); color: #ffffff; }
+.btn-danger { background: var(--danger); color: #ffffff; }
+.btn-outline { background: #ffffff; border-color: var(--border-color); color: var(--text-main); }
+.btn-outline:hover { background: #f1f5f9; border-color: #94a3b8; }
+.btn-sm { padding: 4px 8px; font-size: 0.73rem; }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.form-label {
+    font-size: 0.77rem;
+    font-weight: 700;
+    color: #334155;
+}
+
+.form-control {
+    padding: 6.5px 10px;
+    font-size: 0.84rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    outline: none;
+    background: #ffffff;
+    font-family: inherit;
+}
+
+.form-control:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   Teacher Financial Ledger Special Box
+   -------------------------------------------------------------------------- */
+.ledger-hero-box {
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    color: #ffffff;
+    padding: 18px;
+    border-radius: var(--radius-md);
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: 1.5fr repeat(4, 1fr);
+    gap: 14px;
+    align-items: center;
+}
+
+.ledger-teacher-info h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.ledger-teacher-info p {
+    font-size: 0.81rem;
+    color: #93c5fd;
+}
+
+.ledger-stat-block {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-align: center;
+}
+
+.ledger-stat-block span {
+    display: block;
+    font-size: 0.69rem;
+    text-transform: uppercase;
+    color: #cbd5e1;
+    font-weight: 700;
+}
+
+.ledger-stat-block strong {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-top: 2px;
+    font-family: var(--font-mono);
+}
+
+.stat-outstanding {
+    background: rgba(220, 38, 38, 0.25) !important;
+    border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+/* --------------------------------------------------------------------------
+   Official 14-Row Bill Slip Printable Layout
+   -------------------------------------------------------------------------- */
+.bill-slip-preview-container {
+    background: #525659;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.official-bill-sheet {
+    background: #ffffff;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 11mm 14mm;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    color: #000000;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 8.6pt;
+    line-height: 1.3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.slip-header-block {
+    text-align: center;
+    margin-bottom: 7px;
+}
+
+.slip-uni-title {
+    font-size: 13pt;
+    font-weight: 800;
+    color: #000000;
+}
+
+.slip-sub-title {
+    font-size: 10.2pt;
+    font-weight: 700;
+    border-bottom: 1.5px solid #000000;
+    display: inline-block;
+    padding-bottom: 1px;
+    margin-top: 2px;
+}
+
+.slip-instruction-text {
+    font-size: 7.1pt;
+    color: #333333;
+    margin: 3px 0 5px 0;
+    font-style: italic;
+}
+
+.slip-examiner-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 5px;
+    font-size: 8.3pt;
+}
+
+.slip-examiner-info-table td {
+    padding: 2px 4px;
+}
+
+.slip-grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7.8pt;
+    margin-bottom: 6px;
+}
+
+.slip-grid-table th, .slip-grid-table td {
+    border: 1px solid #000000;
+    padding: 2.5px 4px;
+    vertical-align: middle;
+}
+
+.slip-grid-table th {
+    background: #f2f2f2;
+    font-weight: 700;
+    text-align: center;
+}
+
+.slip-total-row td {
+    font-weight: 800;
+    background: #f9f9f9;
+}
+
+.slip-bottom-signatures {
+    margin-top: 8px;
+}
+
+.slip-sig-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-top: 20px;
+}
+
+.slip-sig-item {
+    text-align: center;
+    width: 40%;
+}
+
+.slip-sig-item .line {
+    border-top: 1px solid #000000;
+    padding-top: 2px;
+    font-weight: 700;
+    font-size: 8pt;
+}
+
+.slip-sanction-box {
+    border: 1px solid #000000;
+    padding: 5px 7px;
+    margin-bottom: 12px;
+    font-size: 8.2pt;
+    line-height: 1.35;
+}
+
+.slip-final-office-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
+}
+
+.slip-revenue-stamp {
+    border: 1px dashed #000000;
+    width: 24mm;
+    height: 24mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7pt;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   Modal Dialogs
+   -------------------------------------------------------------------------- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-card {
+    background: #ffffff;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border-color);
+    background: #f8fafc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 0.98rem;
+    font-weight: 800;
+    color: var(--dark);
+}
+
+.modal-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 16px 18px;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 11px 18px;
+    border-top: 1px solid var(--border-color);
+    background: #f8fafc;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   Official Departmental Examination & Moderation Dossier Layout
+   Matching the 11-Page CamScanner PDF (media_1791908779648_8655bb4f.pdf)
+   -------------------------------------------------------------------------- */
+.dossier-preview-container {
+    background: #525659;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    margin-top: 14px;
+}
+
+.official-dossier-sheet {
+    background: #ffffff;
+    width: 210mm;
+    min-height: 297mm;
+    padding: 14mm 16mm;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    color: #000000;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 8.8pt;
+    line-height: 1.35;
+}
+
+.dossier-header-block {
+    text-align: center;
+    margin-bottom: 12px;
+    border-bottom: 2px double #000000;
+    padding-bottom: 8px;
+}
+
+.dossier-uni-title {
+    font-size: 13pt;
+    font-weight: 800;
+    color: #000000;
+    letter-spacing: 0.3px;
+}
+
+.dossier-dept-title {
+    font-size: 11pt;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.dossier-location-title {
+    font-size: 9pt;
+    font-weight: 600;
+    color: #222222;
+}
+
+.dossier-memo-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5pt;
+    font-weight: 700;
+    margin: 8px 0 6px 0;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 4px;
+}
+
+.dossier-subject-block {
+    font-size: 9.2pt;
+    font-weight: 700;
+    text-align: left;
+    margin: 8px 0 12px 0;
+    padding: 4px 6px;
+    background: #f8fafc;
+    border-left: 3px solid #1e3a8a;
+}
+
+.dossier-section {
+    margin-bottom: 16px;
+}
+
+.dossier-section-title {
+    font-size: 9pt;
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #000000;
+    padding-bottom: 2px;
+}
+
+.dossier-grid-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.2pt;
+    margin-bottom: 8px;
+}
+
+.dossier-grid-table th,
+.dossier-grid-table td {
+    border: 1px solid #000000;
+    padding: 4px 6px;
+    vertical-align: middle;
+}
+
+.dossier-grid-table th {
+    background: #f1f5f9;
+    font-weight: 700;
+    text-align: center;
+}
+
+.dossier-calc-box {
+    background: #f9fbfd;
+    border: 1px solid #cbd5e1;
+    padding: 6px 10px;
+    font-size: 8.4pt;
+    margin: 6px 0 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dossier-sig-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+    padding-top: 10px;
+    gap: 12px;
+}
+
+.dossier-sig-item {
+    text-align: center;
+    flex: 1;
+}
+
+.dossier-sig-item .sig-line {
+    border-top: 1px solid #000000;
+    padding-top: 3px;
+    font-weight: 700;
+    font-size: 7.8pt;
+}
+
+/* --------------------------------------------------------------------------
+   Print Stylesheet (@media print)
+   -------------------------------------------------------------------------- */
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+
+    .app-header,
+    .scope-banner,
+    .nav-bar,
+    .screen-only,
+    .btn,
+    .modal-overlay,
+    .kpi-grid,
+    .card-header,
+    .app-footer {
+        display: none !important;
+    }
+
+    .main-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+
+    .content-card {
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .bill-slip-preview-container,
+    .dossier-preview-container {
+        background: none !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    .official-bill-sheet,
+    .official-dossier-sheet {
+        box-shadow: none !important;
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+    }
+
+    .tab-panel:not(.active) {
+        display: none !important;
+    }
+
+    .tab-panel.active {
+        display: block !important;
+    }
+
+    /* Print styling for custom tabular reports */
+    .print-report-container {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .print-report-header {
+        text-align: center;
+        border-bottom: 2px solid #000;
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 8mm 10mm;
+    }
+}

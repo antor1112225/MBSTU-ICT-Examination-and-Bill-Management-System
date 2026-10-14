@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBSTU ICT Department Examination &amp; Semester Bill Management System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header & University Branding -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand-wrapper">
+                <div class="brand-logo-badge">ICT</div>
+                <div class="brand-text">
+                    <h1>Mawlana Bhashani Science and Technology University</h1>
+                    <p>Department of Information and Communication Technology (ICT) • Examination &amp; Semester Bill Management System</p>
+                </div>
+            </div>
+            <div class="header-controls screen-only">
+                <!-- Matching the user's UI screenshot reference -->
+                <div class="semester-selector-box">
+                    <label for="global-semester-select">ACTIVE SEMESTER:</label>
+                    <select id="global-semester-select" class="semester-select">
+                        <option value="all">All Semesters (Consolidated)</option>
+                    </select>
+                </div>
+                <button id="btn-load-demo-data" class="btn btn-warning btn-sm" title="Load Authentic MBSTU Demo Records">
+                    Load MBSTU Demo Data
+                </button>
+                <button id="btn-export-backup-quick" class="btn btn-outline btn-sm" title="Download JSON Backup">
+                    Backup JSON
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Scope Banner / Active Semester Indicator -->
+    <div class="scope-banner screen-only">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 0.76rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Reporting Scope:</span>
+            <span class="scope-pill" id="active-scope-pill">
+                <span class="scope-pill-dot"></span>
+                <span id="active-scope-label">All Semesters (Consolidated)</span>
+            </span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <button class="btn btn-outline btn-sm" onclick="App.openModal('modal-exclusion-log')">
+                🛡️ External Teachers Exclusion Log (<span id="badge-external-count">0</span>)
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-bar screen-only">
+        <div class="nav-container">
+            <button class="nav-tab active" data-tab="dashboard">
+                <span>📊 Dashboard</span>
+            </button>
+            <button class="nav-tab" data-tab="semesters">
+                <span>🗓️ Semesters</span>
+                <span class="tab-badge" id="badge-semester-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="courses">
+                <span>📚 Courses &amp; Earnings</span>
+                <span class="tab-badge" id="badge-course-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="moderation">
+                <span>📑 Exam &amp; Moderation Dossier (মডারেশন বিবরণী)</span>
+            </button>
+            <button class="nav-tab" data-tab="teachers">
+                <span>👨‍🏫 Internal Faculty (ICT)</span>
+                <span class="tab-badge" id="badge-teacher-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="activities">
+                <span>📝 Dynamic Activities</span>
+                <span class="tab-badge" id="badge-activity-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="ledger">
+                <span>💰 Teacher Ledger</span>
+            </button>
+            <button class="nav-tab" data-tab="bills">
+                <span>📄 Bills &amp; Approvals</span>
+                <span class="tab-badge" id="badge-bill-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="payments">
+                <span>💳 Payments</span>
+                <span class="tab-badge" id="badge-payment-count">0</span>
+            </button>
+            <button class="nav-tab" data-tab="print-slip">
+                <span>🖨️ Official Bill Slip (14-Row বিল ফরম)</span>
+            </button>
+            <button class="nav-tab" data-tab="rates">
+                <span>⚙️ Billing Rates</span>
+            </button>
+            <button class="nav-tab" data-tab="data-backup">
+                <span>💾 Backup &amp; Restore</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="main-wrapper">
+
+        <!-- TAB 1: EXECUTIVE DASHBOARD -->
+        <section id="tab-dashboard" class="tab-panel active">
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-title">Active Semesters</div>
+                    <div class="kpi-value" id="kpi-total-semesters">0</div>
+                    <div class="kpi-sub">Academic terms configured</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Courses Managed</div>
+                    <div class="kpi-value" id="kpi-total-courses">0</div>
+                    <div class="kpi-sub">Theory &amp; Lab/Sessional</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Internal ICT Faculty</div>
+                    <div class="kpi-value" id="kpi-total-teachers">0</div>
+                    <div class="kpi-sub">Eligible departmental teachers</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Exam Duties Logged</div>
+                    <div class="kpi-value" id="kpi-total-activities">0</div>
+                    <div class="kpi-sub">All active categories</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-title">Gross Remuneration</div>
+                    <div class="kpi-value" id="kpi-total-gross">৳0.00</div>
+                    <div class="kpi-sub">Calculated Work Accrued</div>
+                </div>
+                <div class="kpi-card kpi-warning">
+                    <div class="kpi-title">Total Approved</div>
+                    <div class="kpi-value" id="kpi-total-approved">৳0.00</div>
+                    <div class="kpi-sub">Sanctioned by Chairman</div>
+                </div>
+                <div class="kpi-card kpi-success">
+                    <div class="kpi-title">Actual Paid</div>
+                    <div class="kpi-value" id="kpi-total-paid">৳0.00</div>
+                    <div class="kpi-sub">Disbursed by Accounts</div>
+                </div>
+                <div class="kpi-card kpi-danger">
+                    <div class="kpi-title">Current Outstanding</div>
+                    <div class="kpi-value" id="kpi-total-outstanding">৳0.00</div>
+                    <div class="kpi-sub">Approved &minus; Paid Balance</div>
+                </div>
+            </div>
+
+            <!-- Quick Action Hub -->
+            <div class="content-card screen-only">
+                <div class="card-header">
+                    <div class="card-title">⚡ Quick Academic &amp; Financial Actions</div>
+                    <div>
+                        <span class="badge badge-recorded">System Operational • Internal Only</span>
+                    </div>
+                </div>
+                <div class="card-body" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="App.openModal('modal-activity')">+ Log Exam Activity</button>
+                    <button class="btn btn-secondary" onclick="App.openModal('modal-custom-activity')">+ Add Custom Activity Type</button>
+                    <button class="btn btn-secondary" onclick="App.openModal('modal-bill')">+ Prepare Official Bill Slip</button>
+                    <button class="btn btn-warning" onclick="App.openModal('modal-payment')">+ Record Accounts Disbursement</button>
+                    <button class="btn btn-outline" onclick="App.switchTab('assignments')">🎓 Assign Course Teachers</button>
+                    <button class="btn btn-outline" onclick="App.switchTab('moderation')">📋 Moderation Register</button>
+                    <button class="btn btn-outline" onclick="App.switchTab('ledger')">🔍 View Teacher Ledger</button>
+                </div>
+            </div>
+
+            <!-- Recent Disbursement Ledger -->
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">📋 Recent Payment Disbursements &amp; Activity Log (Scope: <span id="dash-recent-scope-text">Consolidated</span>)</div>
+                    <button class="btn btn-outline btn-sm" onclick="App.switchTab('payments')">View All Payments &rarr;</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Voucher / Ref</th>
+                                    <th>Internal Teacher</th>
+                                    <th>Academic Session &amp; Semester</th>
+                                    <th>Bill Slip No</th>
+                                    <th>Method</th>
+                                    <th>Revenue Stamp</th>
+                                    <th style="text-align: right;">Amount Paid</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-recent-payments">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; color: var(--text-muted);">No payment records found. Load demo data to view examples.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: SEMESTERS -->
+        <section id="tab-semesters" class="tab-panel">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">🗓️ Academic Semesters across 5 Sessions (2020–2021 to 2024–2025)</div>
+                    <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-semester')">+ Add New Semester</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Academic Session</th>
+                                    <th>Year &amp; Semester</th>
+                                    <th>Examination Name</th>
+                                    <th>Exam Period</th>
+                                    <th>Regular</th>
+                                    <th>Backlog</th>
+                                    <th>Special</th>
+                                    <th>Total Examinees</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-semesters"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: COURSES & COURSE-WISE BREAKDOWN -->
+        <section id="tab-courses" class="tab-panel">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">📚 Course Management &amp; Activity Breakdown (Scope: <span id="courses-scope-text">Consolidated</span>)</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline btn-sm" onclick="App.printCourseSummaryTable()">🖨️ Print Course Summary</button>
+                        <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-course')">+ Add New Course</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Title</th>
+                                    <th>Academic Session &amp; Semester</th>
+                                    <th>Credit</th>
+                                    <th>Type</th>
+                                    <th>Assigned Internal Teacher</th>
+                                    <th>Verification</th>
+                                    <th>Activities</th>
+                                    <th style="text-align: right;">Total Amount (৳)</th>
+                                    <th style="text-align: right;">Approved (৳)</th>
+                                    <th style="text-align: right;">Paid (৳)</th>
+                                    <th style="text-align: right;">Outstanding (৳)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-courses"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- TAB 5: INTERNAL TEACHERS DIRECTORY -->
+        <section id="tab-teachers" class="tab-panel">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">👨‍🏫 Internal Faculty Directory — Department of ICT, MBSTU</div>
+                    <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-teacher')">+ Add Faculty Member</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name (Bengali)</th>
+                                    <th>Name (English)</th>
+                                    <th>Designation</th>
+                                    <th>Department</th>
+                                    <th>Institution</th>
+                                    <th>Status</th>
+                                    <th>Contact</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-teachers"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: DYNAMIC EXAM ACTIVITIES -->
+        <section id="tab-activities" class="tab-panel">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">📝 Dynamic Examination Activity Management (Scope: <span id="activities-scope-text">Consolidated</span>)</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline btn-sm" onclick="App.printActivityLedger()">🖨️ Print Activity Ledger</button>
+                        <button class="btn btn-secondary btn-sm" onclick="App.openModal('modal-custom-activity')">+ Add Custom Activity Type</button>
+                        <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-activity')">+ Log Activity Record</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Session &amp; Semester</th>
+                                    <th>Category / Activity Type</th>
+                                    <th>Course</th>
+                                    <th>Internal Teacher</th>
+                                    <th>Workload / Qty</th>
+                                    <th>Rate (৳)</th>
+                                    <th>Calc Method</th>
+                                    <th style="text-align: right;">Calculated Amount (৳)</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-activities"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: TEACHER LEDGER & EARNINGS -->
+        <section id="tab-ledger" class="tab-panel">
+            <!-- Filter Bar -->
+            <div class="content-card screen-only" style="margin-bottom: 16px;">
+                <div class="card-body" style="padding: 12px 18px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+                    <div style="flex: 1.2; min-width: 250px;">
+                        <label class="form-label" for="ledger-teacher-select">Select Internal ICT Teacher:</label>
+                        <select id="ledger-teacher-select" class="form-control" onchange="App.renderTeacherLedger()"></select>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label class="form-label" for="ledger-semester-select">Filter by Semester:</label>
+                        <select id="ledger-semester-select" class="form-control" onchange="App.renderTeacherLedger()">
+                            <option value="all">All Semesters (Consolidated)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; min-width: 170px;">
+                        <label class="form-label" for="ledger-status-filter">Bill Status:</label>
+                        <select id="ledger-status-filter" class="form-control" onchange="App.renderTeacherLedger()">
+                            <option value="all">All Statuses</option>
+                            <option value="Recorded">Recorded (Accrued)</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Partially Paid">Partially Paid</option>
+                            <option value="Paid">Paid</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-self: flex-end;">
+                        <button class="btn btn-outline" onclick="App.printTeacherLedger()">🖨️ Print Ledger</button>
+                        <button class="btn btn-outline" onclick="App.exportTeacherLedgerCSV()">Export CSV</button>
+                        <button class="btn btn-primary" onclick="App.prepareSlipForSelectedTeacher()">Generate Bill Slip &rarr;</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Hero Balance Card -->
+            <div class="ledger-hero-box" id="ledger-hero-box">
+                <div class="ledger-teacher-info">
+                    <h3 id="ledger-teacher-name-title">Select a teacher</h3>
+                    <p id="ledger-teacher-sub-title">Designation &bull; Department of ICT, MBSTU</p>
+                </div>
+                <div class="ledger-stat-block">
+                    <span>Work Accrued</span>
+                    <strong id="ledger-stat-accrued">৳0.00</strong>
+                </div>
+                <div class="ledger-stat-block">
+                    <span>Bill Prepared</span>
+                    <strong id="ledger-stat-billed">৳0.00</strong>
+                </div>
+                <div class="ledger-stat-block">
+                    <span>Approved Amount</span>
+                    <strong id="ledger-stat-approved">৳0.00</strong>
+                </div>
+                <div class="ledger-stat-block">
+                    <span>Actually Paid</span>
+                    <strong id="ledger-stat-paid" style="color: #4ade80;">৳0.00</strong>
+                </div>
+                <div class="ledger-stat-block stat-outstanding">
+                    <span>Outstanding Due</span>
+                    <strong id="ledger-stat-outstanding" style="color: #fca5a5;">৳0.00</strong>
+                </div>
+            </div>
+
+            <!-- Course-by-Course Financial Breakdown -->
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">📚 Course-wise Earning &amp; Duty Breakdown for Teacher</div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Session &amp; Semester</th>
+                                    <th>Course Code &amp; Title</th>
+                                    <th>Activity Category</th>
+                                    <th>Workload / Qty</th>
+                                    <th>Rate</th>
+                                    <th style="text-align: right;">Calculated Amount</th>
+                                    <th style="text-align: right;">Approved</th>
+                                    <th style="text-align: right;">Paid</th>
+                                    <th style="text-align: right;">Outstanding</th>
+                                    <th>Bill Ref</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-teacher-courses-breakdown"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Transaction Ledger -->
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">💳 Disbursed Payment Transactions History for Teacher</div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Disbursement Date</th>
+                                    <th>Receipt / Voucher No</th>
+                                    <th>Session &amp; Semester</th>
+                                    <th>Bill Slip Ref</th>
+                                    <th>Payment Method</th>
+                                    <th>Revenue Stamp</th>
+                                    <th>Recorded By</th>
+                                    <th style="text-align: right;">Amount Paid (৳)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-teacher-payments-history"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: DEPARTMENTAL EXAMINATION & MODERATION DOSSIER -->
+        <section id="tab-moderation" class="tab-panel">
+            <!-- Screen-only Controls Header -->
+            <div class="content-card screen-only" style="margin-bottom: 16px;">
+                <div class="card-body" style="padding: 12px 18px; display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 12px; align-items: center; flex: 1; min-width: 320px;">
+                        <label class="form-label" for="dossier-semester-select" style="white-space: nowrap; margin-bottom: 0; font-weight: 800;">
+                            Select Examination Dossier:
+                        </label>
+                        <select id="dossier-semester-select" class="form-control" style="max-width: 480px;" onchange="App.handleDossierSemesterChange(this.value)">
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="App.openEditDossierModal()">
+                            ✏️ Edit Dossier Details
+                        </button>
+                        <button class="btn btn-secondary" onclick="App.printModerationDossier()">
+                            🖨️ Print Dossier PDF (Ctrl+P)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Archival Printable Sheet Container -->
+            <div class="dossier-preview-container">
+                <div class="official-dossier-sheet" id="official-dossier-sheet">
+                    <!-- Letterhead & Institutional Header -->
+                    <div class="dossier-header-block">
+                        <div class="dossier-uni-title">মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়</div>
+                        <div class="dossier-dept-title">ইনফরমেশন এন্ড কমিউনিকেশন টেকনোলজি বিভাগ</div>
+                        <div class="dossier-location-title">সন্তোষ, টাঙ্গাইল-১৯০২।</div>
+                        <div class="dossier-memo-row">
+                            <div>স্মারক নং: <span id="dossier-memo-no">মাভাবিপ্রবি/আইসিটি/প.নি./২০২৫/১৫২</span></div>
+                            <div>তারিখ: <span id="dossier-date">২৫/০৩/২০২৬ খ্রি.</span></div>
+                        </div>
+                        <div class="dossier-subject-block">
+                            <strong>বিষয়:</strong> বি.এস-সি. (ইঞ্জিনিয়ারিং) <span id="dossier-semester-title">২য় বর্ষ ১ম সেমিস্টার</span> ফাইনাল পরীক্ষা-<span id="dossier-exam-year">২০২৫</span> এর মডারেশন ও পরীক্ষা সংক্রান্ত কার্যাবলী বিবরণী।
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Sections 1 through 9 -->
+                    <div id="dossier-content-area">
+                        <!-- Populated by App.renderModerationDossier() -->
+                    </div>
+
+                    <!-- Signatures of Examination Committee -->
+                    <div class="dossier-sig-grid" id="dossier-signatures-block">
+                        <!-- Populated dynamically with Chairman and Member signatures -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 9: BILL PREPARATION & APPROVALS -->
+        <section id="tab-bills" class="tab-panel">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">📄 Official Bill Slips &amp; Chairman Sanctions (Scope: <span id="bills-scope-text">Consolidated</span>)</div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline btn-sm" onclick="App.printConsolidatedBillStatement()">🖨️ 7. Consolidated Bill Statement</button>
+                        <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-bill')">+ Prepare New Bill Slip</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Bill Slip Number</th>
+                                    <th>Internal Teacher Name</th>
+                                    <th>Session &amp; Semester</th>
+                                    <th>Preparation Date</th>
+                                    <th style="text-align: right;">Gross Billed (৳)</th>
+                                    <th style="text-align: right;">Approved (৳)</th>
+                                    <th style="text-align: right;">Paid (৳)</th>
+                                    <th style="text-align: right;">Outstanding (৳)</th>
+                                    <th>Chairman Sanction</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-bills"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 10: PAYMENTS & DISBURSEMENTS -->
+        <section id="tab-payments" class="tab-panel">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">💳 University Accounts Payment Register (Scope: <span id="payments-scope-text">Consolidated</span>)</div>
+                    <button class="btn btn-warning btn-sm" onclick="App.openModal('modal-payment')">+ Record Accounts Disbursement</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Payment Date</th>
+                                    <th>Internal Teacher</th>
+                                    <th>Bill Reference</th>
+                                    <th>Method</th>
+                                    <th>Receipt / Voucher No</th>
+                                    <th>Revenue Stamp Acknowledged</th>
+                                    <th>Recorded By</th>
+                                    <th style="text-align: right;">Disbursed Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-payments"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 11: OFFICIAL 1:1 PRINTABLE BILL SLIP -->
+        <section id="tab-print-slip" class="tab-panel">
+            <!-- Controls bar -->
+            <div class="content-card screen-only" style="margin-bottom: 16px;">
+                <div class="card-body" style="padding: 12px 18px; display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 12px; align-items: center; flex: 1;">
+                        <label class="form-label" for="print-bill-select" style="white-space: nowrap;">Select Bill to Print:</label>
+                        <select id="print-bill-select" class="form-control" style="max-width: 450px;" onchange="App.renderPrintableBillSlip()"></select>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" onclick="window.print()">🖨️ Print / Save PDF (Ctrl+P)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Official 14-Row Printable Sheet -->
+            <div class="bill-slip-preview-container">
+                <div class="official-bill-sheet" id="official-bill-sheet">
+                    <!-- Top Header -->
+                    <div>
+                        <div class="slip-header-block">
+                            <div class="slip-uni-title">মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়</div>
+                            <div class="slip-sub-title">পরীক্ষা সংক্রান্ত পারিশ্রমিকের বিল ফরম</div>
+                            <div style="text-align: right; font-weight: 700; font-size: 8pt; margin-top: -14px;">
+                                বিল নং: <span id="slip-bill-no-display">............</span>
+                            </div>
+                            <div class="slip-instruction-text">
+                                (বিল সংশ্লিষ্ট বিষয়াবলী পরীক্ষা কমিটির চেয়ারম্যানের মাধ্যমে পরীক্ষার সংক্রান্ত কার্যাবলী সম্পাদনের পর পরীক্ষা নিয়ন্ত্রকের কার্যালয়ে দাখিল করতে হবে। প্রতি কোর্সের পরীক্ষার জন্য পৃথক পৃথক ভাবে বিল দাখিল করতে হবে।)
+                            </div>
+                        </div>
+
+                        <!-- Examiner Info Box -->
+                        <table class="slip-examiner-info-table">
+                            <tr>
+                                <td style="width: 25%;">পরীক্ষকের নাম (বাংলায়):</td>
+                                <td style="width: 75%; font-weight: 700;" id="slip-examiner-name-bn">................................................</td>
+                            </tr>
+                            <tr>
+                                <td>(ইংরেজীতে বড় অক্ষরে):</td>
+                                <td style="font-weight: 700; font-family: monospace;" id="slip-examiner-name-en">................................................</td>
+                            </tr>
+                            <tr>
+                                <td>পদবী ও পূর্ণ ঠিকানা:</td>
+                                <td id="slip-examiner-designation">................................................</td>
+                            </tr>
+                            <tr>
+                                <td>পরীক্ষা অনুষ্ঠিত হওয়ার সময়কালঃ</td>
+                                <td id="slip-exam-period">পরীক্ষা অনুষ্ঠিত তারিখঃ ফেব্রুয়ারি-মার্চ/২০২৬</td>
+                            </tr>
+                        </table>
+                        <div style="font-size: 8pt; font-weight: 700; margin-bottom: 4px;">
+                            পরীক্ষা সংক্রান্ত কাজের বিবরণ নিম্নে দেওয়া হইলঃ
+                        </div>
+
+                        <!-- 14-Row Table Grid -->
+                        <table class="slip-grid-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 5%;">ক্রমিক নম্বর</th>
+                                    <th style="width: 24%;">কাজের নাম</th>
+                                    <th style="width: 14%;">পরীক্ষার নাম</th>
+                                    <th style="width: 6%;">বৎসর</th>
+                                    <th style="width: 7%;">বিভাগ</th>
+                                    <th style="width: 9%;">কোর্স কোড</th>
+                                    <th style="width: 11%;">খাতা/পরীক্ষার্থীর সংখ্যা</th>
+                                    <th style="width: 7%;">মোট দিন/সদস্য</th>
+                                    <th style="width: 6%;">ক্রেডিট</th>
+                                    <th style="width: 6%;">ক্লাস টেস্ট</th>
+                                    <th style="width: 9%;">টাকা</th>
+                                    <th style="width: 4%;">পয়সা</th>
+                                </tr>
+                            </thead>
+                            <tbody id="slip-tbody-14-rows">
+                                <!-- Generated Dynamically: Exactly Rows 1 to 14 -->
+                            </tbody>
+                            <tfoot>
+                                <tr class="slip-total-row">
+                                    <td colspan="10" style="text-align: right; padding-right: 10px;">মোট টাকা =</td>
+                                    <td id="slip-total-taka" style="text-align: right; font-weight: 800;">০/-</td>
+                                    <td>০০</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- Bottom Signatures & Sanction Section -->
+                    <div class="slip-bottom-signatures">
+                        <div class="slip-sig-grid">
+                            <div class="slip-sig-item">
+                                <div class="line">প্রতি স্বাক্ষর: সভাপতি, পরীক্ষা কমিটি<br>(সীলমোহর)</div>
+                            </div>
+                            <div class="slip-sig-item">
+                                <div class="line">পরীক্ষকের স্বাক্ষর</div>
+                            </div>
+                        </div>
+
+                        <div class="slip-sanction-box">
+                            বিভাগঃ <strong>আইসিটি</strong>, পরীক্ষাঃ <strong id="slip-sanction-exam-name">বিএসসি (ইঞ্জিঃ) ফাইনাল পরীক্ষা</strong>, সেশনঃ <strong id="slip-sanction-session">২০২৩-২০২৪</strong><br>
+                            প্রফেসর/ড./জনাব <strong id="slip-sanction-teacher-name">........................</strong>-কে টাকা = <strong id="slip-sanction-amount">০/-</strong> (কথায়) : <strong id="slip-sanction-words">........................ টাকা মাত্র</strong> প্রদান করুন।
+                        </div>
+
+                        <div class="slip-final-office-row">
+                            <div class="slip-revenue-stamp">
+                                রেভিনিউ স্ট্যাম্প<br>বুঝিয়া পাইলাম<br>তারিখসহ স্বাক্ষর
+                            </div>
+                            <div style="text-align: center; width: 38%;">
+                                <div style="border-top: 1px solid #000; padding-top: 2px; font-weight: 700;">সেকশন অফিসার / সহকারী পরীক্ষা নিয়ন্ত্রক</div>
+                            </div>
+                            <div style="text-align: center; width: 35%;">
+                                <div style="border-top: 1px solid #000; padding-top: 2px; font-weight: 700;">পরীক্ষা নিয়ন্ত্রক, মাভাবিপ্রবি</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 12: BILLING RATES CONFIGURATOR -->
+        <section id="tab-rates" class="tab-panel">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">⚙️ 14 Official Examination Activity Billing Rates</div>
+                    <div>
+                        <button class="btn btn-outline btn-sm" onclick="App.resetDefaultRates()">Reset to MBSTU Defaults</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>SL (রো)</th>
+                                    <th>Activity Name (বাংলা)</th>
+                                    <th>Description (English)</th>
+                                    <th>Calculation Unit</th>
+                                    <th>Base Rate (BDT / ৳)</th>
+                                    <th>Min Charge (৳)</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-rates"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 13: DATA BACKUP & RESTORE -->
+        <section id="tab-data-backup" class="tab-panel">
+            <div class="content-card">
+                <div class="card-header">
+                    <div class="card-title">💾 System Persistence, Backup &amp; Restore</div>
+                </div>
+                <div class="card-body">
+                    <p style="margin-bottom: 16px; color: var(--text-muted);">
+                        This system operates 100% offline using your browser's local storage. To ensure data safety across computers or after clearing browser cache, create periodic JSON backups.
+                    </p>
+                    <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="App.exportFullJSONBackup()">⬇️ Export Full JSON Database Backup</button>
+                        <label class="btn btn-outline" style="cursor: pointer; margin-bottom: 0;">
+                            ⬆️ Import JSON Database Backup
+                            <input type="file" id="file-import-json" accept=".json" style="display: none;" onchange="App.importFullJSONBackup(event)">
+                        </label>
+                        <button class="btn btn-warning" onclick="App.exportAllCSVs()">📊 Export Consolidated Financial CSVs</button>
+                        <button class="btn btn-danger" onclick="App.confirmResetAllData()">⚠️ Factory Reset Database</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer screen-only" style="background: #ffffff; border-top: 1px solid var(--border-color); padding: 14px 20px; font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+        Mawlana Bhashani Science and Technology University (MBSTU) • Department of Information and Communication Technology (ICT) • 1-Credit Academic Project
+    </footer>
+
+    <!-- MODAL: ADD / EDIT SEMESTER -->
+    <div id="modal-semester" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-semester-title">Add Academic Semester</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-semester')">&times;</button>
+            </div>
+            <form id="form-semester" onsubmit="App.handleSaveSemester(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="sem-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="sem-session">Academic Session *</label>
+                            <input type="text" id="sem-session" class="form-control" placeholder="e.g. 2023-2024" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sem-academic-year">Academic Year *</label>
+                            <input type="text" id="sem-academic-year" class="form-control" placeholder="e.g. 2025" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sem-year-level">Year / Level *</label>
+                            <select id="sem-year-level" class="form-control" required>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year" selected>2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sem-number">Semester Number *</label>
+                            <select id="sem-number" class="form-control" required>
+                                <option value="1st Semester">1st Semester</option>
+                                <option value="2nd Semester">2nd Semester</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="sem-exam-name">Official Examination Name *</label>
+                            <input type="text" id="sem-exam-name" class="form-control" placeholder="e.g. 2nd Year 1st Semester Final Examination 2025" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="sem-period">Exam Held Period *</label>
+                            <input type="text" id="sem-period" class="form-control" placeholder="e.g. February-March 2026" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sem-reg-count">Regular Examinees</label>
+                            <input type="number" id="sem-reg-count" class="form-control" value="57" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sem-bl-count">Backlog Examinees</label>
+                            <input type="number" id="sem-bl-count" class="form-control" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sem-sc-count">Special Examinees</label>
+                            <input type="number" id="sem-sc-count" class="form-control" value="0" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="sem-status">Status</label>
+                            <select id="sem-status" class="form-control">
+                                <option value="In Progress">In Progress</option>
+                                <option value="Billed">Billed</option>
+                                <option value="Upcoming">Upcoming</option>
+                                <option value="Archived">Archived</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-semester')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Semester</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT COURSE -->
+    <div id="modal-course" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-course-title">Add Course</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-course')">&times;</button>
+            </div>
+            <form id="form-course" onsubmit="App.handleSaveCourse(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="crs-id">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="crs-semester-id">Semester *</label>
+                            <select id="crs-semester-id" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="crs-code">Course Code *</label>
+                            <input type="text" id="crs-code" class="form-control" placeholder="e.g. ICT-2101" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="crs-credit">Credit Hour *</label>
+                            <input type="number" id="crs-credit" class="form-control" value="3.00" step="0.25" min="0.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="crs-type">Course Type *</label>
+                            <select id="crs-type" class="form-control" required>
+                                <option value="Theory">Theory</option>
+                                <option value="Lab/Sessional">Lab / Sessional</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="crs-title">Course Title *</label>
+                            <input type="text" id="crs-title" class="form-control" placeholder="e.g. Computer Organization and Architecture" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="crs-internal-teacher">Assigned Internal Course Teacher (ICT Faculty) *</label>
+                            <select id="crs-internal-teacher" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="crs-verification-status">Teacher Assignment Verification *</label>
+                            <select id="crs-verification-status" class="form-control" required>
+                                <option value="Verified">Verified (Confirmed from Dossier)</option>
+                                <option value="Needs Verification">Needs Verification</option>
+                                <option value="Proposed - Needs Confirmation">Proposed - Needs Confirmation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="crs-assignment-source">Source of Assignment</label>
+                            <input type="text" id="crs-assignment-source" class="form-control" placeholder="e.g. Page 3, Scanned MBSTU Dossier">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="crs-students">Enrolled Students</label>
+                            <input type="number" id="crs-students" class="form-control" value="57" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="crs-tests">Class Tests</label>
+                            <input type="number" id="crs-tests" class="form-control" value="4" min="0">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="crs-moderator">Confirmed Moderation Assignment (Optional)</label>
+                            <select id="crs-moderator" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-course')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: DIGITAL MANAGEMENT OF EXAMINATION & MODERATION DOSSIER -->
+    <div id="modal-edit-dossier" class="modal-overlay">
+        <div class="modal-card" style="max-width: 820px;">
+            <div class="modal-header">
+                <h3>📑 Digital Management: Examination &amp; Moderation Dossier</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-edit-dossier')">&times;</button>
+            </div>
+            <form id="form-edit-dossier" onsubmit="App.handleSaveDossier(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="edit-dossier-sem-id">
+                    
+                    <!-- Basic Memo & Session Info -->
+                    <h4 style="font-size: 0.88rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                        ১. স্মারক ও পরীক্ষার সাধারণ বিবরণ
+                    </h4>
+                    <div class="form-grid" style="margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-memo">স্মারক নম্বর *</label>
+                            <input type="text" id="edit-dossier-memo" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-date">তারিখ (খ্রি.) *</label>
+                            <input type="text" id="edit-dossier-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-exam-period">পরীক্ষা অনুষ্ঠিত সময়কাল</label>
+                            <input type="text" id="edit-dossier-exam-period" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-exam-year">পরীক্ষার সাল</label>
+                            <input type="text" id="edit-dossier-exam-year" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Examination Committee Section -->
+                    <h4 style="font-size: 0.88rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                        ২. পরীক্ষা কমিটি গঠন (Committee Members)
+                    </h4>
+                    <div class="form-grid" style="margin-bottom: 16px;">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="edit-dossier-chairman">সভাপতি (Chairman) *</label>
+                            <select id="edit-dossier-chairman" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-member1">সদস্য ১ (Internal Member 1) *</label>
+                            <select id="edit-dossier-member1" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-member2">সদস্য ২ (Internal Member 2) *</label>
+                            <select id="edit-dossier-member2" class="form-control" required></select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="edit-dossier-external">সদস্য (বহিরাগত / External Member from another University) *</label>
+                            <input type="text" id="edit-dossier-external" class="form-control" placeholder="e.g. ড. মোঃ আনোয়ার হোসেন, প্রফেসর, ইইই বিভাগ, রুয়েট" required>
+                        </div>
+                    </div>
+
+                    <!-- Moderation & Typing Workload -->
+                    <h4 style="font-size: 0.88rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                        ৩. মডারেশন ও প্রশ্ন কম্পোজ/টাইপিং (Moderation & Typing Workload)
+                    </h4>
+                    <div class="form-grid" style="margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-mod-questions">মডারেশনকৃত মোট প্রশ্ন সংখ্যা *</label>
+                            <input type="number" id="edit-dossier-mod-questions" class="form-control" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-mod-rate">প্রতি প্রশ্ন মডারেশন হার (৳) *</label>
+                            <input type="number" id="edit-dossier-mod-rate" class="form-control" min="500" value="2000" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">প্রশ্ন কম্পোজ / টাইপিং প্রশ্ন সংখ্যা বন্টন (প্রতি প্রশ্ন ৳২০০):</label>
+                            <div id="edit-dossier-typing-container" style="display: flex; gap: 12px; flex-wrap: wrap; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabulation & Examinee Statistics -->
+                    <h4 style="font-size: 0.88rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                        ৪. ট্যাবুলেশন ও পরীক্ষার্থী পরিসংখ্যান (Examinee Counts & Tabulation)
+                    </h4>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-tab-reg">নিয়মিত পরীক্ষার্থী (Regular)</label>
+                            <input type="number" id="edit-dossier-tab-reg" class="form-control" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-tab-bl">ব্যাকলগ পরীক্ষার্থী (Backlog)</label>
+                            <input type="number" id="edit-dossier-tab-bl" class="form-control" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-tab-sp">স্পেশাল পরীক্ষার্থী (Special)</label>
+                            <input type="number" id="edit-dossier-tab-sp" class="form-control" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-dossier-tab-rate">ট্যাবুলেশন রেট (প্রতি পরীক্ষার্থী ৳)</label>
+                            <input type="number" id="edit-dossier-tab-rate" class="form-control" min="10" value="75" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-edit-dossier')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">💾 Save &amp; Recalculate Ledger</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD / EDIT TEACHER -->
+    <div id="modal-teacher" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-teacher-title">Add Internal ICT Faculty Member</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-teacher')">&times;</button>
+            </div>
+            <form id="form-teacher" onsubmit="App.handleSaveTeacher(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="tchr-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="tchr-name-bn">Name in Bengali *</label>
+                            <input type="text" id="tchr-name-bn" class="form-control" placeholder="e.g. ড. মনির মোর্শেদ" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tchr-name-en">Name in English *</label>
+                            <input type="text" id="tchr-name-en" class="form-control" placeholder="e.g. Dr. Monir Morshed" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tchr-designation">Designation *</label>
+                            <select id="tchr-designation" class="form-control" required>
+                                <option value="Professor">Professor</option>
+                                <option value="Associate Professor">Associate Professor</option>
+                                <option value="Assistant Professor">Assistant Professor</option>
+                                <option value="Lecturer">Lecturer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tchr-department">Department *</label>
+                            <input type="text" id="tchr-department" class="form-control" value="Dept. of ICT" readonly style="background:#f1f5f9;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tchr-institution">Institution *</label>
+                            <input type="text" id="tchr-institution" class="form-control" value="MBSTU" readonly style="background:#f1f5f9;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tchr-phone">Phone Number</label>
+                            <input type="text" id="tchr-phone" class="form-control" placeholder="e.g. 01793667714">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="tchr-email">Email Address</label>
+                            <input type="email" id="tchr-email" class="form-control" placeholder="e.g. monirmorshed.ict@mbstu.ac.bd">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-teacher')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Faculty Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: LOG EXAM ACTIVITY -->
+    <div id="modal-activity" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Log Dynamic Examination Activity</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-activity')">&times;</button>
+            </div>
+            <form id="form-activity" onsubmit="App.handleSaveActivity(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="act-id">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="act-category">Activity Category *</label>
+                            <select id="act-category" class="form-control" onchange="App.handleActivityCategoryChange()" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="act-semester-id">Semester *</label>
+                            <select id="act-semester-id" class="form-control" onchange="App.handleActivitySemesterChange()" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="act-course-id">Related Course (Optional for Committee)</label>
+                            <select id="act-course-id" class="form-control" onchange="App.handleActivityCourseChange()"></select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="act-teacher-id">Responsible Internal Teacher (ICT Faculty) *</label>
+                            <select id="act-teacher-id" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="act-calc-method">Calculation Method *</label>
+                            <select id="act-calc-method" class="form-control" onchange="App.handleCalculationMethodChange()">
+                                <option value="qty_rate">Quantity × Rate</option>
+                                <option value="fixed">Fixed Official Amount</option>
+                                <option value="manual">Manually Entered Total Amount</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="grp-act-workload">
+                            <label class="form-label" for="act-workload" id="lbl-act-workload">Workload / Quantity</label>
+                            <input type="number" id="act-workload" class="form-control" value="1" min="1" oninput="App.calculateActivityPreview()">
+                        </div>
+                        <div class="form-group" id="grp-act-rate">
+                            <label class="form-label" for="act-rate" id="lbl-act-rate">Applied Unit Rate (৳)</label>
+                            <input type="number" id="act-rate" class="form-control" value="120" step="0.01" oninput="App.calculateActivityPreview()">
+                        </div>
+                        <div class="form-group" id="grp-act-manual-amount" style="display: none;">
+                            <label class="form-label" for="act-manual-amount">Manual Total Amount (৳) *</label>
+                            <input type="number" id="act-manual-amount" class="form-control" value="0" step="0.01" oninput="App.calculateActivityPreview()">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; background: #f1f5f9; padding: 10px; border-radius: 4px;">
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Calculated Amount Preview:</span>
+                            <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary); font-family: monospace;" id="act-calc-preview">৳0.00</div>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="act-notes">Reference / Notes</label>
+                            <input type="text" id="act-notes" class="form-control" placeholder="e.g. 58 scripts checked for ICT-4205">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-activity')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Log Activity</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD CUSTOM ACTIVITY TYPE -->
+    <div id="modal-custom-activity" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Add Custom Dynamic Activity Type</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-custom-activity')">&times;</button>
+            </div>
+            <form id="form-custom-activity" onsubmit="App.handleSaveCustomActivityType(event)">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="cust-name-bn">Activity Name in Bengali *</label>
+                            <input type="text" id="cust-name-bn" class="form-control" placeholder="e.g. স্ক্রুটিনি ও নিরীক্ষা" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cust-name-en">Activity Name in English *</label>
+                            <input type="text" id="cust-name-en" class="form-control" placeholder="e.g. Scrutiny and Verification" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cust-unit">Calculation Unit *</label>
+                            <select id="cust-unit" class="form-control" required>
+                                <option value="per_script">Per Script Checked</option>
+                                <option value="per_student">Per Student / Examinee</option>
+                                <option value="per_session">Per Session / Day</option>
+                                <option value="fixed">Fixed Amount</option>
+                                <option value="manual">Manual Amount</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cust-rate">Default Rate (৳) *</label>
+                            <input type="number" id="cust-rate" class="form-control" value="10" step="0.01" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="cust-desc">Description &amp; Regulation Basis</label>
+                            <input type="text" id="cust-desc" class="form-control" placeholder="e.g. Scrutiny committee examination duty allowance">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-custom-activity')">Cancel</button>
+                    <button type="submit" class="btn btn-secondary">Add Activity Type</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EXTERNAL EXCLUSION AUDIT LOG -->
+    <div id="modal-exclusion-log" class="modal-overlay">
+        <div class="modal-card" style="max-width: 850px;">
+            <div class="modal-header">
+                <h3>🛡️ External Teachers Exclusion &amp; Audit Log</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-exclusion-log')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
+                    In accordance with institutional guidelines, external examiners (from RUET, DUET, PUST, BDU, HSTU, etc.) are strictly excluded from internal ICT faculty course assignments, activity ledgers, bill generation, and department remuneration totals. This table records their external duty references purely for institutional audit purposes.
+                </p>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Examiner Name</th>
+                                <th>Designation</th>
+                                <th>External University</th>
+                                <th>Associated Semester &amp; Course</th>
+                                <th>Duty Recorded in Dossier</th>
+                                <th>Internal Audit Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-exclusion-log"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-exclusion-log')">Close Log</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: COURSE DETAILED BREAKDOWN (Requirement 5) -->
+    <div id="modal-course-breakdown" class="modal-overlay">
+        <div class="modal-card" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 id="modal-course-breakdown-title">Course Examination &amp; Earning Breakdown</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-course-breakdown')">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-course-breakdown-content">
+                <!-- Course details, activities, total, paid, outstanding -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="App.printSingleCourseBreakdown()">🖨️ Print Course Report</button>
+                <button type="button" class="btn btn-primary" onclick="App.closeModal('modal-course-breakdown')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PREPARE NEW BILL -->
+    <div id="modal-bill" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Prepare Official Bill Slip (Internal ICT Faculty)</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-bill')">&times;</button>
+            </div>
+            <form id="form-bill" onsubmit="App.handleCreateBill(event)">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="bill-teacher-id">Select Internal ICT Teacher *</label>
+                            <select id="bill-teacher-id" class="form-control" onchange="App.handleBillTeacherChange()" required></select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="bill-semester-id">Semester *</label>
+                            <select id="bill-semester-id" class="form-control" onchange="App.handleBillSemesterChange()" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bill-date">Preparation Date *</label>
+                            <input type="date" id="bill-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bill-no">Bill Slip Number *</label>
+                            <input type="text" id="bill-no" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <div id="bill-existing-alert-box"></div>
+                            <label class="form-label">Examination Activities to Include in Bill Slip:</label>
+                            <div id="bill-activities-checklist" style="max-height: 220px; overflow-y: auto; border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; background: #f8fafc;">
+                                <!-- Checkbox list of eligible activities -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-bill')">Cancel</button>
+                    <button type="submit" class="btn btn-secondary">Generate Bill Slip</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: RECORD ACCOUNTS PAYMENT -->
+    <div id="modal-payment" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Record Accounts Payment Disbursement</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-payment')">&times;</button>
+            </div>
+            <form id="form-payment" onsubmit="App.handleSavePayment(event)">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="pay-bill-id">Select Approved Bill Slip *</label>
+                            <select id="pay-bill-id" class="form-control" onchange="App.handlePaymentBillChange()" required></select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; background: #fef2f2; border: 1px solid #fecaca; padding: 10px; border-radius: 4px;">
+                            <span style="font-size: 0.8rem; font-weight: 700; color: #991b1b;">Current Outstanding Balance on Bill:</span>
+                            <div style="font-size: 1.3rem; font-weight: 800; color: #dc2626; font-family: monospace;" id="pay-max-allowed-display">৳0.00</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pay-date">Disbursement Date *</label>
+                            <input type="date" id="pay-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pay-amount">Payment Amount (৳) *</label>
+                            <input type="number" id="pay-amount" class="form-control" step="0.01" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pay-method">Payment Method *</label>
+                            <select id="pay-method" class="form-control" required>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Cheque">Cheque</option>
+                                <option value="Cash">Cash (With Revenue Stamp)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="pay-voucher">Receipt / Voucher Number *</label>
+                            <input type="text" id="pay-voucher" class="form-control" placeholder="e.g. VR-2026-8842" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label style="display: flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer;">
+                                <input type="checkbox" id="pay-stamp" checked>
+                                <span>৳10 Revenue Stamp Acknowledged (রেভিনিউ স্ট্যাম্প যুক্ত ও বুঝিয়া পাইলাম স্বাক্ষরিত)</span>
+                            </label>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="pay-recorded-by">Recorded By Officer</label>
+                            <input type="text" id="pay-recorded-by" class="form-control" value="Section Officer (Accounts)">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-payment')">Cancel</button>
+                    <button type="submit" class="btn btn-warning">Confirm &amp; Disburse Payment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT BILLING RATE -->
+    <div id="modal-rate" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Edit Activity Billing Rate</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-rate')">&times;</button>
+            </div>
+            <form id="form-rate" onsubmit="App.handleSaveRate(event)">
+                <div class="modal-body">
+                    <input type="hidden" id="rate-cat-num">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">Activity Category (Official MBSTU Row)</label>
+                            <input type="text" id="rate-cat-name" class="form-control" readonly style="background: #f1f5f9;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="rate-unit-rate">Base Unit Rate (৳) *</label>
+                            <input type="number" id="rate-unit-rate" class="form-control" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="rate-min-charge">Minimum Charge (৳)</label>
+                            <input type="number" id="rate-min-charge" class="form-control" step="0.01" min="0" value="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-rate')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Rate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Printable Report Overlay (Hidden on screen, populated dynamically before print) -->
+    <div id="print-report-container" class="print-report-container" style="display: none;"></div>
+
+    <!-- Application Script -->
+    <script src="js/app.js"></script>
+</body>
+</html>

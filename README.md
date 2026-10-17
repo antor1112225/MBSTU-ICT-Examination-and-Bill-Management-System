@@ -8,7 +8,7 @@
 - **Saiba Khan** (Collaborator, ID: IT24006 GitHub: [@saibakhan1104-png](https://github.com/saibakhan1104-png))
 - **Samiul** (Collaborator, ID: IT24011, GitHub: [@SAMIUL-01](https://github.com/SAMIUL-01))  
 **Budget:** STRICTLY ZERO FINANCIAL COST (BDT 0.00)  
-**Storage Architecture:** Client-Side `localStorage` with JSON Import/Export  
+**Storage Architecture:** Client-Side `localStorage` with JSON Import/Export   
 
 ---
 

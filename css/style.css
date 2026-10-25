@@ -565,30 +565,33 @@ body {
     background: #ffffff;
     width: 210mm;
     min-height: 297mm;
-    padding: 11mm 14mm;
+    padding: 8mm 12mm;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     color: #000000;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    font-size: 8.6pt;
-    line-height: 1.3;
+    font-family: 'Kalpurush', 'SolaimanLipi', 'Noto Sans Bengali', 'Segoe UI', serif;
+    font-size: 8.2pt;
+    line-height: 1.25;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-sizing: border-box;
 }
 
 .slip-header-block {
     text-align: center;
-    margin-bottom: 7px;
+    margin-bottom: 5px;
 }
 
 .slip-uni-title {
-    font-size: 13pt;
+    font-size: 13.5pt;
     font-weight: 800;
     color: #000000;
+    letter-spacing: 0.3px;
+    font-family: 'Kalpurush', 'SolaimanLipi', 'Noto Sans Bengali', serif;
 }
 
 .slip-sub-title {
-    font-size: 10.2pt;
+    font-size: 10pt;
     font-weight: 700;
     border-bottom: 1.5px solid #000000;
     display: inline-block;
@@ -597,33 +600,35 @@ body {
 }
 
 .slip-instruction-text {
-    font-size: 7.1pt;
-    color: #333333;
-    margin: 3px 0 5px 0;
+    font-size: 6.8pt;
+    color: #222222;
+    margin: 3px 0 4px 0;
     font-style: italic;
+    line-height: 1.2;
 }
 
 .slip-examiner-info-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 5px;
-    font-size: 8.3pt;
+    margin-bottom: 4px;
+    font-size: 8pt;
 }
 
 .slip-examiner-info-table td {
-    padding: 2px 4px;
+    padding: 2px 3px;
+    line-height: 1.25;
 }
 
 .slip-grid-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 7.8pt;
-    margin-bottom: 6px;
+    font-size: 7.4pt;
+    margin-bottom: 5px;
 }
 
 .slip-grid-table th, .slip-grid-table td {
     border: 1px solid #000000;
-    padding: 2.5px 4px;
+    padding: 2px 3px;
     vertical-align: middle;
 }
 
@@ -631,6 +636,8 @@ body {
     background: #f2f2f2;
     font-weight: 700;
     text-align: center;
+    font-size: 7.2pt;
+    line-height: 1.15;
 }
 
 .slip-total-row td {
@@ -639,53 +646,55 @@ body {
 }
 
 .slip-bottom-signatures {
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 .slip-sig-grid {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 14px;
-    padding-top: 20px;
+    margin-bottom: 8px;
+    padding-top: 10px;
 }
 
 .slip-sig-item {
     text-align: center;
-    width: 40%;
+    width: 45%;
 }
 
 .slip-sig-item .line {
     border-top: 1px solid #000000;
     padding-top: 2px;
     font-weight: 700;
-    font-size: 8pt;
+    font-size: 7.8pt;
 }
 
 .slip-sanction-box {
     border: 1px solid #000000;
-    padding: 5px 7px;
-    margin-bottom: 12px;
-    font-size: 8.2pt;
-    line-height: 1.35;
+    padding: 4px 6px;
+    margin-bottom: 8px;
+    font-size: 7.8pt;
+    line-height: 1.3;
 }
 
 .slip-final-office-row {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 10px;
+    margin-top: 6px;
 }
 
 .slip-revenue-stamp {
     border: 1px dashed #000000;
-    width: 24mm;
-    height: 24mm;
+    width: 22mm;
+    height: 22mm;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-size: 7pt;
+    font-size: 6.8pt;
     text-align: center;
     font-weight: 700;
+    line-height: 1.15;
 }
 
 /* --------------------------------------------------------------------------

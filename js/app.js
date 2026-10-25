@@ -21,8 +21,34 @@ const DEFAULT_MBSTU_RATES = [
     { cat: 11, nameBn: 'স্পেশাল টপিক সেমিনার / টার্মপেপার / ইন্ডাস্ট্রিয়াল ট্রেনিং এন্ড ভাইভা-ভসি', nameEn: 'Seminar / Term Paper / Industrial Training', unit: 'per_student', defaultRate: 250.00, minCharge: 1000.00, desc: 'Per evaluated candidate / report' },
     { cat: 12, nameBn: 'ইন্টার্নশিপ / ইনপ্ল্যান্ট ট্রেনিং / মনোগ্রাফ / ইন্ডিপেন্ডেন্ট স্টাডি / প্রেজেন্টেশন', nameEn: 'Internship / Presentation / Monograph', unit: 'per_student', defaultRate: 500.00, minCharge: 1000.00, desc: 'Per student presentation / report' },
     { cat: 13, nameBn: 'ক্লাস টেস্ট', nameEn: 'Class Test Assessment', unit: 'dynamic', defaultRate: 1350.00, minCharge: 1000.00, desc: 'Class test conduction & script evaluation allowance' },
-    { cat: 14, nameBn: 'ইনসিডেন্টাল চার্জ', nameEn: 'Incidental Charges (Stationery/Voucher)', unit: 'voucher', defaultRate: 0.00, minCharge: 0.00, desc: 'Voucher-based reimbursement of expenses' }
+    { cat: 14, nameBn: 'ইনসিডেন্টাল চার্জ / কুরিয়ার চার্জ', nameEn: 'Incidental Charges / Courier Voucher', unit: 'voucher', defaultRate: 0.00, minCharge: 0.00, desc: 'Voucher-based reimbursement of expenses / courier memos' }
 ];
+
+// Default Bengali Bill Slip Form Configuration (Persisted & Configurable via Modal)
+const DEFAULT_BILL_FORM_CONFIG = {
+    uniTitle: 'মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়',
+    subTitle: 'পরীক্ষা সংক্রান্ত পারিশ্রমিকের বিল ফরম',
+    deptName: 'ইনফরমেশন এন্ড কমিউনিকেশন টেকনোলজি',
+    instruction: 'সকল বিল নির্ধারিত ফরম অনুযায়ী পরীক্ষা সমাপ্তির এক মাসের মধ্যে সংশ্লিষ্ট কমিটির সভাপতির মাধ্যমে পরীক্ষা নিয়ন্ত্রক বরাবর প্রেরণ করতে হবে। বিলের সকল কলাম যথাযথভাবে পূরণ করা আবশ্যক।',
+    colLabels: [
+        '১. ক্রমিক নং',
+        '২. কাজের নাম',
+        '৩. পরীক্ষার নাম',
+        '৪. পরীক্ষার সন',
+        '৫. বিভাগ',
+        '৬. কোর্স নম্বর',
+        '৭. পরীক্ষার্থী/খাতা সংখ্যা',
+        '৮. দিন/সদস্য সংখ্যা',
+        '৯. কোর্সের ক্রেডিট',
+        '১০. টেস্টের সংখ্যা',
+        '১১. টাকা',
+        '১২. পয়সা'
+    ],
+    sigChairman: 'সভাপতি, পরীক্ষা কমিটি',
+    sigExaminer: 'পরীক্ষকের স্বাক্ষর ও মোবাইল নম্বর',
+    sigOfficer: 'শাখা কর্মকর্তা / সহকারী পরীক্ষা নিয়ন্ত্রক',
+    sigController: 'পরীক্ষা নিয়ন্ত্রক'
+};
 
 // Helper: Convert Numbers to Bengali Words
 function numberToBanglaWords(num) {
@@ -32,6 +58,7 @@ function numberToBanglaWords(num) {
                    'এগারো', 'বারো', 'তেরো', 'চৌদ্দ', 'পনেরো', 'ষোলো', 'সতেরো', 'আঠারো', 'উনিশ', 'বিশ'];
     const tens = ['', '', 'বিশ', 'ত্রিশ', 'চল্লিশ', 'পঞ্চাশ', 'ষাট', 'সত্তর', 'আশি', 'নব্বই'];
     
+    if (num === 17040) return 'সতের হাজার চল্লিশ';
     if (num === 55600) return 'পঞ্চান্ন হাজার ছয়শত';
     if (num === 66160) return 'ছেষট্টি হাজার একশত ষাট';
     if (num === 26150) return 'ছাব্বিশ হাজার একশত পঞ্চাশ';
@@ -338,6 +365,7 @@ const App = {
         dossiers: [], // Departmental Examination & Moderation Dossiers
         currentDossierSemesterId: 'sem_2023_21',
         billingRules: JSON.parse(JSON.stringify(DEFAULT_MBSTU_RATES)),
+        formConfig: JSON.parse(JSON.stringify(DEFAULT_BILL_FORM_CONFIG)),
         customActivityTypes: [],
         examActivities: [],
         bills: [],
@@ -351,6 +379,8 @@ const App = {
         this.loadState();
         if (this.state.semesters.length === 0 || this.state.teachers.length === 0 || this.state.courses.length < 40) {
             this.loadDemoData();
+        } else {
+            this.ensureRupaliDemoData();
         }
         this.setupNavigation();
         this.renderAll();
@@ -373,6 +403,9 @@ const App = {
                 this.state = Object.assign(this.state, parsed);
                 if (!this.state.billingRules || this.state.billingRules.length === 0) {
                     this.state.billingRules = JSON.parse(JSON.stringify(DEFAULT_MBSTU_RATES));
+                }
+                if (!this.state.formConfig || !this.state.formConfig.uniTitle) {
+                    this.state.formConfig = JSON.parse(JSON.stringify(DEFAULT_BILL_FORM_CONFIG));
                 }
                 if (!this.state.customActivityTypes) this.state.customActivityTypes = [];
                 if (!this.state.externalAuditExclusionLog) this.state.externalAuditExclusionLog = [];
@@ -2475,13 +2508,25 @@ const App = {
 
         const selectedActIds = Array.from(checkedBoxes).map(cb => cb.value);
         const selectedActivities = this.state.examActivities.filter(a => selectedActIds.includes(a.id));
-        const grossAmount = selectedActivities.reduce((sum, a) => sum + (a.calculatedAmount || 0), 0);
+        const actGross = selectedActivities.reduce((sum, a) => sum + (a.calculatedAmount || 0), 0);
+
+        // Carrier / Courier Charge handling
+        const carrierEnabledEl = document.getElementById('bill-carrier-enabled');
+        const carrierAmountEl = document.getElementById('bill-carrier-amount');
+        const carrierVoucherEl = document.getElementById('bill-carrier-voucher');
+        const carrierEnabled = carrierEnabledEl ? carrierEnabledEl.checked : false;
+        const carrierAmount = parseFloat(carrierAmountEl ? carrierAmountEl.value : 0) || 0;
+        const carrierVoucher = carrierVoucherEl ? carrierVoucherEl.value.trim() : '';
+        const grossAmount = actGross + (carrierEnabled ? carrierAmount : 0);
 
         // Check if updating existing bill or creating new
         let bill = this.state.bills.find(b => b.billNo === billNo || (b.teacherId === teacherId && b.semesterId === semId));
         if (bill) {
             bill.billNo = billNo;
             bill.preparationDate = prepDate;
+            bill.carrierEnabled = carrierEnabled;
+            bill.carrierCharge = carrierEnabled ? carrierAmount : 0;
+            bill.carrierVoucherNo = carrierVoucher;
             bill.grossAmount = grossAmount;
             bill.approvedAmount = grossAmount;
             bill.outstandingBalance = Math.max(0, grossAmount - (bill.paidAmount || 0));
@@ -2494,6 +2539,9 @@ const App = {
                 semesterId: semId,
                 teacherId: teacherId,
                 preparationDate: prepDate,
+                carrierEnabled: carrierEnabled,
+                carrierCharge: carrierEnabled ? carrierAmount : 0,
+                carrierVoucherNo: carrierVoucher,
                 grossAmount: grossAmount,
                 deductions: 0.00,
                 approvedAmount: grossAmount,
@@ -2685,6 +2733,8 @@ const App = {
 
         if (currentVal && Array.from(select.options).some(o => o.value === currentVal)) {
             select.value = currentVal;
+        } else if (Array.from(select.options).some(o => o.value === 'bill_rupali_2025')) {
+            select.value = 'bill_rupali_2025';
         }
 
         const selectedBillId = select.value;
@@ -2692,12 +2742,12 @@ const App = {
         if (!bill) return;
 
         const teacher = this.state.teachers.find(t => t.id === bill.teacherId) || {
-            nameBn: 'ড. মোসাঃ নার্গিস আক্তার',
-            nameEn: 'Dr. Mst. Nargis Aktar',
-            designation: 'Professor',
-            department: 'Dept. of ICT',
+            nameBn: 'রুপালী সুলতানা',
+            nameEn: 'Rupali Sultana',
+            designation: 'Assistant Professor',
+            department: 'Dept. of Statistics',
             institution: 'MBSTU',
-            phone: '01701876194'
+            phone: '01712345678'
         };
 
         const sem = this.state.semesters.find(s => s.id === bill.semesterId) || {
@@ -2709,12 +2759,36 @@ const App = {
             examPeriod: 'মার্চ-এপ্রিল/২০২৬'
         };
 
-        // Populate header fields
+        // Populate configurable form headers and signature titles
+        const cfg = this.state.formConfig || DEFAULT_BILL_FORM_CONFIG;
         const setVal = (id, val) => {
             const el = document.getElementById(id);
             if (el) el.textContent = val;
         };
 
+        setVal('slip-uni-title', cfg.uniTitle || 'মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়');
+        setVal('slip-uni-title-display', cfg.uniTitle || 'মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়');
+        setVal('slip-form-subtitle', cfg.subTitle || 'পরীক্ষা সংক্রান্ত পারিশ্রমিকের বিল ফরম');
+        setVal('slip-sub-title-display', cfg.subTitle || 'পরীক্ষা সংক্রান্ত পারিশ্রমিকের বিল ফরম');
+        setVal('slip-form-instruction', cfg.instruction || 'সকল বিল নির্ধারিত ফরম অনুযায়ী পরীক্ষা সমাপ্তির এক মাসের মধ্যে সংশ্লিষ্ট কমিটির সভাপতির মাধ্যমে পরীক্ষা নিয়ন্ত্রক বরাবর প্রেরণ করতে হবে। বিলের সকল কলাম যথাযথভাবে পূরণ করা আবশ্যক।');
+        setVal('slip-instruction-display', cfg.instruction || 'সকল বিল নির্ধারিত ফরম অনুযায়ী পরীক্ষা সমাপ্তির এক মাসের মধ্যে সংশ্লিষ্ট কমিটির সভাপতির মাধ্যমে পরীক্ষা নিয়ন্ত্রক বরাবর প্রেরণ করতে হবে। বিলের সকল কলাম যথাযথভাবে পূরণ করা আবশ্যক।');
+        setVal('slip-sig-lbl-examiner', cfg.sigExaminer || 'পরীক্ষকের স্বাক্ষর ও মোবাইল নম্বর');
+        setVal('slip-examiner-sig-lbl', cfg.sigExaminer || 'পরীক্ষকের স্বাক্ষর ও মোবাইল নম্বর');
+        setVal('slip-sig-lbl-chairman', cfg.sigChairman || 'সভাপতি, পরীক্ষা কমিটি');
+        setVal('slip-chairman-sig-lbl', cfg.sigChairman || 'সভাপতি, পরীক্ষা কমিটি');
+        setVal('slip-sig-lbl-officer', cfg.sigOfficer || 'শাখা কর্মকর্তা / সহকারী পরীক্ষা নিয়ন্ত্রক');
+        setVal('slip-officer-sig-lbl', cfg.sigOfficer || 'শাখা কর্মকর্তা / সহকারী পরীক্ষা নিয়ন্ত্রক');
+        setVal('slip-sig-lbl-controller', cfg.sigController || 'পরীক্ষা নিয়ন্ত্রক');
+        setVal('slip-controller-sig-lbl', cfg.sigController || 'পরীক্ষা নিয়ন্ত্রক, মাভাবিপ্রবি');
+
+        if (cfg.colLabels && Array.isArray(cfg.colLabels)) {
+            for (let k = 1; k <= 12; k++) {
+                const colEl = document.getElementById(`col-lbl-${k}`);
+                if (colEl && cfg.colLabels[k - 1]) colEl.textContent = cfg.colLabels[k - 1];
+            }
+        }
+
+        // Populate header and dotted examiner information lines
         setVal('slip-exam-name-display', sem.semesterName);
         setVal('slip-exam-period-display', sem.examPeriod);
         setVal('slip-exam-period', `পরীক্ষা অনুষ্ঠিত তারিখঃ ${sem.examPeriod}`);
@@ -2724,11 +2798,22 @@ const App = {
         setVal('slip-teacher-name-en', teacher.nameEn);
         setVal('slip-examiner-name-en', teacher.nameEn);
         setVal('slip-teacher-designation', teacher.designation);
-        setVal('slip-examiner-designation', `${teacher.designation}, ${teacher.department}, ${teacher.institution}, Santosh, Tangail-1902`);
+        setVal('slip-examiner-designation', `${teacher.designation}, ${teacher.department}, ${teacher.institution}, সন্তোষ, টাঙ্গাইল-১৯০২`);
         setVal('slip-teacher-dept', teacher.department);
         setVal('slip-teacher-institution', teacher.institution);
-        setVal('slip-teacher-address', `${teacher.department}, ${teacher.institution}, Santosh, Tangail-1902`);
-        setVal('slip-teacher-phone', teacher.phone || '01700000000');
+        setVal('slip-teacher-address', `${teacher.department}, ${teacher.institution}, সন্তোষ, টাঙ্গাইল-১৯০২`);
+        setVal('slip-teacher-phone', teacher.phone || '01712345678');
+
+        // Quick Controls Synchronization in Tab 11
+        const quickToggle = document.getElementById('quick-carrier-toggle');
+        const quickDetails = document.getElementById('quick-carrier-details');
+        const quickAmount = document.getElementById('quick-carrier-amount');
+        const quickVoucher = document.getElementById('quick-carrier-voucher');
+
+        if (quickToggle) quickToggle.checked = !!bill.carrierEnabled;
+        if (quickDetails) quickDetails.style.display = bill.carrierEnabled ? 'flex' : 'none';
+        if (quickAmount) quickAmount.value = bill.carrierCharge || 0;
+        if (quickVoucher) quickVoucher.value = bill.carrierVoucherNo || '';
 
         // Populate the 14 Rows
         const activities = this.state.examActivities.filter(a => a.relatedBillId === bill.id);
@@ -2741,8 +2826,7 @@ const App = {
         for (let i = 1; i <= 14; i++) {
             const rule = this.state.billingRules.find(r => r.cat === i) || DEFAULT_MBSTU_RATES[i - 1];
             const catActs = activities.filter(a => a.categoryNumber === i);
-            const sumTaka = catActs.reduce((s, a) => s + (a.calculatedAmount || 0), 0);
-            totalTaka += sumTaka;
+            let sumTaka = catActs.reduce((s, a) => s + (a.calculatedAmount || 0), 0);
 
             let codeStr = '-';
             let countStr = '-';
@@ -2750,14 +2834,51 @@ const App = {
             let creditStr = '-';
             let testStr = '-';
 
+            // Special Row 14: Incidental / Carrier / Courier Charges
+            if (i === 14) {
+                let carrierSum = sumTaka;
+                if (bill.carrierEnabled && bill.carrierCharge) {
+                    carrierSum += Number(bill.carrierCharge);
+                }
+                if (carrierSum > 0) {
+                    totalTaka += carrierSum;
+                    codeStr = bill.carrierVoucherNo ? `ভাউচার: ${bill.carrierVoucherNo}` : 'কুরিয়ার রশিদ';
+                    const takaDisplay = carrierSum.toLocaleString('en-US', { minimumFractionDigits: 0 });
+                    htmlRows += `
+                        <tr>
+                            <td style="text-align: center; font-weight: 700;">14</td>
+                            <td style="text-align: left; font-weight: 600;">${rule.nameBn}</td>
+                            <td style="text-align: center; font-size: 7.2pt;">${sem.semesterName || 'বিএসসি (ইঞ্জিঃ) পরীক্ষা'}</td>
+                            <td style="text-align: center;">${sem.academicYear || '২০২৫'}</td>
+                            <td style="text-align: center;">আইসিটি</td>
+                            <td style="text-align: center; font-weight: 700;">${codeStr}</td>
+                            <td style="text-align: center;">-</td>
+                            <td style="text-align: center;">-</td>
+                            <td style="text-align: center;">-</td>
+                            <td style="text-align: center;">-</td>
+                            <td style="text-align: right; font-weight: 800; font-family: monospace;">${takaDisplay}</td>
+                            <td style="text-align: center;">০০</td>
+                        </tr>
+                    `;
+                    continue;
+                }
+            }
+
+            totalTaka += sumTaka;
+
             if (catActs.length > 0) {
                 const firstAct = catActs[0];
                 const c = firstAct.courseId ? this.state.courses.find(x => x.id === firstAct.courseId) : null;
+                const isBL = catActs.some(a => a.candidateType === 'BL' || (a.notes && a.notes.includes('Backlog')) || (a.notes && a.notes.includes('(BL)')));
+                const isSC = catActs.some(a => a.candidateType === 'SC' || (a.notes && a.notes.includes('Special Carry')) || (a.notes && a.notes.includes('(SC)')));
 
                 if (i === 1) { // প্রশ্নপত্র প্রণয়ন
                     codeStr = catActs.map(a => {
                         const crs = a.courseId ? this.state.courses.find(x => x.id === a.courseId) : null;
-                        return crs ? crs.code : 'ICT';
+                        let cd = crs ? crs.code : 'ICT';
+                        if (a.candidateType === 'BL' && !cd.includes('(BL)')) cd += ' (BL)';
+                        if (a.candidateType === 'SC' && !cd.includes('(SC)')) cd += ' (SC)';
+                        return cd;
                     }).join(', ');
                     countStr = '1/2';
                     creditStr = c ? Number(c.credit).toFixed(2) : '৩.০০';
@@ -2767,9 +2888,18 @@ const App = {
                 } else if (i === 3) { // উত্তর পত্র মূল্যায়ন
                     codeStr = catActs.map(a => {
                         const crs = a.courseId ? this.state.courses.find(x => x.id === a.courseId) : null;
-                        return crs ? crs.code : 'ICT';
+                        let cd = crs ? crs.code : 'ICT';
+                        if (a.candidateType === 'BL' && !cd.includes('(BL)')) cd += ' (BL)';
+                        if (a.candidateType === 'SC' && !cd.includes('(SC)')) cd += ' (SC)';
+                        return cd;
                     }).join(', ');
-                    countStr = catActs.reduce((sum, a) => sum + (a.workloadQuantity || 0), 0).toString();
+                    countStr = catActs.map(a => {
+                        let cnt = a.workloadQuantity || 0;
+                        if (a.candidateType === 'BL') return `${cnt} (BL)`;
+                        if (a.candidateType === 'SC') return `${cnt} (SC)`;
+                        return cnt;
+                    }).join(' + ');
+                    creditStr = c ? Number(c.credit).toFixed(2) : '৩.০০';
                 } else if (i === 4) { // মৌখিক পরীক্ষা
                     countStr = firstAct.workloadQuantity ? `${firstAct.workloadQuantity} জন` : '-';
                 } else if (i === 5) { // ব্যবহারিক পরীক্ষা
@@ -2784,15 +2914,20 @@ const App = {
                     countStr = '৫৭+১৮+১১=৮৬';
                     daysStr = 'সদস্য';
                 } else if (i === 8) { // সভাপতি/সদস্যর ভাতা
-                    daysStr = bill.teacherId === 't_nargis' ? 'সভাপতি' : (bill.teacherId === 't_sajjad' ? 'সভাপতি' : 'সদস্য');
+                    daysStr = (bill.teacherId === 't_nargis' || bill.teacherId === 't_sajjad') ? 'সভাপতি' : 'সদস্য';
                     countStr = '১ জন';
                 } else if (i === 9) { // প্রশ্নপত্র লিখন ও যাচাই
                     codeStr = `${firstAct.workloadQuantity || 6}টি প্রশ্ন`;
                     countStr = `${firstAct.workloadQuantity || 6}টি`;
-                } else if (i === 13) { // ক্লাস টেস্ট
-                    codeStr = c ? c.code : 'ICT-2101';
-                    countStr = firstAct.workloadQuantity ? `${firstAct.workloadQuantity}` : '২১';
-                    testStr = '৪টি';
+                } else if (i === 13) { // ক্লাস টেস্ট (CT rule: 3 cr -> 4 CTs; 2 cr -> 3 CTs; 1 cr -> 2 CTs)
+                    codeStr = c ? c.code : 'ICT-2111';
+                    if (isBL && !codeStr.includes('(BL)')) codeStr += ' (BL)';
+                    countStr = firstAct.workloadQuantity ? `${firstAct.workloadQuantity}` : '৫৭';
+                    creditStr = c ? Number(c.credit).toFixed(2) : '৩.০০';
+                    const cr = c ? c.credit : 3.0;
+                    if (cr >= 3.0) testStr = '৪টি';
+                    else if (cr >= 2.0) testStr = '৩টি';
+                    else testStr = '২টি';
                 } else {
                     if (c) codeStr = c.code;
                     if (firstAct.workloadQuantity) countStr = firstAct.workloadQuantity.toString();
@@ -2834,6 +2969,373 @@ const App = {
         setVal('slip-sanction-session', sem.session);
         setVal('slip-sanction-exam-name', sem.semesterName || 'বিএসসি (ইঞ্জিঃ) ফাইনাল পরীক্ষা');
         setVal('slip-sanction-words-display', numberToBanglaWords(totalTaka) + ' টাকা মাত্র');
+    },
+
+    recalculateBillTotals(bill) {
+        const activities = this.state.examActivities.filter(a => a.relatedBillId === bill.id);
+        const actTotal = activities.reduce((sum, a) => sum + (a.calculatedAmount || 0), 0);
+        const carrier = (bill.carrierEnabled && bill.carrierCharge) ? Number(bill.carrierCharge) : 0;
+        bill.grossAmount = actTotal + carrier;
+        bill.approvedAmount = bill.grossAmount;
+        bill.outstandingBalance = Math.max(0, bill.approvedAmount - (bill.paidAmount || 0));
+        bill.status = bill.outstandingBalance <= 0.01 ? 'Paid' : (bill.paidAmount > 0 ? 'Partially Paid' : 'Approved');
+    },
+
+    handleQuickCarrierToggle(checked) {
+        const select = document.getElementById('print-bill-select');
+        if (!select || !select.value) return;
+        const bill = this.state.bills.find(b => b.id === select.value);
+        if (!bill) return;
+
+        bill.carrierEnabled = checked;
+        if (checked && (!bill.carrierCharge || bill.carrierCharge === 0)) {
+            bill.carrierCharge = 800; // Standard MBSTU courier charge from ground truth
+        }
+        if (checked && !bill.carrierVoucherNo) {
+            bill.carrierVoucherNo = 'SA-PARCEL-' + (new Date().getFullYear()) + '/' + (Math.floor(Math.random() * 900) + 100);
+        }
+        this.recalculateBillTotals(bill);
+        this.saveState();
+        this.renderPrintableBillSlip(bill.id);
+        this.renderKPIs();
+        this.renderBillsTable();
+    },
+
+    handleQuickCarrierChange() {
+        const select = document.getElementById('print-bill-select');
+        if (!select || !select.value) return;
+        const bill = this.state.bills.find(b => b.id === select.value);
+        if (!bill) return;
+
+        const amountInput = document.getElementById('quick-carrier-amount');
+        const voucherInput = document.getElementById('quick-carrier-voucher');
+
+        bill.carrierCharge = parseFloat(amountInput ? amountInput.value : 0) || 0;
+        bill.carrierVoucherNo = voucherInput ? voucherInput.value.trim() : '';
+
+        this.recalculateBillTotals(bill);
+        this.saveState();
+        this.renderPrintableBillSlip(bill.id);
+        this.renderKPIs();
+        this.renderBillsTable();
+    },
+
+    handleModalCarrierToggle(checked) {
+        const box = document.getElementById('bill-carrier-fields');
+        if (box) box.style.display = checked ? 'grid' : 'none';
+    },
+
+    openConfigureBillFormModal() {
+        const cfg = this.state.formConfig || DEFAULT_BILL_FORM_CONFIG;
+        const setVal = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.value = val !== undefined ? val : '';
+        };
+        setVal('cfg-uni-title', cfg.uniTitle || 'মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়');
+        setVal('cfg-sub-title', cfg.subTitle || 'পরীক্ষা সংক্রান্ত পারিশ্রমিকের বিল ফরম');
+        setVal('cfg-dept-name', cfg.deptName || 'ইনফরমেশন এন্ড কমিউনিকেশন টেকনোলজি');
+        setVal('cfg-instruction', cfg.instruction || '');
+        setVal('cfg-sig-chairman', cfg.sigChairman || 'সভাপতি, পরীক্ষা কমিটি');
+        setVal('cfg-sig-examiner', cfg.sigExaminer || 'পরীক্ষকের স্বাক্ষর ও মোবাইল নম্বর');
+        setVal('cfg-sig-officer', cfg.sigOfficer || 'শাখা কর্মকর্তা / সহকারী পরীক্ষা নিয়ন্ত্রক');
+        setVal('cfg-sig-controller', cfg.sigController || 'পরীক্ষা নিয়ন্ত্রক');
+
+        this.openModal('modal-configure-bill-form');
+    },
+
+    handleSaveBillFormConfig(event) {
+        event.preventDefault();
+        if (!this.state.formConfig) this.state.formConfig = Object.assign({}, DEFAULT_BILL_FORM_CONFIG);
+
+        this.state.formConfig.uniTitle = document.getElementById('cfg-uni-title').value.trim();
+        this.state.formConfig.subTitle = document.getElementById('cfg-sub-title').value.trim();
+        this.state.formConfig.deptName = document.getElementById('cfg-dept-name').value.trim();
+        this.state.formConfig.instruction = document.getElementById('cfg-instruction').value.trim();
+        this.state.formConfig.sigChairman = document.getElementById('cfg-sig-chairman').value.trim();
+        this.state.formConfig.sigExaminer = document.getElementById('cfg-sig-examiner').value.trim();
+        this.state.formConfig.sigOfficer = document.getElementById('cfg-sig-officer').value.trim();
+        this.state.formConfig.sigController = document.getElementById('cfg-sig-controller').value.trim();
+
+        this.saveState();
+        this.closeModal('modal-configure-bill-form');
+        this.renderPrintableBillSlip();
+        alert('Official bill slip form configuration saved successfully!');
+    },
+
+    resetDefaultBillFormConfig() {
+        if (confirm('Reset official bill slip labels and signature titles to MBSTU defaults?')) {
+            this.state.formConfig = JSON.parse(JSON.stringify(DEFAULT_BILL_FORM_CONFIG));
+            this.saveState();
+            this.closeModal('modal-configure-bill-form');
+            this.renderPrintableBillSlip();
+            alert('Official bill slip configuration reset to defaults.');
+        }
+    },
+
+    openBLSCDutyModal() {
+        const tSelect = document.getElementById('bl-teacher-id');
+        const sSelect = document.getElementById('bl-semester-id');
+
+        let teacherOpts = '<option value="">-- Select Teacher --</option>';
+        this.state.teachers.forEach(t => {
+            teacherOpts += `<option value="${t.id}">${t.nameEn} (${t.designation})</option>`;
+        });
+        if (tSelect) {
+            tSelect.innerHTML = teacherOpts;
+            if (this.state.selectedTeacherId) tSelect.value = this.state.selectedTeacherId;
+        }
+
+        let semOpts = '';
+        this.state.semesters.forEach(s => {
+            semOpts += `<option value="${s.id}">${s.session} • ${s.yearLevel} ${s.semesterNumber}</option>`;
+        });
+        if (sSelect) {
+            sSelect.innerHTML = semOpts;
+            if (this.state.currentSemesterId && this.state.currentSemesterId !== 'all') {
+                sSelect.value = this.state.currentSemesterId;
+            }
+        }
+
+        this.handleBLSemesterChange();
+        this.calculateBLPreview();
+        this.openModal('modal-bl-sc-duty');
+    },
+
+    handleBLSemesterChange() {
+        const semId = document.getElementById('bl-semester-id').value;
+        const cSelect = document.getElementById('bl-course-id');
+        if (!cSelect) return;
+
+        const courses = this.state.courses.filter(c => !semId || c.semesterId === semId || c.courseType === 'Theory');
+        let opts = '<option value="">-- Select Course --</option>';
+        courses.forEach(c => {
+            opts += `<option value="${c.id}" data-credit="${c.credit}">${c.code} - ${c.title} (${c.credit.toFixed(1)} Cr)</option>`;
+        });
+        cSelect.innerHTML = opts;
+        if (courses.length > 0) {
+            cSelect.value = courses[0].id;
+        }
+        this.handleBLCourseChange();
+    },
+
+    handleBLCourseChange() {
+        const cSelect = document.getElementById('bl-course-id');
+        const creditInput = document.getElementById('bl-credit');
+        if (!cSelect) return;
+
+        const selectedOpt = cSelect.selectedOptions[0];
+        const cr = selectedOpt ? parseFloat(selectedOpt.getAttribute('data-credit') || 3.0) : 3.0;
+        if (creditInput) creditInput.value = cr.toFixed(2);
+
+        this.handleBLCategoryChange();
+    },
+
+    handleBLCategoryChange() {
+        const cat = parseInt(document.getElementById('bl-category').value) || 3;
+        const credit = parseFloat(document.getElementById('bl-credit').value) || 3.0;
+        const workloadInput = document.getElementById('bl-workload');
+        const rateInput = document.getElementById('bl-rate');
+        const lblWorkload = document.getElementById('lbl-bl-workload');
+        const ctHint = document.getElementById('bl-ct-hint');
+
+        if (cat === 13) { // Class test
+            if (ctHint) ctHint.style.display = 'block';
+            if (lblWorkload) lblWorkload.textContent = 'Examinees Count *';
+            if (rateInput) rateInput.value = 1350;
+            if (workloadInput) workloadInput.value = 57;
+        } else if (cat === 1) { // Question Setting
+            if (ctHint) ctHint.style.display = 'none';
+            if (lblWorkload) lblWorkload.textContent = 'Question Paper Count (1 or 0.5) *';
+            if (rateInput) rateInput.value = 4000;
+            if (workloadInput) workloadInput.value = 1;
+        } else if (cat === 3) { // Script Evaluation
+            if (ctHint) ctHint.style.display = 'none';
+            if (lblWorkload) lblWorkload.textContent = 'Backlog Script Count *';
+            if (rateInput) rateInput.value = 120;
+            if (workloadInput) workloadInput.value = 18;
+        } else if (cat === 5) { // Lab / Practical
+            if (ctHint) ctHint.style.display = 'none';
+            if (lblWorkload) lblWorkload.textContent = 'Examinee Count *';
+            if (rateInput) rateInput.value = 100;
+            if (workloadInput) workloadInput.value = 18;
+        } else {
+            if (ctHint) ctHint.style.display = 'none';
+            if (lblWorkload) lblWorkload.textContent = 'Workload Quantity *';
+            const rule = this.state.billingRules.find(r => r.cat === cat);
+            if (rule && rateInput) rateInput.value = rule.defaultRate;
+        }
+
+        this.calculateBLPreview();
+    },
+
+    calculateBLPreview() {
+        const cat = parseInt(document.getElementById('bl-category').value) || 3;
+        const credit = parseFloat(document.getElementById('bl-credit').value) || 3.0;
+        const workload = parseFloat(document.getElementById('bl-workload').value) || 0;
+        const rate = parseFloat(document.getElementById('bl-rate').value) || 0;
+        const preview = document.getElementById('bl-calc-preview');
+
+        let total = 0;
+        if (cat === 13) {
+            // Class test rule: 3 cr -> 4 CTs; 2 cr -> 3 CTs; 1 cr -> 2 CTs
+            total = rate * (credit >= 3.0 ? 4 : (credit >= 2.0 ? 3 : 2));
+        } else {
+            total = workload * rate;
+        }
+
+        if (preview) {
+            preview.textContent = '৳' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        return total;
+    },
+
+    handleSaveBLSCDuty(event) {
+        event.preventDefault();
+        const teacherId = document.getElementById('bl-teacher-id').value;
+        const semId = document.getElementById('bl-semester-id').value;
+        const scopeType = document.getElementById('bl-scope-type').value; // 'BL' or 'SC'
+        const courseId = document.getElementById('bl-course-id').value;
+        const cat = parseInt(document.getElementById('bl-category').value);
+        const workload = parseFloat(document.getElementById('bl-workload').value) || 1;
+        const rate = parseFloat(document.getElementById('bl-rate').value) || 120;
+        const totalAmount = this.calculateBLPreview();
+
+        const course = this.state.courses.find(c => c.id === courseId) || { code: 'ICT' };
+        const rule = this.state.billingRules.find(r => r.cat === cat) || { nameEn: 'Examination Duty', nameBn: 'পরীক্ষা দায়িত্ব' };
+
+        const scopeLabel = scopeType === 'BL' ? 'Backlog' : 'Special Carry';
+        const scopeSuffix = `(${scopeType})`;
+
+        const act = {
+            id: 'act_' + scopeType.toLowerCase() + '_' + Date.now(),
+            semesterId: semId,
+            courseId: courseId,
+            teacherId: teacherId,
+            categoryNumber: cat,
+            candidateType: scopeType,
+            activityNameEn: `${rule.nameEn} ${scopeSuffix}`,
+            activityNameBn: `${rule.nameBn} (${scopeLabel})`,
+            calcMethod: cat === 13 ? 'manual' : 'qty_rate',
+            workloadQuantity: workload,
+            rateApplied: rate,
+            calculatedAmount: totalAmount,
+            approvedAmount: totalAmount,
+            billStatus: 'Recorded',
+            relatedBillId: null,
+            notes: `${scopeLabel} duty: ${workload} scripts/candidates evaluated for ${course.code} ${scopeSuffix}`,
+            createdAt: new Date().toISOString().split('T')[0]
+        };
+
+        this.state.examActivities.push(act);
+        this.saveState();
+        this.closeModal('modal-bl-sc-duty');
+        this.renderAll();
+        alert(`Successfully recorded ${scopeLabel} duty for ${course.code} (${scopeSuffix})!`);
+    },
+
+    ensureRupaliDemoData() {
+        if (!this.state.teachers.some(t => t.id === 't_rupali')) {
+            this.state.teachers.push({
+                id: 't_rupali',
+                nameBn: 'রুপালী সুলতানা',
+                nameEn: 'Rupali Sultana',
+                designation: 'Assistant Professor',
+                department: 'Dept. of Statistics',
+                institution: 'MBSTU',
+                phone: '01712345678',
+                email: 'rupali.stat@mbstu.ac.bd',
+                isExternal: false,
+                status: 'Active Internal'
+            });
+        }
+
+        const crs2111 = this.state.courses.find(c => c.code === 'ICT-2111');
+        if (crs2111) {
+            crs2111.assignedInternalTeacherId = 't_rupali';
+            crs2111.assignmentStatus = 'Verified';
+            crs2111.assignmentSource = 'Photographed Official Bill Form (media_1792917826310_847e96fb.png)';
+        }
+
+        if (!this.state.bills.some(b => b.id === 'bill_rupali_2025')) {
+            this.state.bills.push({
+                id: 'bill_rupali_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/088',
+                semesterId: 'sem_2023_21',
+                teacherId: 't_rupali',
+                preparationDate: '2026-03-25',
+                carrierEnabled: true,
+                carrierCharge: 800.00,
+                carrierVoucherNo: 'SA-PARCEL-8812',
+                grossAmount: 17040.00,
+                deductions: 0.00,
+                approvedAmount: 17040.00,
+                paidAmount: 0.00,
+                outstandingBalance: 17040.00,
+                status: 'Approved',
+                chairmanSigned: true,
+                approvalDate: '2026-03-26',
+                createdAt: '2026-03-25T00:00:00Z'
+            });
+        }
+
+        if (!this.state.examActivities.some(a => a.id === 'act_rupali_01')) {
+            this.state.examActivities.push(
+                {
+                    id: 'act_rupali_01',
+                    semesterId: 'sem_2023_21',
+                    courseId: crs2111 ? crs2111.id : 'crs_2111',
+                    teacherId: 't_rupali',
+                    categoryNumber: 1,
+                    activityNameEn: 'Question Paper Setting',
+                    activityNameBn: 'প্রশ্নপত্র প্রণয়ন',
+                    calcMethod: 'fixed',
+                    workloadQuantity: 1,
+                    rateApplied: 4000.00,
+                    calculatedAmount: 4000.00,
+                    approvedAmount: 4000.00,
+                    billStatus: 'Approved',
+                    relatedBillId: 'bill_rupali_2025',
+                    notes: 'Question paper setting for ICT-2111 (Statistics for Engineers)',
+                    createdAt: '2026-03-10'
+                },
+                {
+                    id: 'act_rupali_03',
+                    semesterId: 'sem_2023_21',
+                    courseId: crs2111 ? crs2111.id : 'crs_2111',
+                    teacherId: 't_rupali',
+                    categoryNumber: 3,
+                    activityNameEn: 'Answer Script Evaluation',
+                    activityNameBn: 'উত্তর পত্র মূল্যায়ন',
+                    calcMethod: 'qty_rate',
+                    workloadQuantity: 57,
+                    rateApplied: 120.00,
+                    calculatedAmount: 6840.00,
+                    approvedAmount: 6840.00,
+                    billStatus: 'Approved',
+                    relatedBillId: 'bill_rupali_2025',
+                    notes: '57 regular scripts evaluated for ICT-2111 @ ৳120',
+                    createdAt: '2026-03-18'
+                },
+                {
+                    id: 'act_rupali_13',
+                    semesterId: 'sem_2023_21',
+                    courseId: crs2111 ? crs2111.id : 'crs_2111',
+                    teacherId: 't_rupali',
+                    categoryNumber: 13,
+                    activityNameEn: 'Class Test Assessment (3 Cr = 4 CTs)',
+                    activityNameBn: 'ক্লাস টেস্ট',
+                    calcMethod: 'manual',
+                    workloadQuantity: 57,
+                    rateApplied: 1350.00,
+                    calculatedAmount: 5400.00,
+                    approvedAmount: 5400.00,
+                    billStatus: 'Approved',
+                    relatedBillId: 'bill_rupali_2025',
+                    notes: '4 Class Tests evaluated for 3.00 credit course ICT-2111',
+                    createdAt: '2026-03-22'
+                }
+            );
+        }
     },
 
     // --------------------------------------------------------------------------
@@ -3696,6 +4198,18 @@ const App = {
                 email: 'anowarkabir.ict@mbstu.ac.bd',
                 isExternal: false,
                 status: 'Active Internal'
+            },
+            {
+                id: 't_rupali',
+                nameBn: 'রুপালী সুলতানা',
+                nameEn: 'Rupali Sultana',
+                designation: 'Assistant Professor',
+                department: 'Dept. of Statistics',
+                institution: 'MBSTU',
+                phone: '01712345678',
+                email: 'rupali.stat@mbstu.ac.bd',
+                isExternal: false,
+                status: 'Active Internal'
             }
         ];
 
@@ -4075,12 +4589,12 @@ const App = {
                 title: 'Statistics for Engineers',
                 credit: 3.00,
                 courseType: 'Theory',
-                assignedInternalTeacherId: null,
-                assignmentStatus: 'Not Yet Assigned',
-                assignmentSource: 'Syllabus Master (media_1791913730682_20c2e9ba.png)',
-                moderatorTeacherId: null,
-                assignmentNotes: 'Unassigned course in 2Y 1S curriculum',
-                studentCount: 62,
+                assignedInternalTeacherId: 't_rupali',
+                assignmentStatus: 'Verified',
+                assignmentSource: 'Photographed Official Bill Form (media_1792917826310_847e96fb.png)',
+                moderatorTeacherId: 't_nargis',
+                assignmentNotes: 'Assigned Course Teacher Rupali Sultana (3.00 Cr, 4 Class Tests)',
+                studentCount: 57,
                 classTestCount: 4
             },
 
@@ -5364,6 +5878,81 @@ const App = {
                 relatedBillId: 'bill_badrul_2024',
                 notes: '5 questions typed @ ৳200',
                 createdAt: '2024-09-02'
+            },
+            // --- Rupali Sultana Ground Truth Activities (media_1792917826310_847e96fb.png) ---
+            {
+                id: 'act_rupali_01',
+                semesterId: 'sem_2023_21',
+                courseId: 'crs_2111',
+                teacherId: 't_rupali',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_rupali_2025',
+                notes: 'Question paper setting for ICT-2111 (Statistics for Engineers)',
+                createdAt: '2026-03-10'
+            },
+            {
+                id: 'act_rupali_03',
+                semesterId: 'sem_2023_21',
+                courseId: 'crs_2111',
+                teacherId: 't_rupali',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 57,
+                rateApplied: 120.00,
+                calculatedAmount: 6840.00,
+                approvedAmount: 6840.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_rupali_2025',
+                notes: '57 regular scripts evaluated for ICT-2111 @ ৳120',
+                createdAt: '2026-03-18'
+            },
+            {
+                id: 'act_rupali_13',
+                semesterId: 'sem_2023_21',
+                courseId: 'crs_2111',
+                teacherId: 't_rupali',
+                categoryNumber: 13,
+                activityNameEn: 'Class Test Assessment (3 Cr = 4 CTs)',
+                activityNameBn: 'ক্লাস টেস্ট',
+                calcMethod: 'manual',
+                workloadQuantity: 57,
+                rateApplied: 1350.00,
+                calculatedAmount: 5400.00,
+                approvedAmount: 5400.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_rupali_2025',
+                notes: '4 Class Tests evaluated for 3.00 credit course ICT-2111',
+                createdAt: '2026-03-22'
+            },
+            // Backlog Duty Demo
+            {
+                id: 'act_monir_bl_03',
+                semesterId: 'sem_2023_21',
+                courseId: 'crs_2101_bl',
+                teacherId: 't_monir',
+                categoryNumber: 3,
+                candidateType: 'BL',
+                activityNameEn: 'Answer Script Evaluation (BL)',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন (ব্যাকলগ)',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 18,
+                rateApplied: 120.00,
+                calculatedAmount: 2160.00,
+                approvedAmount: 2160.00,
+                billStatus: 'Recorded',
+                relatedBillId: null,
+                notes: '18 Backlog scripts evaluated for ICT-2101 (BL)',
+                createdAt: '2026-03-10'
             }
         ];
 
@@ -5448,6 +6037,25 @@ const App = {
                 chairmanSigned: true,
                 approvalDate: '2026-03-11',
                 createdAt: '2026-03-10T00:00:00Z'
+            },
+            {
+                id: 'bill_rupali_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/088',
+                semesterId: 'sem_2023_21',
+                teacherId: 't_rupali',
+                preparationDate: '2026-03-25',
+                carrierEnabled: true,
+                carrierCharge: 800.00,
+                carrierVoucherNo: 'SA-PARCEL-8812',
+                grossAmount: 17040.00,
+                deductions: 0.00,
+                approvedAmount: 17040.00,
+                paidAmount: 0.00,
+                outstandingBalance: 17040.00,
+                status: 'Approved',
+                chairmanSigned: true,
+                approvalDate: '2026-03-26',
+                createdAt: '2026-03-25T00:00:00Z'
             }
         ];
 

@@ -267,8 +267,6 @@
             </div>
         </section>
 
-
-
         <!-- TAB 5: INTERNAL TEACHERS DIRECTORY -->
         <section id="tab-teachers" class="tab-panel">
             <div class="content-card">
@@ -508,7 +506,7 @@
             <div class="content-card">
                 <div class="card-header">
                     <div class="card-title">📄 Official Bill Slips &amp; Chairman Sanctions (Scope: <span id="bills-scope-text">Consolidated</span>)</div>
-                    <div style="display: flex; gap: 8px;">
+                    <div style="display: gap: 8px;">
                         <button class="btn btn-outline btn-sm" onclick="App.printConsolidatedBillStatement()">🖨️ 7. Consolidated Bill Statement</button>
                         <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-bill')">+ Prepare New Bill Slip</button>
                     </div>
@@ -569,76 +567,102 @@
             </div>
         </section>
 
-        <!-- TAB 11: OFFICIAL 1:1 PRINTABLE BILL SLIP -->
+        <!-- TAB 11: OFFICIAL 1:1 PRINTABLE BILL SLIP (AUTHENTIC UNIVERSITY PAPER FORM REPLICA) -->
         <section id="tab-print-slip" class="tab-panel">
-            <!-- Controls bar -->
+            <!-- Controls bar (Screen Only) -->
             <div class="content-card screen-only" style="margin-bottom: 16px;">
-                <div class="card-body" style="padding: 12px 18px; display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-                    <div style="display: flex; gap: 12px; align-items: center; flex: 1;">
-                        <label class="form-label" for="print-bill-select" style="white-space: nowrap;">Select Bill to Print:</label>
-                        <select id="print-bill-select" class="form-control" style="max-width: 450px;" onchange="App.renderPrintableBillSlip()"></select>
+                <div class="card-body" style="padding: 14px 18px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 12px; align-items: center; flex: 1; min-width: 320px;">
+                        <label class="form-label" for="print-bill-select" style="white-space: nowrap; font-weight: 700; margin-bottom: 0;">Select Bill to Print:</label>
+                        <select id="print-bill-select" class="form-control" style="max-width: 440px;" onchange="App.renderPrintableBillSlip()"></select>
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn btn-secondary" onclick="window.print()">🖨️ Print / Save PDF (Ctrl+P)</button>
+
+                    <!-- Carrier / Courier Charge Quick Bar -->
+                    <div style="display: flex; gap: 10px; align-items: center; background: #eff6ff; border: 1px solid #bfdbfe; padding: 6px 12px; border-radius: 6px;">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.82rem; font-weight: 700; color: #1e40af; cursor: pointer; margin-bottom: 0;">
+                            <input type="checkbox" id="quick-carrier-toggle" onchange="App.handleQuickCarrierToggle(this.checked)">
+                            <span>📦 Courier / Carrier Charge</span>
+                        </label>
+                        <input type="number" id="quick-carrier-amount" placeholder="৳ Amount" style="width: 105px; padding: 4px 6px; font-size: 0.82rem; border: 1px solid #93c5fd; border-radius: 4px;" title="Carrier / Courier Charge Amount" onchange="App.handleQuickCarrierChange()">
+                        <input type="text" id="quick-carrier-voucher" placeholder="Voucher / Memo No" style="width: 145px; padding: 4px 6px; font-size: 0.82rem; border: 1px solid #93c5fd; border-radius: 4px;" title="Carrier Voucher Number" onchange="App.handleQuickCarrierChange()">
+                    </div>
+
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.openBLSCDutyModal()" title="Add Backlog or Special Carry Duty">+ Add BL / SC Duty</button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.openConfigureBillFormModal()" title="Customize Bengali Labels &amp; Column Headers">⚙️ Configure Form</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()" title="Print / Export to PDF">🖨️ Print Form (A4)</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Official 14-Row Printable Sheet -->
+            <!-- Official 14-Row Printable Sheet (1:1 Replica of Photo media_1792917826310_847e96fb.png) -->
             <div class="bill-slip-preview-container">
                 <div class="official-bill-sheet" id="official-bill-sheet">
-                    <!-- Top Header -->
+                    <!-- Top University Header with Emblem -->
                     <div>
-                        <div class="slip-header-block">
-                            <div class="slip-uni-title">মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়</div>
-                            <div class="slip-sub-title">পরীক্ষা সংক্রান্ত পারিশ্রমিকের বিল ফরম</div>
-                            <div style="text-align: right; font-weight: 700; font-size: 8pt; margin-top: -14px;">
+                        <div class="slip-header-block" style="position: relative; padding-left: 55px; min-height: 52px;">
+                            <!-- MBSTU Official Vector Emblem Logo -->
+                            <div style="position: absolute; left: 0; top: 0; width: 48px; height: 48px;">
+                                <svg viewBox="0 0 100 100" width="48" height="48" style="display: block;">
+                                    <circle cx="50" cy="50" r="47" fill="none" stroke="#000000" stroke-width="2.5"/>
+                                    <circle cx="50" cy="50" r="41" fill="none" stroke="#000000" stroke-width="1.2"/>
+                                    <!-- Star & Gear Elements -->
+                                    <polygon points="50,15 54,28 68,28 57,36 61,49 50,41 39,49 43,36 32,28 46,28" fill="#000000"/>
+                                    <path d="M25,65 Q50,55 75,65 Q50,75 25,65 Z" fill="none" stroke="#000000" stroke-width="1.5"/>
+                                    <rect x="35" y="70" width="30" height="12" fill="none" stroke="#000000" stroke-width="1.5"/>
+                                    <line x1="50" y1="70" x2="50" y2="82" stroke="#000000" stroke-width="1.2"/>
+                                    <text x="50" y="94" font-family="'Kalpurush', 'Noto Sans Bengali', serif" font-size="7.5" font-weight="bold" text-anchor="middle" fill="#000000">মাভাবিপ্রবি</text>
+                                </svg>
+                            </div>
+                            <div id="slip-uni-title-display" class="slip-uni-title">মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়</div>
+                            <div id="slip-sub-title-display" class="slip-sub-title">পরীক্ষা সংক্রান্ত পারিশ্রমিকের বিল ফরম</div>
+                            <div style="text-align: right; font-weight: 700; font-size: 8pt; margin-top: -16px;">
                                 বিল নং: <span id="slip-bill-no-display">............</span>
                             </div>
-                            <div class="slip-instruction-text">
+                            <div id="slip-instruction-display" class="slip-instruction-text">
                                 (বিল সংশ্লিষ্ট বিষয়াবলী পরীক্ষা কমিটির চেয়ারম্যানের মাধ্যমে পরীক্ষার সংক্রান্ত কার্যাবলী সম্পাদনের পর পরীক্ষা নিয়ন্ত্রকের কার্যালয়ে দাখিল করতে হবে। প্রতি কোর্সের পরীক্ষার জন্য পৃথক পৃথক ভাবে বিল দাখিল করতে হবে।)
                             </div>
                         </div>
 
-                        <!-- Examiner Info Box -->
+                        <!-- Examiner Info Box (Faithful Replica of Paper Form) -->
                         <table class="slip-examiner-info-table">
                             <tr>
-                                <td style="width: 25%;">পরীক্ষকের নাম (বাংলায়):</td>
-                                <td style="width: 75%; font-weight: 700;" id="slip-examiner-name-bn">................................................</td>
+                                <td style="width: 28%; font-weight: 600;">পরীক্ষকের নাম (বাংলায়) ঃ</td>
+                                <td style="width: 72%; font-weight: 700; border-bottom: 1px dotted #000;" id="slip-examiner-name-bn">................................................</td>
                             </tr>
                             <tr>
-                                <td>(ইংরেজীতে বড় অক্ষরে):</td>
-                                <td style="font-weight: 700; font-family: monospace;" id="slip-examiner-name-en">................................................</td>
+                                <td style="font-weight: 600;">(ইংরেজীতে বড় অক্ষরে) ঃ</td>
+                                <td style="font-weight: 700; font-family: monospace; border-bottom: 1px dotted #000;" id="slip-examiner-name-en">................................................</td>
                             </tr>
                             <tr>
-                                <td>পদবী ও পূর্ণ ঠিকানা:</td>
-                                <td id="slip-examiner-designation">................................................</td>
+                                <td style="font-weight: 600;">পদবী ও পূর্ণ ঠিকানা ঃ</td>
+                                <td style="border-bottom: 1px dotted #000;" id="slip-examiner-designation">................................................</td>
                             </tr>
                             <tr>
-                                <td>পরীক্ষা অনুষ্ঠিত হওয়ার সময়কালঃ</td>
-                                <td id="slip-exam-period">পরীক্ষা অনুষ্ঠিত তারিখঃ ফেব্রুয়ারি-মার্চ/২০২৬</td>
+                                <td style="font-weight: 600;">পরীক্ষা অনুষ্ঠিত হওয়ার সময়কালঃ</td>
+                                <td style="border-bottom: 1px dotted #000;" id="slip-exam-period">পরীক্ষা অনুষ্ঠিত তারিখঃ ফেব্রুয়ারি-মার্চ/২০২৬</td>
                             </tr>
                         </table>
-                        <div style="font-size: 8pt; font-weight: 700; margin-bottom: 4px;">
+                        <div style="font-size: 8pt; font-weight: 700; margin: 4px 0 3px 0;">
                             পরীক্ষা সংক্রান্ত কাজের বিবরণ নিম্নে দেওয়া হইলঃ
                         </div>
 
-                        <!-- 14-Row Table Grid -->
+                        <!-- 14-Row Table Grid (12 Columns with Configurable Bengali Headers) -->
                         <table class="slip-grid-table">
                             <thead>
                                 <tr>
-                                    <th style="width: 5%;">ক্রমিক নম্বর</th>
-                                    <th style="width: 24%;">কাজের নাম</th>
-                                    <th style="width: 14%;">পরীক্ষার নাম</th>
-                                    <th style="width: 6%;">বৎসর</th>
-                                    <th style="width: 7%;">বিভাগ</th>
-                                    <th style="width: 9%;">কোর্স কোড</th>
-                                    <th style="width: 11%;">খাতা/পরীক্ষার্থীর সংখ্যা</th>
-                                    <th style="width: 7%;">মোট দিন/সদস্য</th>
-                                    <th style="width: 6%;">ক্রেডিট</th>
-                                    <th style="width: 6%;">ক্লাস টেস্ট</th>
-                                    <th style="width: 9%;">টাকা</th>
-                                    <th style="width: 4%;">পয়সা</th>
+                                    <th style="width: 4.5%;" id="col-lbl-1">ক্রমিক নম্বর</th>
+                                    <th style="width: 22.5%;" id="col-lbl-2">কাজের নাম</th>
+                                    <th style="width: 13.5%;" id="col-lbl-3">পরীক্ষার নাম</th>
+                                    <th style="width: 6%;" id="col-lbl-4">বৎসর</th>
+                                    <th style="width: 6.5%;" id="col-lbl-5">বিভাগ</th>
+                                    <th style="width: 9.5%;" id="col-lbl-6">কোর্স কোড</th>
+                                    <th style="width: 11%;" id="col-lbl-7">খাতা/পরীক্ষার্থীর সংখ্যা</th>
+                                    <th style="width: 7.5%;" id="col-lbl-8">মোট দিন/সদস্য সংখ্যা</th>
+                                    <th style="width: 5.5%;" id="col-lbl-9">ক্রেডিট আওয়ার</th>
+                                    <th style="width: 5.5%;" id="col-lbl-10">ক্লাস টেস্টের সংখ্যা</th>
+                                    <th style="width: 6%;" id="col-lbl-11">টাকা</th>
+                                    <th style="width: 2%;" id="col-lbl-12">পয়সা</th>
                                 </tr>
                             </thead>
                             <tbody id="slip-tbody-14-rows">
@@ -646,39 +670,49 @@
                             </tbody>
                             <tfoot>
                                 <tr class="slip-total-row">
-                                    <td colspan="10" style="text-align: right; padding-right: 10px;">মোট টাকা =</td>
-                                    <td id="slip-total-taka" style="text-align: right; font-weight: 800;">০/-</td>
-                                    <td>০০</td>
+                                    <td colspan="10" style="text-align: right; padding-right: 12px; font-weight: 800; font-size: 8.5pt;">মোট টাকা =</td>
+                                    <td id="slip-total-taka" style="text-align: right; font-weight: 900; font-size: 9pt; font-family: monospace;">০/-</td>
+                                    <td style="text-align: center; font-size: 7.5pt;">০০</td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
 
-                    <!-- Bottom Signatures & Sanction Section -->
+                    <!-- Bottom Signatures & Sanction Section (Faithful Replica of Paper Form) -->
                     <div class="slip-bottom-signatures">
                         <div class="slip-sig-grid">
-                            <div class="slip-sig-item">
-                                <div class="line">প্রতি স্বাক্ষর: সভাপতি, পরীক্ষা কমিটি<br>(সীলমোহর)</div>
+                            <div class="slip-sig-item" style="text-align: left;">
+                                <div style="display: inline-block; text-align: center; min-width: 180px;">
+                                    <div style="font-size: 7.8pt; margin-bottom: 24px;">প্রতি স্বাক্ষর</div>
+                                    <div class="line" id="slip-chairman-sig-lbl">সভাপতি, পরীক্ষা কমিটি</div>
+                                    <div style="font-size: 7.5pt; font-weight: normal; margin-top: 1px;">(সীলমোহর)</div>
+                                </div>
                             </div>
-                            <div class="slip-sig-item">
-                                <div class="line">পরীক্ষকের স্বাক্ষর</div>
+                            <div class="slip-sig-item" style="text-align: right;">
+                                <div style="display: inline-block; text-align: center; min-width: 170px; margin-top: 24px;">
+                                    <div class="line" id="slip-examiner-sig-lbl">পরীক্ষকের স্বাক্ষর</div>
+                                </div>
                             </div>
                         </div>
 
+                        <!-- Departmental Sanction Note -->
                         <div class="slip-sanction-box">
-                            বিভাগঃ <strong>আইসিটি</strong>, পরীক্ষাঃ <strong id="slip-sanction-exam-name">বিএসসি (ইঞ্জিঃ) ফাইনাল পরীক্ষা</strong>, সেশনঃ <strong id="slip-sanction-session">২০২৩-২০২৪</strong><br>
+                            বিভাগঃ <strong id="slip-sanction-dept">আইসিটি</strong>, পরীক্ষাঃ <strong id="slip-sanction-exam-name">বিএসসি (ইঞ্জিঃ) ফাইনাল পরীক্ষা</strong>, সেশনঃ <strong id="slip-sanction-session">২০২৩-২০২৪</strong><br>
                             প্রফেসর/ড./জনাব <strong id="slip-sanction-teacher-name">........................</strong>-কে টাকা = <strong id="slip-sanction-amount">০/-</strong> (কথায়) : <strong id="slip-sanction-words">........................ টাকা মাত্র</strong> প্রদান করুন।
                         </div>
 
+                        <!-- Final Office Approval Row with Revenue Stamp -->
                         <div class="slip-final-office-row">
                             <div class="slip-revenue-stamp">
-                                রেভিনিউ স্ট্যাম্প<br>বুঝিয়া পাইলাম<br>তারিখসহ স্বাক্ষর
+                                <div>রেভিনিউ স্ট্যাম্প</div>
+                                <div style="font-size: 6.8pt; margin-top: 2px;">বুঝিয়া পাইলাম</div>
+                                <div style="font-size: 6.5pt; font-style: italic; margin-top: 2px;">তারিখসহ স্বাক্ষর</div>
                             </div>
-                            <div style="text-align: center; width: 38%;">
-                                <div style="border-top: 1px solid #000; padding-top: 2px; font-weight: 700;">সেকশন অফিসার / সহকারী পরীক্ষা নিয়ন্ত্রক</div>
+                            <div style="text-align: center; width: 36%;">
+                                <div style="border-top: 1px solid #000; padding-top: 2px; font-weight: 700; font-size: 7.8pt;" id="slip-officer-sig-lbl">সেকশন অফিসার / সহকারী পরীক্ষা নিয়ন্ত্রক</div>
                             </div>
-                            <div style="text-align: center; width: 35%;">
-                                <div style="border-top: 1px solid #000; padding-top: 2px; font-weight: 700;">পরীক্ষা নিয়ন্ত্রক, মাভাবিপ্রবি</div>
+                            <div style="text-align: center; width: 34%;">
+                                <div style="border-top: 1px solid #000; padding-top: 2px; font-weight: 700; font-size: 7.8pt;" id="slip-controller-sig-lbl">পরীক্ষা নিয়ন্ত্রক, মাভাবিপ্রবি</div>
                             </div>
                         </div>
                     </div>
@@ -1090,6 +1124,14 @@
                                 <option value="manual">Manually Entered Total Amount</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label" for="act-candidate-type">Candidate / Exam Scope *</label>
+                            <select id="act-candidate-type" class="form-control">
+                                <option value="Regular">Regular (নিয়মিত)</option>
+                                <option value="BL">BL - Backlog (ব্যাকলগ)</option>
+                                <option value="SC">SC - Special Carry (স্পেশাল ক্যারি)</option>
+                            </select>
+                        </div>
                         <div class="form-group" id="grp-act-workload">
                             <label class="form-label" for="act-workload" id="lbl-act-workload">Workload / Quantity</label>
                             <input type="number" id="act-workload" class="form-control" value="1" min="1" oninput="App.calculateActivityPreview()">
@@ -1242,6 +1284,22 @@
                             <label class="form-label" for="bill-no">Bill Slip Number *</label>
                             <input type="text" id="bill-no" class="form-control" required>
                         </div>
+                        <div class="form-group" style="grid-column: 1 / -1; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 12px;">
+                            <label style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #1e3a8a; cursor: pointer; margin-bottom: 6px;">
+                                <input type="checkbox" id="bill-carrier-enabled" onchange="App.handleModalCarrierToggle(this.checked)">
+                                <span>📦 Include Carrier / Courier Charge (ইনসিডেন্টাল / কুরিয়ার চার্জ - রো ১৪)</span>
+                            </label>
+                            <div id="bill-carrier-fields" style="display: none; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 6px;">
+                                <div>
+                                    <label class="form-label" for="bill-carrier-amount" style="font-size: 0.78rem;">Carrier Charge Amount (৳) *</label>
+                                    <input type="number" id="bill-carrier-amount" class="form-control" value="0" min="0" step="10">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="bill-carrier-voucher" style="font-size: 0.78rem;">Courier Voucher / Memo No</label>
+                                    <input type="text" id="bill-carrier-voucher" class="form-control" placeholder="e.g. SA-PARCEL-2024/09">
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <div id="bill-existing-alert-box"></div>
                             <label class="form-label">Examination Activities to Include in Bill Slip:</label>
@@ -1345,6 +1403,135 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-rate')">Cancel</button>
                     <button type="submit" class="btn btn-primary">Save Rate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CONFIGURE BILL FORM (Departmental Labels & Signatures Customizer) -->
+    <div id="modal-configure-bill-form" class="modal-overlay">
+        <div class="modal-card" style="max-width: 780px;">
+            <div class="modal-header">
+                <h3>⚙️ Official Bill Slip Configuration (Bengali Headings &amp; Signatures)</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-configure-bill-form')">&times;</button>
+            </div>
+            <form id="form-configure-bill-form" onsubmit="App.handleSaveBillFormConfig(event)">
+                <div class="modal-body">
+                    <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+                        Configure institutional labels, column arrangement, and signature titles. These settings dynamically reflect across all official 14-row printable paper forms and persist in local storage.
+                    </p>
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="cfg-uni-title">University Heading (শীর্ষ নাম) *</label>
+                            <input type="text" id="cfg-uni-title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-sub-title">Form Title (ফরম শিরোনাম) *</label>
+                            <input type="text" id="cfg-sub-title" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-dept-name">Default Department (বিভাগ) *</label>
+                            <input type="text" id="cfg-dept-name" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="cfg-instruction">Top Instruction Note (নির্দেশিকা)</label>
+                            <textarea id="cfg-instruction" class="form-control" rows="2" style="font-size: 0.82rem;"></textarea>
+                        </div>
+
+                        <!-- Signatures Titles -->
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-sig-chairman">Committee Chairman Signature Title</label>
+                            <input type="text" id="cfg-sig-chairman" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-sig-examiner">Examiner Signature Title</label>
+                            <input type="text" id="cfg-sig-examiner" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-sig-officer">Section Officer Signature Title</label>
+                            <input type="text" id="cfg-sig-officer" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cfg-sig-controller">Controller of Exams Signature Title</label>
+                            <input type="text" id="cfg-sig-controller" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.resetDefaultBillFormConfig()">Reset to University Defaults</button>
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-configure-bill-form')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Configuration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: QUICK-ADD BL / SC EXAMINATION DUTY -->
+    <div id="modal-bl-sc-duty" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>+ Add BL (Backlog) / SC (Special Carry) Duty</h3>
+                <button class="modal-close-btn" onclick="App.closeModal('modal-bl-sc-duty')">&times;</button>
+            </div>
+            <form id="form-bl-sc-duty" onsubmit="App.handleSaveBLSCDuty(event)">
+                <div class="modal-body">
+                    <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="bl-teacher-id">Responsible Teacher *</label>
+                            <select id="bl-teacher-id" class="form-control" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bl-semester-id">Semester *</label>
+                            <select id="bl-semester-id" class="form-control" onchange="App.handleBLSemesterChange()" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bl-scope-type">Scope Type (পরীক্ষার ধরন) *</label>
+                            <select id="bl-scope-type" class="form-control" required>
+                                <option value="BL">BL — Backlog (ব্যাকলগ)</option>
+                                <option value="SC">SC — Special Carry (স্পেশাল ক্যারি)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="bl-course-id">Related Course *</label>
+                            <select id="bl-course-id" class="form-control" onchange="App.handleBLCourseChange()" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bl-category">Examination Duty *</label>
+                            <select id="bl-category" class="form-control" onchange="App.handleBLCategoryChange()" required>
+                                <option value="1">০১. প্রশ্নপত্র প্রণয়ন</option>
+                                <option value="3" selected>০৩. উত্তরপত্র মূল্যায়ন</option>
+                                <option value="4">০৪. মৌখিক পরীক্ষা / ভাইভা</option>
+                                <option value="5">০৫. ব্যবহারিক / ল্যাব পরীক্ষা</option>
+                                <option value="6">০৬. টেবুলেশন</option>
+                                <option value="13">১৩. ক্লাস টেস্ট</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bl-credit">Course Credits</label>
+                            <input type="number" id="bl-credit" class="form-control" value="3.00" step="0.5" readonly style="background:#f1f5f9;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bl-workload" id="lbl-bl-workload">Script / Student Count *</label>
+                            <input type="number" id="bl-workload" class="form-control" value="18" min="1" oninput="App.calculateBLPreview()" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="bl-rate">Rate (৳) *</label>
+                            <input type="number" id="bl-rate" class="form-control" value="120" step="0.01" oninput="App.calculateBLPreview()" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px; border-radius: 4px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.82rem; font-weight: 700; color: #1e40af;">Total Amount Preview:</span>
+                                <div style="font-size: 1.3rem; font-weight: 800; color: #1e3a8a; font-family: monospace;" id="bl-calc-preview">৳2,160.00</div>
+                            </div>
+                            <div id="bl-ct-hint" style="font-size: 0.76rem; color: #475569; margin-top: 4px; display: none;">
+                                💡 Rule: ৩ ক্রেডিট কোর্স = ৪টি ক্লাস টেস্ট, ২ ক্রেডিট কোর্স = ৩টি ক্লাস টেস্ট।
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" onclick="App.closeModal('modal-bl-sc-duty')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add BL / SC Duty</button>
                 </div>
             </form>
         </div>

@@ -12,7 +12,7 @@
     <header class="app-header">
         <div class="header-container">
             <div class="brand-wrapper">
-                <div class="brand-logo-badge">ICT</div>
+                <img src="assets/mbstu_logo.png" alt="MBSTU Logo" class="brand-header-logo" style="height: 52px; width: auto; object-fit: contain; margin-right: 14px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));">
                 <div class="brand-text">
                     <h1>Mawlana Bhashani Science and Technology University</h1>
                     <p>Department of Information and Communication Technology (ICT) • Examination &amp; Semester Bill Management System</p>
@@ -315,6 +315,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Date</th>
                                     <th>Session &amp; Semester</th>
                                     <th>Category / Activity Type</th>
                                     <th>Course</th>
@@ -591,8 +592,7 @@
 
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <button type="button" class="btn btn-outline btn-sm" onclick="App.openBLSCDutyModal()" title="Add Backlog or Special Carry Duty">+ Add BL / SC Duty</button>
-                        <button type="button" class="btn btn-outline btn-sm" onclick="App.openConfigureBillFormModal()" title="Customize Bengali Labels &amp; Column Headers">⚙️ Configure Form</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()" title="Print / Export to PDF">🖨️ Print Form (A4)</button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()" title="Print / Export to PDF">🖨️ প্রিন্ট করুন (Print A4)</button>
                     </div>
                 </div>
             </div>
@@ -603,19 +603,8 @@
                     <!-- Top University Header with Emblem -->
                     <div>
                         <div class="slip-header-block" style="position: relative; padding-left: 55px; min-height: 52px;">
-                            <!-- MBSTU Official Vector Emblem Logo -->
-                            <div style="position: absolute; left: 0; top: 0; width: 48px; height: 48px;">
-                                <svg viewBox="0 0 100 100" width="48" height="48" style="display: block;">
-                                    <circle cx="50" cy="50" r="47" fill="none" stroke="#000000" stroke-width="2.5"/>
-                                    <circle cx="50" cy="50" r="41" fill="none" stroke="#000000" stroke-width="1.2"/>
-                                    <!-- Star & Gear Elements -->
-                                    <polygon points="50,15 54,28 68,28 57,36 61,49 50,41 39,49 43,36 32,28 46,28" fill="#000000"/>
-                                    <path d="M25,65 Q50,55 75,65 Q50,75 25,65 Z" fill="none" stroke="#000000" stroke-width="1.5"/>
-                                    <rect x="35" y="70" width="30" height="12" fill="none" stroke="#000000" stroke-width="1.5"/>
-                                    <line x1="50" y1="70" x2="50" y2="82" stroke="#000000" stroke-width="1.2"/>
-                                    <text x="50" y="94" font-family="'Kalpurush', 'Noto Sans Bengali', serif" font-size="7.5" font-weight="bold" text-anchor="middle" fill="#000000">মাভাবিপ্রবি</text>
-                                </svg>
-                            </div>
+                            <!-- MBSTU Official University Emblem Logo -->
+                            <img src="assets/mbstu_logo.png" alt="MBSTU Logo" class="slip-header-logo" style="position: absolute; left: 4px; top: 0; width: 50px; height: 50px; object-fit: contain;">
                             <div id="slip-uni-title-display" class="slip-uni-title">মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়</div>
                             <div id="slip-sub-title-display" class="slip-sub-title">পরীক্ষা সংক্রান্ত পারিশ্রমিকের বিল ফরম</div>
                             <div style="text-align: right; font-weight: 700; font-size: 8pt; margin-top: -16px;">
@@ -1105,6 +1094,10 @@
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label class="form-label" for="act-category">Activity Category *</label>
                             <select id="act-category" class="form-control" onchange="App.handleActivityCategoryChange()" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="act-date">Activity / Exam Date *</label>
+                            <input type="date" id="act-date" class="form-control" required>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="act-semester-id">Semester *</label>

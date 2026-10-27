@@ -50,47 +50,53 @@ const DEFAULT_BILL_FORM_CONFIG = {
     sigController: 'পরীক্ষা নিয়ন্ত্রক'
 };
 
-// Helper: Convert Numbers to Bengali Words
+// Helper: Convert Numbers to Fluent Bengali Words (1 to 10,000,000)
 function numberToBanglaWords(num) {
     if (!num || isNaN(num)) return 'শূন্য';
     num = Math.round(num);
-    const units = ['', 'এক', 'দুই', 'তিন', 'চার', 'পাঁচ', 'ছয়', 'সাত', 'আট', 'নয়', 'দশ', 
-                   'এগারো', 'বারো', 'তেরো', 'চৌদ্দ', 'পনেরো', 'ষোলো', 'সতেরো', 'আঠারো', 'উনিশ', 'বিশ'];
-    const tens = ['', '', 'বিশ', 'ত্রিশ', 'চল্লিশ', 'পঞ্চাশ', 'ষাট', 'সত্তর', 'আশি', 'নব্বই'];
-    
-    if (num === 17040) return 'সতের হাজার চল্লিশ';
-    if (num === 55600) return 'পঞ্চান্ন হাজার ছয়শত';
-    if (num === 66160) return 'ছেষট্টি হাজার একশত ষাট';
-    if (num === 26150) return 'ছাব্বিশ হাজার একশত পঞ্চাশ';
-    if (num === 18200) return 'আঠারো হাজার দুইশত';
-    if (num === 16500) return 'ষোল হাজার পাঁচশত';
-    if (num === 14400) return 'চৌদ্দ হাজার চারশত';
-    if (num === 10980) return 'দশ হাজার নয়শত আশি';
-    if (num === 38350) return 'আটত্রিশ হাজার তিনশত পঞ্চাশ';
-    
-    let words = '';
-    if (Math.floor(num / 100000) > 0) {
-        words += numberToBanglaWords(Math.floor(num / 100000)) + ' লাখ ';
+
+    const b1To99 = [
+        '', 'এক', 'দুই', 'তিন', 'চার', 'পাঁচ', 'ছয়', 'সাত', 'আট', 'নয়', 'দশ',
+        'এগারো', 'বারো', 'তেরো', 'চৌদ্দ', 'পনেরো', 'ষোলো', 'সতেরো', 'আঠারো', 'উনিশ', 'বিশ',
+        'একুশ', 'বাইশ', 'তেইশ', 'চব্বিশ', 'পঁচিশ', 'ছাব্বিশ', 'সাতাশ', 'আটাশ', 'উনত্রিশ', 'ত্রিশ',
+        'একত্রিশ', 'বত্রিশ', 'তেত্রিশ', 'চৌত্রিশ', 'পঁয়ত্রিশ', 'ছত্রিশ', 'সাঁইত্রিশ', 'আটত্রিশ', 'ঊনচল্লিশ', 'চল্লিশ',
+        'একচল্লিশ', 'বিয়াল্লিশ', 'তেতাল্লিশ', 'চুয়াল্লিশ', 'পঁয়তাল্লিশ', 'ছেচল্লিশ', 'সাতচল্লিশ', 'আটচল্লিশ', 'ঊনপঞ্চাশ', 'পঞ্চাশ',
+        'একান্ন', 'বায়ান্ন', 'তিপ্পান্ন', 'চুয়ান্ন', 'পঞ্চান্ন', 'ছাপ্পান্ন', 'সাতান্ন', 'আটান্ন', 'ঊনষাট', 'ষাট',
+        'একষট্টি', 'বাষট্টি', 'তেষট্টি', 'চৌষট্টি', 'পঁয়ষট্টি', 'ছেষট্টি', 'সাতষট্টি', 'আটষট্টি', 'ঊনসত্তর', 'সত্তর',
+        'একাত্তর', 'বাহাত্তর', 'তিয়াত্তর', 'চৌহাত্তর', 'পঁচাত্তর', 'ছিয়াত্তর', 'সাতাত্তর', 'আটাত্তর', 'ঊনআশি', 'আশি',
+        'একাশি', 'বিরাশি', 'তিরাশি', 'চুরাশি', 'পঁচাশি', 'ছিয়াশি', 'সাতাশি', 'অষ্টআশি', 'ঊননব্বই', 'নব্বই',
+        'একানব্বই', 'বিরানব্বই', 'তিরানব্বই', 'চুরানব্বই', 'পঁচানব্বই', 'ছিয়ানব্বই', 'সাতানব্বই', 'আটানব্বই', 'নিরানব্বই'
+    ];
+
+    function convertTwoDigits(n) {
+        return b1To99[n] || '';
+    }
+
+    let parts = [];
+    if (num >= 10000000) {
+        const cr = Math.floor(num / 10000000);
+        parts.push(numberToBanglaWords(cr) + ' কোটি');
+        num %= 10000000;
+    }
+    if (num >= 100000) {
+        const lk = Math.floor(num / 100000);
+        parts.push(convertTwoDigits(lk) + ' লাখ');
         num %= 100000;
     }
-    if (Math.floor(num / 1000) > 0) {
-        const k = Math.floor(num / 1000);
-        words += (k <= 20 ? units[k] : k) + ' হাজার ';
+    if (num >= 1000) {
+        const th = Math.floor(num / 1000);
+        parts.push(convertTwoDigits(th) + ' হাজার');
         num %= 1000;
     }
-    if (Math.floor(num / 100) > 0) {
-        words += units[Math.floor(num / 100)] + ' শত ';
+    if (num >= 100) {
+        const hu = Math.floor(num / 100);
+        parts.push(convertTwoDigits(hu) + ' শত');
         num %= 100;
     }
     if (num > 0) {
-        if (num <= 20) words += units[num];
-        else {
-            const t = Math.floor(num / 10);
-            const u = num % 10;
-            words += tens[t] + (u > 0 ? ' ' + units[u] : '');
-        }
+        parts.push(convertTwoDigits(num));
     }
-    return words.trim();
+    return parts.join(' ').trim();
 }
 
 // 5 Canonical Departmental Examination & Moderation Dossiers
@@ -370,7 +376,7 @@ const App = {
         examActivities: [],
         bills: [],
         payments: [],
-        currentSemesterId: 'all',
+        currentSemesterId: 'sem_2024_11', // Default active: 1st Year 1st Semester
         selectedTeacherId: null,
         currentReportCourseId: null
     },
@@ -412,6 +418,9 @@ const App = {
                 if (!this.state.dossiers || this.state.dossiers.length === 0) {
                     this.state.dossiers = JSON.parse(JSON.stringify(DEFAULT_DOSSIERS));
                 }
+                if (!this.state.currentSemesterId || this.state.currentSemesterId === 'all') {
+                    this.state.currentSemesterId = 'sem_2024_11';
+                }
             }
         } catch (e) {
             console.error('Error loading state from localStorage:', e);
@@ -423,7 +432,15 @@ const App = {
     // --------------------------------------------------------------------------
     openModal(id) {
         const modal = document.getElementById(id);
-        if (modal) modal.classList.add('active');
+        if (modal) {
+            modal.classList.add('active');
+            if (id === 'modal-activity') {
+                const dateEl = document.getElementById('act-date');
+                if (dateEl && !dateEl.value) {
+                    dateEl.value = new Date().toISOString().split('T')[0];
+                }
+            }
+        }
     },
 
     closeModal(id) {
@@ -1178,7 +1195,7 @@ const App = {
 
         const filtered = this.getFilteredActivities();
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; color: var(--text-muted); padding: 16px;">No dynamic exam activities found for the active semester scope.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: var(--text-muted); padding: 16px;">No dynamic exam activities found for the active semester scope.</td></tr>';
             return;
         }
 
@@ -1186,6 +1203,7 @@ const App = {
             const sem = this.state.semesters.find(s => s.id === a.semesterId) || { session: 'N/A', yearLevel: '', semesterNumber: '' };
             const teacher = this.state.teachers.find(t => t.id === a.teacherId) || { nameEn: 'Unknown Internal Teacher' };
             const course = a.courseId ? (this.state.courses.find(c => c.id === a.courseId) || { code: a.courseId }) : { code: 'Committee Duty' };
+            const dateStr = a.activityDate || (a.createdAt ? a.createdAt.split('T')[0] : '2026-03-25');
             
             let catName = a.activityNameEn;
             if (!catName) {
@@ -1200,6 +1218,7 @@ const App = {
             return `
                 <tr>
                     <td><code>${a.id}</code></td>
+                    <td><span class="act-date-cell">${dateStr}</span></td>
                     <td><span class="badge badge-secondary">${sem.session}</span> ${sem.yearLevel} ${sem.semesterNumber}</td>
                     <td><strong>${catName}</strong></td>
                     <td><code>${course.code}</code></td>
@@ -1358,6 +1377,7 @@ const App = {
 
         const act = {
             id: 'act_' + Date.now(),
+            activityDate: document.getElementById('act-date') ? (document.getElementById('act-date').value || new Date().toISOString().split('T')[0]) : new Date().toISOString().split('T')[0],
             semesterId: document.getElementById('act-semester-id').value,
             courseId: document.getElementById('act-course-id').value || null,
             teacherId: document.getElementById('act-teacher-id').value,
@@ -2209,7 +2229,7 @@ const App = {
 
         const filtered = this.getFilteredBills();
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; color: var(--text-muted); padding: 16px;">No official bill slips prepared for the active semester scope.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: var(--text-muted); padding: 16px;">No official bill slips prepared for the active semester scope.</td></tr>';
             return;
         }
 
@@ -3963,7 +3983,7 @@ const App = {
                 examActivities: [],
                 bills: [],
                 payments: [],
-                currentSemesterId: 'all',
+                currentSemesterId: 'sem_2024_11', // Default active: 1st Year 1st Semester
                 selectedTeacherId: null,
                 currentReportCourseId: null
             };
@@ -4409,7 +4429,7 @@ const App = {
                 title: 'Differential and Integral Calculus',
                 credit: 3.00,
                 courseType: 'Theory',
-                assignedInternalTeacherId: null,
+                assignedInternalTeacherId: 't_abir',
                 assignmentStatus: 'Not Yet Assigned',
                 assignmentSource: 'Syllabus Master (media_1791913723666_50af885d.png)',
                 moderatorTeacherId: null,
@@ -4425,7 +4445,7 @@ const App = {
                 title: 'Chemistry',
                 credit: 3.00,
                 courseType: 'Theory',
-                assignedInternalTeacherId: null,
+                assignedInternalTeacherId: 't_nargis',
                 assignmentStatus: 'Not Yet Assigned',
                 assignmentSource: 'Syllabus Master (media_1791913723666_50af885d.png)',
                 moderatorTeacherId: null,
@@ -5078,6 +5098,736 @@ const App = {
         ];
 
         this.state.examActivities = [
+            // =========================================================================
+            // SESSION 2024-2025 • 1ST YEAR 1ST SEMESTER (sem_2024_11) — ACTIVE DEFAULT
+            // =========================================================================
+            // 1. Dr. Ziaur Rahman (Chairman, Exam Committee 1Y 1S)
+            {
+                id: 'act_24_ziaur_01',
+                activityDate: '2026-03-02',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1103',
+                teacherId: 't_ziaur',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ziaur_2025',
+                notes: 'Full question paper setting for ICT-1103 Computer Programming',
+                createdAt: '2026-03-02T00:00:00Z'
+            },
+            {
+                id: 'act_24_ziaur_02',
+                activityDate: '2026-03-10',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_ziaur',
+                categoryNumber: 2,
+                activityNameEn: 'Question Paper Moderation (Chairman Share)',
+                activityNameBn: 'প্রশ্নপত্র সমীক্ষণ',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4500.00,
+                calculatedAmount: 4500.00,
+                approvedAmount: 4500.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ziaur_2025',
+                notes: 'Chairman share of 9 moderated courses honorarium (৳18,000 / 4)',
+                createdAt: '2026-03-10T00:00:00Z'
+            },
+            {
+                id: 'act_24_ziaur_03',
+                activityDate: '2026-03-19',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1103',
+                teacherId: 't_ziaur',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 60,
+                rateApplied: 120.00,
+                calculatedAmount: 7200.00,
+                approvedAmount: 7200.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ziaur_2025',
+                notes: '60 regular answer scripts evaluated @ ৳120 for ICT-1103',
+                createdAt: '2026-03-19T00:00:00Z'
+            },
+            {
+                id: 'act_24_ziaur_13',
+                activityDate: '2026-03-12',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1103',
+                teacherId: 't_ziaur',
+                categoryNumber: 13,
+                activityNameEn: 'Class Test Assessment',
+                activityNameBn: 'ক্লাস টেস্ট',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 4,
+                rateApplied: 1350.00,
+                calculatedAmount: 5400.00,
+                approvedAmount: 5400.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ziaur_2025',
+                notes: '4 Class Tests conduction & script evaluation (3.00 Credits)',
+                createdAt: '2026-03-12T00:00:00Z'
+            },
+            {
+                id: 'act_24_ziaur_06',
+                activityDate: '2026-03-28',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_ziaur',
+                categoryNumber: 6,
+                activityNameEn: 'Results Tabulation',
+                activityNameBn: 'ট্যাবুলেশন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 75,
+                rateApplied: 75.00,
+                calculatedAmount: 5625.00,
+                approvedAmount: 5625.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ziaur_2025',
+                notes: 'Tabulation for 57 Regular + 18 Backlog examinees @ ৳75',
+                createdAt: '2026-03-28T00:00:00Z'
+            },
+            {
+                id: 'act_24_ziaur_09',
+                activityDate: '2026-03-08',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_ziaur',
+                categoryNumber: 9,
+                activityNameEn: 'Question Typing and Proof Verification',
+                activityNameBn: 'প্রশ্নপত্র লিখন ও যাচাই',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 3,
+                rateApplied: 200.00,
+                calculatedAmount: 600.00,
+                approvedAmount: 600.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ziaur_2025',
+                notes: '3 Question papers typing & verification proofing @ ৳200',
+                createdAt: '2026-03-08T00:00:00Z'
+            },
+            {
+                id: 'act_24_ziaur_08',
+                activityDate: '2026-03-29',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_ziaur',
+                categoryNumber: 8,
+                activityNameEn: 'Exam Committee Chairman Allowance',
+                activityNameBn: 'সভাপতি / সদস্যর ভাতা',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 2250.00,
+                calculatedAmount: 2250.00,
+                approvedAmount: 2250.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ziaur_2025',
+                notes: 'Statutory examination committee chairman honorarium allowance',
+                createdAt: '2026-03-29T00:00:00Z'
+            },
+            {
+                id: 'act_24_ziaur_14',
+                activityDate: '2026-03-25',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_ziaur',
+                categoryNumber: 14,
+                activityNameEn: 'Incidental Charges / Courier Voucher',
+                activityNameBn: 'ইনসিডেন্টাল চার্জ / কুরিয়ার চার্জ',
+                calcMethod: 'manual',
+                workloadQuantity: 1,
+                rateApplied: 700.00,
+                calculatedAmount: 700.00,
+                approvedAmount: 700.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ziaur_2025',
+                notes: 'Confidential scripts transit courier expense (Voucher: VR-1Y1S-ZIA-991)',
+                createdAt: '2026-03-25T00:00:00Z'
+            },
+
+            // 2. Dr. Monir Morshed (Theory Course ICT-1101)
+            {
+                id: 'act_24_monir_01',
+                activityDate: '2026-03-02',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1101',
+                teacherId: 't_monir',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_monir_2025',
+                notes: 'Full paper question setting for ICT-1101 Basic Electrical Circuits',
+                createdAt: '2026-03-02T00:00:00Z'
+            },
+            {
+                id: 'act_24_monir_03',
+                activityDate: '2026-03-18',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1101',
+                teacherId: 't_monir',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 60,
+                rateApplied: 120.00,
+                calculatedAmount: 7200.00,
+                approvedAmount: 7200.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_monir_2025',
+                notes: '60 regular answer scripts evaluated @ ৳120 for ICT-1101',
+                createdAt: '2026-03-18T00:00:00Z'
+            },
+            {
+                id: 'act_24_monir_13',
+                activityDate: '2026-03-12',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1101',
+                teacherId: 't_monir',
+                categoryNumber: 13,
+                activityNameEn: 'Class Test Assessment',
+                activityNameBn: 'ক্লাস টেস্ট',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 4,
+                rateApplied: 1350.00,
+                calculatedAmount: 5400.00,
+                approvedAmount: 5400.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_monir_2025',
+                notes: '4 Class Tests evaluated (3.00 Cr - ICT-1101)',
+                createdAt: '2026-03-12T00:00:00Z'
+            },
+            {
+                id: 'act_24_monir_14',
+                activityDate: '2026-03-24',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_monir',
+                categoryNumber: 14,
+                activityNameEn: 'Incidental Charges / Courier Voucher',
+                activityNameBn: 'ইনসিডেন্টাল চার্জ / কুরিয়ার চার্জ',
+                calcMethod: 'manual',
+                workloadQuantity: 1,
+                rateApplied: 600.00,
+                calculatedAmount: 600.00,
+                approvedAmount: 600.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_monir_2025',
+                notes: 'Courier transit parcel receipt (Voucher: SA-PARCEL-1101)',
+                createdAt: '2026-03-24T00:00:00Z'
+            },
+
+            // 3. Dr. Muhammad Shahin Uddin (Theory ICT-1105 & Lab ICT-1102)
+            {
+                id: 'act_24_shahin_01',
+                activityDate: '2026-03-04',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1105',
+                teacherId: 't_shahin',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_shahin_2025',
+                notes: 'Question paper setting for ICT-1105 Physics',
+                createdAt: '2026-03-04T00:00:00Z'
+            },
+            {
+                id: 'act_24_shahin_03',
+                activityDate: '2026-03-20',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1105',
+                teacherId: 't_shahin',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 60,
+                rateApplied: 120.00,
+                calculatedAmount: 7200.00,
+                approvedAmount: 7200.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_shahin_2025',
+                notes: '60 answer scripts checked for ICT-1105 Physics',
+                createdAt: '2026-03-20T00:00:00Z'
+            },
+            {
+                id: 'act_24_shahin_05',
+                activityDate: '2026-03-15',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1102',
+                teacherId: 't_shahin',
+                categoryNumber: 5,
+                activityNameEn: 'Practical / Lab / Sessional Exam',
+                activityNameBn: 'ব্যবহারিক / ল্যাব / সেশনাল পরীক্ষা',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 60,
+                rateApplied: 100.00,
+                calculatedAmount: 6000.00,
+                approvedAmount: 6000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_shahin_2025',
+                notes: 'Conduction & examination for 60 candidates (ICT-1102 Lab)',
+                createdAt: '2026-03-15T00:00:00Z'
+            },
+            {
+                id: 'act_24_shahin_13',
+                activityDate: '2026-03-14',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1105',
+                teacherId: 't_shahin',
+                categoryNumber: 13,
+                activityNameEn: 'Class Test Assessment',
+                activityNameBn: 'ক্লাস টেস্ট',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 4,
+                rateApplied: 1350.00,
+                calculatedAmount: 5400.00,
+                approvedAmount: 5400.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_shahin_2025',
+                notes: '4 Class Tests for 3 Cr course ICT-1105 Physics',
+                createdAt: '2026-03-14T00:00:00Z'
+            },
+
+            // 4. Dr. Mosammat Nargis Akter (Committee Member, ICT-1109)
+            {
+                id: 'act_24_nargis_01',
+                activityDate: '2026-03-06',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1109',
+                teacherId: 't_nargis',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_nargis_2025',
+                notes: 'Full question paper setting for ICT-1109 Chemistry',
+                createdAt: '2026-03-06T00:00:00Z'
+            },
+            {
+                id: 'act_24_nargis_02',
+                activityDate: '2026-03-10',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_nargis',
+                categoryNumber: 2,
+                activityNameEn: 'Question Paper Moderation',
+                activityNameBn: 'প্রশ্নপত্র সমীক্ষণ',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4500.00,
+                calculatedAmount: 4500.00,
+                approvedAmount: 4500.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_nargis_2025',
+                notes: 'Committee member moderation share (৳18,000 / 4)',
+                createdAt: '2026-03-10T00:00:00Z'
+            },
+            {
+                id: 'act_24_nargis_03',
+                activityDate: '2026-03-22',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1109',
+                teacherId: 't_nargis',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 60,
+                rateApplied: 120.00,
+                calculatedAmount: 7200.00,
+                approvedAmount: 7200.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_nargis_2025',
+                notes: '60 regular answer scripts evaluated for ICT-1109 Chemistry',
+                createdAt: '2026-03-22T00:00:00Z'
+            },
+            {
+                id: 'act_24_nargis_13',
+                activityDate: '2026-03-15',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1109',
+                teacherId: 't_nargis',
+                categoryNumber: 13,
+                activityNameEn: 'Class Test Assessment',
+                activityNameBn: 'ক্লাস টেস্ট',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 4,
+                rateApplied: 1350.00,
+                calculatedAmount: 5400.00,
+                approvedAmount: 5400.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_nargis_2025',
+                notes: '4 Class Tests for 3 Cr course ICT-1109 Chemistry',
+                createdAt: '2026-03-15T00:00:00Z'
+            },
+            {
+                id: 'act_24_nargis_06',
+                activityDate: '2026-03-28',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_nargis',
+                categoryNumber: 6,
+                activityNameEn: 'Results Tabulation',
+                activityNameBn: 'ট্যাবুলেশন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 75,
+                rateApplied: 75.00,
+                calculatedAmount: 5625.00,
+                approvedAmount: 5625.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_nargis_2025',
+                notes: 'Tabulator 3 share for 75 candidates @ ৳75',
+                createdAt: '2026-03-28T00:00:00Z'
+            },
+            {
+                id: 'act_24_nargis_09',
+                activityDate: '2026-03-08',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_nargis',
+                categoryNumber: 9,
+                activityNameEn: 'Question Typing and Proof Verification',
+                activityNameBn: 'প্রশ্নপত্র লিখন ও যাচাই',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 3,
+                rateApplied: 200.00,
+                calculatedAmount: 600.00,
+                approvedAmount: 600.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_nargis_2025',
+                notes: '3 questions typed & verified @ ৳200',
+                createdAt: '2026-03-08T00:00:00Z'
+            },
+
+            // 5. Prof. Dr. Sajjad Waheed (Committee Member)
+            {
+                id: 'act_24_sajjad_02',
+                activityDate: '2026-03-10',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_sajjad',
+                categoryNumber: 2,
+                activityNameEn: 'Question Paper Moderation',
+                activityNameBn: 'প্রশ্নপত্র সমীক্ষণ',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4500.00,
+                calculatedAmount: 4500.00,
+                approvedAmount: 4500.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_sajjad_2025',
+                notes: 'Committee member moderation share (৳18,000 / 4)',
+                createdAt: '2026-03-10T00:00:00Z'
+            },
+            {
+                id: 'act_24_sajjad_06',
+                activityDate: '2026-03-28',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_sajjad',
+                categoryNumber: 6,
+                activityNameEn: 'Results Tabulation',
+                activityNameBn: 'ট্যাবুলেশন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 75,
+                rateApplied: 75.00,
+                calculatedAmount: 5625.00,
+                approvedAmount: 5625.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_sajjad_2025',
+                notes: 'Tabulator 2 share for 75 candidates @ ৳75',
+                createdAt: '2026-03-28T00:00:00Z'
+            },
+            {
+                id: 'act_24_sajjad_09',
+                activityDate: '2026-03-08',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 't_sajjad',
+                categoryNumber: 9,
+                activityNameEn: 'Question Typing and Proof Verification',
+                activityNameBn: 'প্রশ্নপত্র লিখন ও যাচাই',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 3,
+                rateApplied: 200.00,
+                calculatedAmount: 600.00,
+                approvedAmount: 600.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_sajjad_2025',
+                notes: '3 questions typed & verified @ ৳200',
+                createdAt: '2026-03-08T00:00:00Z'
+            },
+
+            // 6. Dr. Muhammad Badrul Alam Miah (Programming Lab ICT-1104)
+            {
+                id: 'act_24_badrul_05',
+                activityDate: '2026-03-16',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1104',
+                teacherId: 't_badrul',
+                categoryNumber: 5,
+                activityNameEn: 'Practical / Lab / Sessional Exam',
+                activityNameBn: 'ব্যবহারিক / ল্যাব / সেশনাল পরীক্ষা',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 60,
+                rateApplied: 100.00,
+                calculatedAmount: 6000.00,
+                approvedAmount: 6000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_badrul_2025',
+                notes: 'Lab exam conduction for 60 candidates (ICT-1104 Programming Lab)',
+                createdAt: '2026-03-16T00:00:00Z'
+            },
+            {
+                id: 'act_24_badrul_03_3rd',
+                activityDate: '2026-03-24',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1105',
+                teacherId: 't_badrul',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation (3rd Examiner)',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন (৩য় পরীক্ষক)',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 2,
+                rateApplied: 120.00,
+                calculatedAmount: 240.00,
+                approvedAmount: 240.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_badrul_2025',
+                notes: '3rd Examiner for IT24022 & IT24047',
+                createdAt: '2026-03-24T00:00:00Z'
+            },
+
+            // 7. Dr. Md. Abir Hossain (Calculus ICT-1107)
+            {
+                id: 'act_24_abir_01',
+                activityDate: '2026-03-05',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1107',
+                teacherId: 't_abir',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_abir_2025',
+                notes: 'Question paper setting for ICT-1107 Calculus',
+                createdAt: '2026-03-05T00:00:00Z'
+            },
+            {
+                id: 'act_24_abir_03',
+                activityDate: '2026-03-21',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1107',
+                teacherId: 't_abir',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 60,
+                rateApplied: 120.00,
+                calculatedAmount: 7200.00,
+                approvedAmount: 7200.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_abir_2025',
+                notes: '60 answer scripts checked for ICT-1107 Calculus',
+                createdAt: '2026-03-21T00:00:00Z'
+            },
+            {
+                id: 'act_24_abir_13',
+                activityDate: '2026-03-14',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1107',
+                teacherId: 't_abir',
+                categoryNumber: 13,
+                activityNameEn: 'Class Test Assessment',
+                activityNameBn: 'ক্লাস টেস্ট',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 4,
+                rateApplied: 1350.00,
+                calculatedAmount: 5400.00,
+                approvedAmount: 5400.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_abir_2025',
+                notes: '4 Class Tests for 3 Cr course ICT-1107 Calculus',
+                createdAt: '2026-03-14T00:00:00Z'
+            },
+            {
+                id: 'act_24_abir_03_3rd',
+                activityDate: '2026-03-24',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1107',
+                teacherId: 't_abir',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation (3rd Examiner)',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন (৩য় পরীক্ষক)',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 2,
+                rateApplied: 120.00,
+                calculatedAmount: 240.00,
+                approvedAmount: 240.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_abir_2025',
+                notes: '3rd Examiner for IT24014 & IT24033',
+                createdAt: '2026-03-24T00:00:00Z'
+            },
+
+            // =========================================================================
+            // SESSION 2021-2022 • 4TH YEAR 1ST SEMESTER (sem_2021_41)
+            // =========================================================================
+            {
+                id: 'act_41_monir_01',
+                activityDate: '2025-12-10',
+                semesterId: 'sem_2021_41',
+                courseId: 'crs_4103',
+                teacherId: 't_monir',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_monir_41_2025',
+                notes: 'Question setting for ICT-4103 Digital Image Processing',
+                createdAt: '2025-12-10T00:00:00Z'
+            },
+            {
+                id: 'act_41_monir_03',
+                activityDate: '2025-12-22',
+                semesterId: 'sem_2021_41',
+                courseId: 'crs_4103',
+                teacherId: 't_monir',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 56,
+                rateApplied: 120.00,
+                calculatedAmount: 6720.00,
+                approvedAmount: 6720.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_monir_41_2025',
+                notes: '56 scripts evaluated for ICT-4103 DIP',
+                createdAt: '2025-12-22T00:00:00Z'
+            },
+            {
+                id: 'act_41_monir_05',
+                activityDate: '2025-12-18',
+                semesterId: 'sem_2021_41',
+                courseId: 'crs_4104',
+                teacherId: 't_monir',
+                categoryNumber: 5,
+                activityNameEn: 'Practical / Lab / Sessional Exam',
+                activityNameBn: 'ব্যবহারিক / ল্যাব / সেশনাল পরীক্ষা',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 56,
+                rateApplied: 100.00,
+                calculatedAmount: 5600.00,
+                approvedAmount: 5600.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_monir_41_2025',
+                notes: '56 candidates in ICT-4104 DIP Lab',
+                createdAt: '2025-12-18T00:00:00Z'
+            },
+            {
+                id: 'act_41_monir_13',
+                activityDate: '2025-12-15',
+                semesterId: 'sem_2021_41',
+                courseId: 'crs_4103',
+                teacherId: 't_monir',
+                categoryNumber: 13,
+                activityNameEn: 'Class Test Assessment',
+                activityNameBn: 'ক্লাস টেস্ট',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 4,
+                rateApplied: 1350.00,
+                calculatedAmount: 5400.00,
+                approvedAmount: 5400.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_monir_41_2025',
+                notes: '4 Class Tests for 3 Cr course ICT-4103 DIP',
+                createdAt: '2025-12-15T00:00:00Z'
+            },
+
+            // =========================================================================
+            // SESSION 2023-2024 • 2ND YEAR 1ST SEMESTER BACKLOG (sem_2023_21_bl)
+            // =========================================================================
+            {
+                id: 'act_bl_rupali_eval',
+                activityDate: '2026-03-24',
+                semesterId: 'sem_2023_21_bl',
+                courseId: 'crs_2111',
+                teacherId: 't_rupali',
+                categoryNumber: 3,
+                candidateType: 'BL',
+                activityNameEn: 'Answer Script Evaluation (BL)',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন (ব্যাকলগ)',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 18,
+                rateApplied: 120.00,
+                calculatedAmount: 2160.00,
+                approvedAmount: 2160.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_bl_rupali_2025',
+                notes: '18 Backlog scripts evaluated for ICT-2111 Statistics (BL)',
+                createdAt: '2026-03-24T00:00:00Z'
+            },
+            {
+                id: 'act_bl_shahin_eval',
+                activityDate: '2026-03-24',
+                semesterId: 'sem_2023_21_bl',
+                courseId: 'crs_2101',
+                teacherId: 't_shahin',
+                categoryNumber: 3,
+                candidateType: 'BL',
+                activityNameEn: 'Answer Script Evaluation (BL)',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন (ব্যাকলগ)',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 5,
+                rateApplied: 120.00,
+                calculatedAmount: 600.00,
+                approvedAmount: 600.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_bl_rupali_2025',
+                notes: '5 Backlog scripts evaluated for ICT-2101 Computer Org (BL)',
+                createdAt: '2026-03-24T00:00:00Z'
+            },
+
             // --- Dr. Monir Morshed Activities (Accrued: ৳26,150) ---
             {
                 id: 'act_monir_01',
@@ -5958,6 +6708,181 @@ const App = {
 
         // 6. Official Bills (Internal Teachers Only)
         this.state.bills = [
+            // --- 1Y 1S BILLS (sem_2024_11) ---
+            {
+                id: 'bill_ziaur_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/11/001',
+                semesterId: 'sem_2024_11',
+                teacherId: 't_ziaur',
+                preparationDate: '2026-03-30',
+                carrierEnabled: true,
+                carrierCharge: 700.00,
+                carrierVoucherNo: 'VR-1Y1S-ZIA-991',
+                grossAmount: 30275.00,
+                deductions: 0.00,
+                approvedAmount: 30275.00,
+                paidAmount: 30275.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-04-02',
+                createdAt: '2026-03-30T00:00:00Z'
+            },
+            {
+                id: 'bill_monir_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/11/002',
+                semesterId: 'sem_2024_11',
+                teacherId: 't_monir',
+                preparationDate: '2026-03-28',
+                carrierEnabled: true,
+                carrierCharge: 600.00,
+                carrierVoucherNo: 'SA-PARCEL-1101',
+                grossAmount: 17200.00,
+                deductions: 0.00,
+                approvedAmount: 17200.00,
+                paidAmount: 17200.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-04-01',
+                createdAt: '2026-03-28T00:00:00Z'
+            },
+            {
+                id: 'bill_shahin_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/11/003',
+                semesterId: 'sem_2024_11',
+                teacherId: 't_shahin',
+                preparationDate: '2026-03-28',
+                carrierEnabled: false,
+                carrierCharge: 0.00,
+                carrierVoucherNo: '',
+                grossAmount: 22600.00,
+                deductions: 0.00,
+                approvedAmount: 22600.00,
+                paidAmount: 22600.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-04-01',
+                createdAt: '2026-03-28T00:00:00Z'
+            },
+            {
+                id: 'bill_nargis_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/11/004',
+                semesterId: 'sem_2024_11',
+                teacherId: 't_nargis',
+                preparationDate: '2026-03-29',
+                carrierEnabled: false,
+                carrierCharge: 0.00,
+                carrierVoucherNo: '',
+                grossAmount: 27325.00,
+                deductions: 0.00,
+                approvedAmount: 27325.00,
+                paidAmount: 0.00,
+                outstandingBalance: 27325.00,
+                status: 'Approved',
+                chairmanSigned: true,
+                approvalDate: '2026-04-02',
+                createdAt: '2026-03-29T00:00:00Z'
+            },
+            {
+                id: 'bill_sajjad_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/11/005',
+                semesterId: 'sem_2024_11',
+                teacherId: 't_sajjad',
+                preparationDate: '2026-03-29',
+                carrierEnabled: false,
+                carrierCharge: 0.00,
+                carrierVoucherNo: '',
+                grossAmount: 10725.00,
+                deductions: 0.00,
+                approvedAmount: 10725.00,
+                paidAmount: 10725.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-04-02',
+                createdAt: '2026-03-29T00:00:00Z'
+            },
+            {
+                id: 'bill_badrul_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/11/006',
+                semesterId: 'sem_2024_11',
+                teacherId: 't_badrul',
+                preparationDate: '2026-03-29',
+                carrierEnabled: false,
+                carrierCharge: 0.00,
+                carrierVoucherNo: '',
+                grossAmount: 6240.00,
+                deductions: 0.00,
+                approvedAmount: 6240.00,
+                paidAmount: 6240.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-04-02',
+                createdAt: '2026-03-29T00:00:00Z'
+            },
+            {
+                id: 'bill_abir_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/11/007',
+                semesterId: 'sem_2024_11',
+                teacherId: 't_abir',
+                preparationDate: '2026-03-29',
+                carrierEnabled: false,
+                carrierCharge: 0.00,
+                carrierVoucherNo: '',
+                grossAmount: 16840.00,
+                deductions: 0.00,
+                approvedAmount: 16840.00,
+                paidAmount: 16840.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-04-02',
+                createdAt: '2026-03-29T00:00:00Z'
+            },
+            // --- 4Y 1S BILL (sem_2021_41) ---
+            {
+                id: 'bill_monir_41_2025',
+                billNo: 'MBSTU/ICT/BILL/2024/41/001',
+                semesterId: 'sem_2021_41',
+                teacherId: 't_monir',
+                preparationDate: '2025-12-28',
+                carrierEnabled: false,
+                carrierCharge: 0.00,
+                carrierVoucherNo: '',
+                grossAmount: 21720.00,
+                deductions: 0.00,
+                approvedAmount: 21720.00,
+                paidAmount: 21720.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-01-05',
+                createdAt: '2025-12-28T00:00:00Z'
+            },
+            // --- Backlog Bill (sem_2023_21_bl) ---
+            {
+                id: 'bill_bl_rupali_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/BL/RUPALI',
+                semesterId: 'sem_2023_21_bl',
+                teacherId: 't_rupali',
+                preparationDate: '2026-03-26',
+                carrierEnabled: false,
+                carrierCharge: 0.00,
+                carrierVoucherNo: '',
+                grossAmount: 2160.00,
+                deductions: 0.00,
+                approvedAmount: 2160.00,
+                paidAmount: 2160.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-03-28',
+                createdAt: '2026-03-26T00:00:00Z'
+            },
+
             {
                 id: 'bill_nargis_2026',
                 billNo: 'MBSTU/ICT/BILL/2026/042',
@@ -6061,6 +6986,47 @@ const App = {
 
         // 7. Payments (Accounts Disbursements)
         this.state.payments = [
+            // 1Y 1S Payments (sem_2024_11)
+            {
+                id: 'pay_ziaur_2025',
+                billId: 'bill_ziaur_2025',
+                teacherId: 't_ziaur',
+                semesterId: 'sem_2024_11',
+                paymentDate: '2026-04-05',
+                amountPaid: 30275.00,
+                paymentMethod: 'Bank Transfer',
+                receiptVoucherNo: 'VR-2026-4411',
+                hasRevenueStamp: true,
+                recordedBy: 'Section Officer (Accounts)',
+                createdAt: '2026-04-05T00:00:00Z'
+            },
+            {
+                id: 'pay_monir_2025',
+                billId: 'bill_monir_2025',
+                teacherId: 't_monir',
+                semesterId: 'sem_2024_11',
+                paymentDate: '2026-04-04',
+                amountPaid: 17200.00,
+                paymentMethod: 'Bank Transfer',
+                receiptVoucherNo: 'VR-2026-4412',
+                hasRevenueStamp: true,
+                recordedBy: 'Assistant Controller (Accounts)',
+                createdAt: '2026-04-04T00:00:00Z'
+            },
+            {
+                id: 'pay_shahin_2025',
+                billId: 'bill_shahin_2025',
+                teacherId: 't_shahin',
+                semesterId: 'sem_2024_11',
+                paymentDate: '2026-04-04',
+                amountPaid: 22600.00,
+                paymentMethod: 'Bank Transfer',
+                receiptVoucherNo: 'VR-2026-4413',
+                hasRevenueStamp: true,
+                recordedBy: 'Assistant Controller (Accounts)',
+                createdAt: '2026-04-04T00:00:00Z'
+            },
+
             {
                 id: 'pay_nargis_01',
                 billId: 'bill_nargis_2026',
@@ -6103,7 +7069,8 @@ const App = {
         ];
 
         // Default selector
-        this.state.currentSemesterId = 'all';
+        this.state.currentSemesterId = 'sem_2024_11'; // Default active semester is 1st Year 1st Semester
+        this.state.selectedTeacherId = 't_ziaur';
         this.state.selectedTeacherId = 't_monir';
 
         this.saveState();

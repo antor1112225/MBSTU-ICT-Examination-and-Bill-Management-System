@@ -51,11 +51,24 @@ body {
    Header & University Branding
    -------------------------------------------------------------------------- */
 .app-header {
-    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #0b2545 0%, #173860 100%);
     color: #ffffff;
-    padding: 14px 24px;
-    border-bottom: 3px solid #d97706;
-    box-shadow: var(--shadow-md);
+    padding: 12px 24px;
+    border-bottom: 3px solid #f59e0b;
+    box-shadow: 0 4px 15px rgba(11, 37, 69, 0.15);
+}
+
+.brand-header-logo {
+    transition: transform 0.2s ease;
+}
+
+.brand-header-logo:hover {
+    transform: scale(1.04);
+}
+
+.slip-header-logo {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
 }
 
 .header-container {
@@ -983,4 +996,18 @@ body {
         size: A4 portrait;
         margin: 8mm 10mm;
     }
+}
+
+/* Dynamic Activity Date Badge */
+.act-date-cell {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #1e3a8a;
+    background: #f1f5f9;
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+    display: inline-block;
+    white-space: nowrap;
 }

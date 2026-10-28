@@ -658,7 +658,6 @@ const App = {
     },
 
     updateTeacherDropdowns() {
-        // STRICT REQUIREMENT: Only internal ICT faculty appear in active dropdowns
         const crsInt = document.getElementById('crs-internal-teacher');
         const actTchr = document.getElementById('act-teacher-id');
         const billTchr = document.getElementById('bill-teacher-id');
@@ -666,32 +665,109 @@ const App = {
         const assignTchr = document.getElementById('assign-teacher-id');
         const assignMod = document.getElementById('assign-moderator-id');
 
-        let options = '<option value="">-- Select Internal Teacher --</option>';
-        let modOptions = '<option value="">-- None / External Moderator --</option>';
+        const internalTeachers = this.state.teachers.filter(t => !t.isExternal);
+        const externalTeachers = this.state.teachers.filter(t => t.isExternal);
 
-        this.state.teachers.forEach(t => {
-            const label = `${t.nameEn} (${t.designation}, MBSTU)`;
-            options += `<option value="${t.id}">${label}</option>`;
-            modOptions += `<option value="${t.id}">${label}</option>`;
+        let internalOpts = '<optgroup label="🏛️ Internal Faculty (মাভাবিপ্রবি শিক্ষক)">';
+        internalTeachers.forEach(t => {
+            internalOpts += `<option value="${t.id}">${t.nameEn} (${t.designation}, MBSTU)</option>`;
         });
+        internalOpts += '</optgroup>';
 
-        if (crsInt) crsInt.innerHTML = options;
-        if (actTchr) actTchr.innerHTML = options;
-        if (billTchr) billTchr.innerHTML = options;
-        if (assignTchr) assignTchr.innerHTML = options;
+        let externalOpts = '';
+        if (externalTeachers.length > 0) {
+            externalOpts = '<optgroup label="🌐 External Examiners (বহিরাগত শিক্ষক / পরীক্ষক)">';
+            externalTeachers.forEach(t => {
+                const instStr = t.institution ? ` (${t.institution})` : ' (External)';
+                externalOpts += `<option value="${t.id}">${t.nameEn} - ${t.designation}${instStr}</option>`;
+            });
+            externalOpts += '</optgroup>';
+        }
+
+        const othersOpt = '<optgroup label="➕ Others (অন্যান্য)">' +
+                          '<option value="__NEW_EXTERNAL__">➕ Add New External Examiner (নতুন বহিরাগত শিক্ষক হিসেবে ইনপুট দিন)...</option>' +
+                          '</optgroup>';
+
+        const fullWithOthers = '<option value="">-- Select Teacher / Examiner --</option>' + internalOpts + externalOpts + othersOpt;
+        const fullOptions = '<option value="">-- Select Teacher / Examiner --</option>' + internalOpts + externalOpts;
+        const internalOnly = '<option value="">-- Select Internal Teacher --</option>' + internalOpts;
+        const modOptions = '<option value="">-- None / Select Moderator --</option>' + internalOpts + externalOpts;
+
+        if (crsInt) crsInt.innerHTML = internalOnly;
+        if (assignTchr) assignTchr.innerHTML = internalOnly;
         if (assignMod) assignMod.innerHTML = modOptions;
 
+        if (actTchr) actTchr.innerHTML = fullWithOthers;
+        if (billTchr) billTchr.innerHTML = fullWithOthers;
+
         if (ledgerTchr) {
-            ledgerTchr.innerHTML = options;
-            if (this.state.selectedTeacherId) {
+            ledgerTchr.innerHTML = fullOptions;
+            if (this.state.selectedTeacherId && this.state.teachers.some(t => t.id === this.state.selectedTeacherId)) {
                 ledgerTchr.value = this.state.selectedTeacherId;
             } else if (this.state.teachers.length > 0) {
-                // Default to Dr. Monir Morshed if present, or first teacher
-                const monir = this.state.teachers.find(t => t.id === 't_monir');
-                ledgerTchr.value = monir ? monir.id : this.state.teachers[0].id;
+                ledgerTchr.value = this.state.teachers[0].id;
                 this.state.selectedTeacherId = ledgerTchr.value;
             }
         }
+    },
+
+    handleActivityTeacherSelectChange(val) {
+        const box = document.getElementById('box-new-external-teacher');
+        if (box) {
+            box.style.display = val === '__NEW_EXTERNAL__' ? 'block' : 'none';
+        }
+    },
+
+    handleTeacherTypeChange(val) {
+        const dept = document.getElementById('tchr-department');
+        const inst = document.getElementById('tchr-institution');
+        const title = document.getElementById('modal-teacher-title');
+
+        if (val === 'external') {
+            if (dept) {
+                dept.removeAttribute('readonly');
+                dept.style.background = '#ffffff';
+                dept.value = '';
+                dept.placeholder = 'e.g. Dept. of CSE / EEE';
+            }
+            if (inst) {
+                inst.removeAttribute('readonly');
+                inst.style.background = '#ffffff';
+                inst.value = '';
+                inst.placeholder = 'e.g. RUET, Rajshahi / DUET / JU / BUET';
+            }
+            if (title) title.textContent = 'Add External / Other University Examiner';
+        } else {
+            if (dept) {
+                dept.setAttribute('readonly', 'true');
+                dept.style.background = '#f1f5f9';
+                dept.value = 'Dept. of ICT';
+            }
+            if (inst) {
+                inst.setAttribute('readonly', 'true');
+                inst.style.background = '#f1f5f9';
+                inst.value = 'MBSTU';
+            }
+            if (title) title.textContent = 'Add Internal ICT Faculty Member';
+        }
+    },
+
+    openAddExternalTeacherModal() {
+        this.openModal('modal-teacher');
+        const typeSelect = document.getElementById('tchr-type');
+        if (typeSelect) {
+            typeSelect.value = 'external';
+            this.handleTeacherTypeChange('external');
+        }
+    },
+
+    filterTeachersDirectory(filterType) {
+        this.state.teacherFilter = filterType;
+        ['all', 'internal', 'external'].forEach(f => {
+            const btn = document.getElementById(`btn-filter-tchr-${f}`);
+            if (btn) btn.classList.toggle('active', f === filterType);
+        });
+        this.renderTeachersTable();
     },
 
     // --------------------------------------------------------------------------
@@ -1139,20 +1215,37 @@ const App = {
         const tbody = document.getElementById('tbody-teachers');
         if (!tbody) return;
 
-        tbody.innerHTML = this.state.teachers.map(t => `
-            <tr>
-                <td><strong>${t.nameBn}</strong></td>
-                <td><strong>${t.nameEn}</strong></td>
-                <td><span class="badge badge-secondary">${t.designation}</span></td>
-                <td>${t.department}</td>
-                <td><strong>${t.institution}</strong></td>
-                <td><span class="badge badge-verified">${t.status || 'Active Internal'}</span></td>
-                <td><small>📞 ${t.phone || 'N/A'}<br>✉️ ${t.email || 'N/A'}</small></td>
-                <td>
-                    <button class="btn btn-outline btn-sm" onclick="App.deleteTeacher('${t.id}')">Delete</button>
-                </td>
-            </tr>
-        `).join('');
+        let list = this.state.teachers;
+        const filter = this.state.teacherFilter || 'all';
+        if (filter === 'internal') list = list.filter(t => !t.isExternal);
+        if (filter === 'external') list = list.filter(t => t.isExternal);
+
+        if (list.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 16px;">No faculty or examiners found for selected filter.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = list.map(t => {
+            const typeBadge = t.isExternal 
+                ? `<span class="badge" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a;">🌐 External (${t.institution || 'Other Univ'})</span>`
+                : `<span class="badge badge-verified">🏛️ MBSTU Internal</span>`;
+
+            return `
+                <tr>
+                    <td><strong>${t.nameBn}</strong></td>
+                    <td><strong>${t.nameEn}</strong></td>
+                    <td><span class="badge badge-secondary">${t.designation}</span></td>
+                    <td>${t.department}</td>
+                    <td><strong>${t.institution}</strong></td>
+                    <td>${typeBadge}</td>
+                    <td><small>📞 ${t.phone || 'N/A'}<br>✉️ ${t.email || 'N/A'}</small></td>
+                    <td>
+                        <button class="btn btn-outline btn-sm" onclick="App.editTeacher('${t.id}')">Edit</button>
+                        <button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="App.deleteTeacher('${t.id}')">Delete</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
     },
 
     deleteTeacher(id) {
@@ -1375,12 +1468,44 @@ const App = {
             }
         }
 
+        let selectedTeacherId = document.getElementById('act-teacher-id').value;
+
+        // If user input a new external examiner under 'Others'
+        if (selectedTeacherId === '__NEW_EXTERNAL__') {
+            const extNameBn = document.getElementById('ext-name-bn')?.value.trim();
+            const extNameEn = document.getElementById('ext-name-en')?.value.trim();
+            const extInst = document.getElementById('ext-institution')?.value.trim() || 'Other University';
+            const extDept = document.getElementById('ext-department')?.value.trim() || 'External Examiner';
+
+            if (!extNameBn && !extNameEn) {
+                alert('Please enter the External Examiner name.');
+                return;
+            }
+
+            const newExtId = 'ext_' + Date.now();
+            const newExt = {
+                id: newExtId,
+                nameBn: extNameBn || extNameEn,
+                nameEn: extNameEn || extNameBn,
+                designation: extDept,
+                department: extDept,
+                institution: extInst,
+                phone: '',
+                email: '',
+                isExternal: true,
+                status: 'Active External'
+            };
+            this.state.teachers.push(newExt);
+            this.updateTeacherDropdowns();
+            selectedTeacherId = newExtId;
+        }
+
         const act = {
             id: 'act_' + Date.now(),
             activityDate: document.getElementById('act-date') ? (document.getElementById('act-date').value || new Date().toISOString().split('T')[0]) : new Date().toISOString().split('T')[0],
             semesterId: document.getElementById('act-semester-id').value,
             courseId: document.getElementById('act-course-id').value || null,
-            teacherId: document.getElementById('act-teacher-id').value,
+            teacherId: selectedTeacherId,
             categoryNumber: catNum,
             activityNameEn: nameEn,
             activityNameBn: nameBn,
@@ -2770,6 +2895,10 @@ const App = {
             phone: '01712345678'
         };
 
+        const teacherAddress = teacher.isExternal 
+            ? `${teacher.designation}, ${teacher.department}, ${teacher.institution}`
+            : `${teacher.designation}, ${teacher.department || 'তথ্য ও যোগাযোগ প্রযুক্তি বিভাগ'}, ${teacher.institution || 'মাভাবিপ্রবি'}`;
+
         const sem = this.state.semesters.find(s => s.id === bill.semesterId) || {
             academicYear: '2025',
             yearLevel: '2nd Year',
@@ -4099,6 +4228,80 @@ const App = {
         ];
 
         this.state.teachers = [
+            // --- Authentic External Examiners across Universities (from MBSTU Dossiers) ---
+            {
+                id: 'ext_abdullah_hstu',
+                nameBn: 'ড. আব্দুল্লাহ আল মামুন',
+                nameEn: 'Dr. Abdullah Al Mamun',
+                designation: 'Professor',
+                department: 'Dept. of CSE',
+                institution: 'HSTU, Dinajpur',
+                phone: '01711223344',
+                email: 'abdullah.cse@hstu.ac.bd',
+                isExternal: true,
+                status: 'Active External'
+            },
+            {
+                id: 'ext_anwar_ruet',
+                nameBn: 'ড. মোঃ আনোয়ার হোসেন',
+                nameEn: 'Dr. Md. Anwar Hossain',
+                designation: 'Professor',
+                department: 'Dept. of EEE',
+                institution: 'RUET, Rajshahi',
+                phone: '01712334455',
+                email: 'anwar.eee@ruet.ac.bd',
+                isExternal: true,
+                status: 'Active External'
+            },
+            {
+                id: 'ext_rafiqul_duet',
+                nameBn: 'প্রফেসর ড. মোঃ রফিকুল ইসলাম',
+                nameEn: 'Prof. Dr. Md. Rafiqul Islam',
+                designation: 'Professor',
+                department: 'Dept. of CSE',
+                institution: 'DUET, Gazipur',
+                phone: '01713445566',
+                email: 'rafiqul.cse@duet.ac.bd',
+                isExternal: true,
+                status: 'Active External'
+            },
+            {
+                id: 'ext_shamim_ju',
+                nameBn: 'ড. শামীম কায়সার',
+                nameEn: 'Dr. Shamim Kaiser',
+                designation: 'Professor',
+                department: 'Institute of Information Technology (IIT)',
+                institution: 'Jahangirnagar University',
+                phone: '01714556677',
+                email: 'shamim.iit@juniv.edu',
+                isExternal: true,
+                status: 'Active External'
+            },
+            {
+                id: 'ext_sarwar_pust',
+                nameBn: 'ড. মোঃ সারওয়ার হোসাইন',
+                nameEn: 'Dr. Md. Sarwar Hosain',
+                designation: 'Professor',
+                department: 'Dept. of ICE',
+                institution: 'PUST, Pabna',
+                phone: '01715667788',
+                email: 'sarwar.ice@pust.ac.bd',
+                isExternal: true,
+                status: 'Active External'
+            },
+            {
+                id: 'ext_kamal_ruet',
+                nameBn: 'ড. মোঃ কামাল হোসেন',
+                nameEn: 'Dr. Md. Kamal Hossain',
+                designation: 'Professor',
+                department: 'Dept. of CSE',
+                institution: 'RUET, Rajshahi',
+                phone: '01716778899',
+                email: 'kamal.cse@ruet.ac.bd',
+                isExternal: true,
+                status: 'Active External'
+            },
+
             {
                 id: 't_monir',
                 nameBn: 'ড. মনির মোর্শেদ',
@@ -5098,6 +5301,184 @@ const App = {
         ];
 
         this.state.examActivities = [
+            // --- External Examiners Activities (Payment Calculations) ---
+            // 1. Dr. Abdullah Al Mamun (HSTU) for 1Y 1S (sem_2024_11)
+            {
+                id: 'act_24_ext_abdullah_mod',
+                activityDate: '2026-03-10',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 'ext_abdullah_hstu',
+                categoryNumber: 2,
+                activityNameEn: 'Question Moderation (External Member Share)',
+                activityNameBn: 'প্রশ্নপত্র সমীক্ষণ (বহিরাগত সদস্য)',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4500.00,
+                calculatedAmount: 4500.00,
+                approvedAmount: 4500.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_abdullah_2025',
+                notes: 'External member share for moderating 9 courses in 1Y 1S',
+                createdAt: '2026-03-10T00:00:00Z'
+            },
+            {
+                id: 'act_24_ext_abdullah_qs',
+                activityDate: '2026-03-04',
+                semesterId: 'sem_2024_11',
+                courseId: 'crs_1103',
+                teacherId: 'ext_abdullah_hstu',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting (Section-B / খ-বিভাগ)',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন (খ-বিভাগ)',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_abdullah_2025',
+                notes: 'Full question paper setting Section-B for ICT-1103',
+                createdAt: '2026-03-04T00:00:00Z'
+            },
+            {
+                id: 'act_24_ext_abdullah_tada',
+                activityDate: '2026-03-25',
+                semesterId: 'sem_2024_11',
+                courseId: null,
+                teacherId: 'ext_abdullah_hstu',
+                categoryNumber: 14,
+                activityNameEn: 'TA / DA & Conveyance Allowance',
+                activityNameBn: 'ইনসিডেন্টাল চার্জ / কুরিয়ার চার্জ / টিএ-ডিএ',
+                calcMethod: 'manual',
+                workloadQuantity: 1,
+                rateApplied: 1500.00,
+                calculatedAmount: 1500.00,
+                approvedAmount: 1500.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_abdullah_2025',
+                notes: 'Travel allowance and confidential question transit (Voucher: VR-HSTU-TA-88)',
+                createdAt: '2026-03-25T00:00:00Z'
+            },
+
+            // 2. Dr. Md. Anwar Hossain (RUET) for 2Y 1S (sem_2023_21)
+            {
+                id: 'act_23_ext_anwar_mod',
+                activityDate: '2026-03-12',
+                semesterId: 'sem_2023_21',
+                courseId: null,
+                teacherId: 'ext_anwar_ruet',
+                categoryNumber: 2,
+                activityNameEn: 'Question Moderation (External Member Share)',
+                activityNameBn: 'প্রশ্নপত্র সমীক্ষণ (বহিরাগত সদস্য)',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 8000.00,
+                calculatedAmount: 8000.00,
+                approvedAmount: 8000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_anwar_2025',
+                notes: 'External moderation member share for 16 courses (৳32,000 / 4)',
+                createdAt: '2026-03-12T00:00:00Z'
+            },
+            {
+                id: 'act_23_ext_anwar_qs',
+                activityDate: '2026-03-05',
+                semesterId: 'sem_2023_21',
+                courseId: 'crs_2103',
+                teacherId: 'ext_anwar_ruet',
+                categoryNumber: 1,
+                activityNameEn: 'Question Paper Setting (Section-B)',
+                activityNameBn: 'প্রশ্নপত্র প্রণয়ন (খ-বিভাগ)',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 4000.00,
+                calculatedAmount: 4000.00,
+                approvedAmount: 4000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_anwar_2025',
+                notes: 'Question paper setting for ICT-2103 Digital Electronics',
+                createdAt: '2026-03-05T00:00:00Z'
+            },
+            {
+                id: 'act_23_ext_anwar_eval',
+                activityDate: '2026-03-20',
+                semesterId: 'sem_2023_21',
+                courseId: 'crs_2103',
+                teacherId: 'ext_anwar_ruet',
+                categoryNumber: 3,
+                activityNameEn: 'Answer Script Evaluation (External Examiner)',
+                activityNameBn: 'উত্তর পত্র মূল্যায়ন (বহিরাগত পরীক্ষক)',
+                calcMethod: 'qty_rate',
+                workloadQuantity: 57,
+                rateApplied: 120.00,
+                calculatedAmount: 6840.00,
+                approvedAmount: 6840.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_anwar_2025',
+                notes: '57 answer scripts evaluated for ICT-2103 @ ৳120',
+                createdAt: '2026-03-20T00:00:00Z'
+            },
+            {
+                id: 'act_23_ext_anwar_tada',
+                activityDate: '2026-03-25',
+                semesterId: 'sem_2023_21',
+                courseId: null,
+                teacherId: 'ext_anwar_ruet',
+                categoryNumber: 14,
+                activityNameEn: 'Conveyance & Courier Charges',
+                activityNameBn: 'ইনসিডেন্টাল চার্জ / কুরিয়ার চার্জ / টিএ-ডিএ',
+                calcMethod: 'manual',
+                workloadQuantity: 1,
+                rateApplied: 2000.00,
+                calculatedAmount: 2000.00,
+                approvedAmount: 2000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_anwar_2025',
+                notes: 'Conveyance & transit courier (Voucher: VR-RUET-ANWAR-01)',
+                createdAt: '2026-03-25T00:00:00Z'
+            },
+
+            // 3. Dr. Shamim Kaiser (JU) for 4Y 2S (sem_2020_42)
+            {
+                id: 'act_20_ext_shamim_mod',
+                activityDate: '2026-02-18',
+                semesterId: 'sem_2020_42',
+                courseId: null,
+                teacherId: 'ext_shamim_ju',
+                categoryNumber: 2,
+                activityNameEn: 'Question Moderation (External Member Share)',
+                activityNameBn: 'প্রশ্নপত্র সমীক্ষণ (বহিরাগত সদস্য)',
+                calcMethod: 'fixed',
+                workloadQuantity: 1,
+                rateApplied: 5000.00,
+                calculatedAmount: 5000.00,
+                approvedAmount: 5000.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_shamim_2024',
+                notes: 'External moderation member share for 10 courses in 4Y 2S',
+                createdAt: '2026-02-18T00:00:00Z'
+            },
+            {
+                id: 'act_20_ext_shamim_eval',
+                activityDate: '2026-02-25',
+                semesterId: 'sem_2020_42',
+                courseId: 'crs_4200',
+                teacherId: 'ext_shamim_ju',
+                categoryNumber: 10,
+                activityNameEn: 'Thesis / Research Project Evaluation (External)',
+                activityNameBn: 'থিসিস / রিসার্চ প্রজেক্ট',
+                calcMethod: 'fixed',
+                workloadQuantity: 3,
+                rateApplied: 1500.00,
+                calculatedAmount: 4500.00,
+                approvedAmount: 4500.00,
+                billStatus: 'Approved',
+                relatedBillId: 'bill_ext_shamim_2024',
+                notes: 'External examiner for 3 undergraduate thesis projects',
+                createdAt: '2026-02-25T00:00:00Z'
+            },
+
             // =========================================================================
             // SESSION 2024-2025 • 1ST YEAR 1ST SEMESTER (sem_2024_11) — ACTIVE DEFAULT
             // =========================================================================
@@ -6708,6 +7089,65 @@ const App = {
 
         // 6. Official Bills (Internal Teachers Only)
         this.state.bills = [
+            // --- External Examiners Bills ---
+            {
+                id: 'bill_ext_abdullah_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/11/EXT-01',
+                semesterId: 'sem_2024_11',
+                teacherId: 'ext_abdullah_hstu',
+                preparationDate: '2026-03-30',
+                carrierEnabled: true,
+                carrierCharge: 1500.00,
+                carrierVoucherNo: 'VR-HSTU-TA-88',
+                grossAmount: 10000.00,
+                deductions: 0.00,
+                approvedAmount: 10000.00,
+                paidAmount: 10000.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-04-02',
+                createdAt: '2026-03-30T00:00:00Z'
+            },
+            {
+                id: 'bill_ext_anwar_2025',
+                billNo: 'MBSTU/ICT/BILL/2025/21/EXT-01',
+                semesterId: 'sem_2023_21',
+                teacherId: 'ext_anwar_ruet',
+                preparationDate: '2026-03-28',
+                carrierEnabled: true,
+                carrierCharge: 2000.00,
+                carrierVoucherNo: 'VR-RUET-ANWAR-01',
+                grossAmount: 20840.00,
+                deductions: 0.00,
+                approvedAmount: 20840.00,
+                paidAmount: 20840.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-04-01',
+                createdAt: '2026-03-28T00:00:00Z'
+            },
+            {
+                id: 'bill_ext_shamim_2024',
+                billNo: 'MBSTU/ICT/BILL/2024/42/EXT-01',
+                semesterId: 'sem_2020_42',
+                teacherId: 'ext_shamim_ju',
+                preparationDate: '2026-02-28',
+                carrierEnabled: false,
+                carrierCharge: 0.00,
+                carrierVoucherNo: '',
+                grossAmount: 9500.00,
+                deductions: 0.00,
+                approvedAmount: 9500.00,
+                paidAmount: 9500.00,
+                outstandingBalance: 0.00,
+                status: 'Paid',
+                chairmanSigned: true,
+                approvalDate: '2026-03-05',
+                createdAt: '2026-02-28T00:00:00Z'
+            },
+
             // --- 1Y 1S BILLS (sem_2024_11) ---
             {
                 id: 'bill_ziaur_2025',

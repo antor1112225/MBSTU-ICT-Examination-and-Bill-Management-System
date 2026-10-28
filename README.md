@@ -14,13 +14,13 @@
 * **Course:** Software Engineering Capstone Project / Course Project (Part I: Proposal & Prototyping)  
 * **Academic Session:** 2023–2024 / 2024–2025  
 
-### 👥 Project Team Members
-* **Md Tahmid Hasib Antor** (Lead Technical Architect & Developer) — **Student ID: IT24055**  
-  Email: `tahmidantor123@gmail.com` | GitHub: [@antor1112225](https://github.com/antor1112225)
-* **Saiba Khan** (Requirements Analyst & QA) — GitHub: [@saibakhan1104-png](https://github.com/saibakhan1104-png)  
-  Email: `saibakhan1104@gmail.com`
-* **Samiul Islam** (Systems Analyst & UI/UX) — **Student ID: IT24011**  
-  Email: `it24011@mbstu.ac.bd` | GitHub: [@SAMIUL-01](https://github.com/SAMIUL-01)
+### 👤 Project Student / Author
+* **Md Tahmid Hasib Antor** (Sole Author, System Architect & Developer) — **Student ID: IT24055**  
+  * **Department:** Department of Information and Communication Technology (ICT)  
+  * **Faculty:** Faculty of Engineering  
+  * **Institution:** Mawlana Bhashani Science and Technology University (MBSTU), Santosh, Tangail-1902  
+  * **Email:** `tahmidantor123@gmail.com` | `it24055@mbstu.ac.bd`  
+  * **GitHub Profile:** [@antor1112225](https://github.com/antor1112225)
 
 ---
 

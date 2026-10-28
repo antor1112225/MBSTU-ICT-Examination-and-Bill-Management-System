@@ -11,13 +11,13 @@
 * **Academic Session:** 2023–2024 / 2024–2025
 * **Submission Date:** October 2026
 
-### 👥 Project Team Members
-1. **Md Tahmid Hasib Antor** (Lead Technical Architect & Developer) — **Student ID: IT24055**  
-   Email: `tahmidantor123@gmail.com` | GitHub: [@antor1112225](https://github.com/antor1112225)
-2. **Saiba Khan** (Requirements Analyst & Quality Assurance)  
-   Email: `saibakhan1104@gmail.com` | GitHub: [@saibakhan1104-png](https://github.com/saibakhan1104-png)
-3. **Samiul Islam** (Systems Analyst & UI/UX Designer) — **Student ID: IT24011**  
-   Email: `it24011@mbstu.ac.bd` | GitHub: [@SAMIUL-01](https://github.com/SAMIUL-01)
+### 👤 Project Student / Author
+* **Md Tahmid Hasib Antor** (Sole Author, System Architect & Developer) — **Student ID: IT24055**  
+  * **Department:** Department of Information and Communication Technology (ICT)  
+  * **Faculty:** Faculty of Engineering  
+  * **Institution:** Mawlana Bhashani Science and Technology University (MBSTU), Santosh, Tangail-1902  
+  * **Email:** `tahmidantor123@gmail.com` | `it24055@mbstu.ac.bd`  
+  * **GitHub Profile:** [@antor1112225](https://github.com/antor1112225)
 
 ### 🔗 Project Access Links
 * **🌐 Official Live Interactive System (GitHub Pages):**  
@@ -616,7 +616,7 @@ Unlike ordinary software invoices, university regulatory audits reject non-confo
 | **Data Persistence** | Browser `localStorage` API + JSON Export | Zero server infrastructure costs; departmental privacy preserved locally. |
 | **Branding & Assets** | High-Res PNG Logo + Clean Vector Typography | Authentic university visual identity compliant with paper standards. |
 | **Hosting & Deployment** | GitHub Pages CDN | Highly reliable, SSL-certified global hosting updated via Git commits. |
-| **Version Control** | Git & GitHub Team Collaboration | Full commit history and distributed team workflow. |
+| **Version Control** | Git & GitHub | Complete commit history, branching, and cloud repository hosting. |
 
 ---
 
@@ -637,15 +637,17 @@ The prototype has undergone extensive validation:
 
 The **MBSTU ICT Department Examination, Moderation, Faculty Remuneration, and Bill Management System** bridges the gap between traditional university administrative paper bureaucracy and modern automated software engineering. By adhering strictly to the university's official paper form geometry while offering modern financial analytics, multi-semester ledgers, and external examiner flexibility, this project delivers immediate, practical utility to the Department of Information and Communication Technology.
 
-We submit this proposal as our formal **Software Engineering Capstone Project Proposal (Part I)**.
+I submit this proposal as my formal **Software Engineering Capstone Project Proposal (Part I)**.
 
-### Student Signatures & Endorsement
+### Student Signature & Academic Endorsement
 
 ```
-____________________________          ____________________________          ____________________________
-  Md Tahmid Hasib Antor                  Saiba Khan                            Samiul Islam
-  Student ID: IT24055                    Collaborator                          Student ID: IT24011
-  Dept. of ICT, MBSTU                    Dept. of ICT, MBSTU                   Dept. of ICT, MBSTU
+____________________________________________________________
+  Md Tahmid Hasib Antor
+  Student ID: IT24055
+  Department of Information and Communication Technology (ICT)
+  Faculty of Engineering
+  Mawlana Bhashani Science and Technology University (MBSTU)
 ```
 
 ---

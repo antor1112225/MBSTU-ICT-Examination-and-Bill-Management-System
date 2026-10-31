@@ -1011,3 +1011,382 @@ body {
     display: inline-block;
     white-space: nowrap;
 }
+
+
+/* ==========================================================================
+   Comprehensive Mobile & Responsive Media Queries
+   Smartphones, Tablets, and Small Screen Optimization
+   ========================================================================== */
+
+/* 1. Medium Screens & Tablets (max-width: 1024px) */
+@media (max-width: 1024px) {
+    .header-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .brand-wrapper {
+        justify-content: flex-start;
+    }
+
+    .header-controls {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-start;
+    }
+
+    .semester-selector-box {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .semester-select {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .ledger-hero-box {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .ledger-teacher-info {
+        grid-column: 1 / -1;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+    }
+}
+
+/* 2. Standard Mobile & Tablets Portrait (max-width: 768px) */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    .app-header {
+        padding: 10px 14px;
+    }
+
+    .brand-header-logo {
+        height: 40px !important;
+        margin-right: 10px !important;
+    }
+
+    .brand-text h1 {
+        font-size: 0.98rem;
+        line-height: 1.25;
+    }
+
+    .brand-text p {
+        font-size: 0.72rem;
+        line-height: 1.25;
+    }
+
+    .header-controls {
+        gap: 6px;
+    }
+
+    .header-controls .btn {
+        flex: 1 1 calc(50% - 6px);
+        font-size: 0.72rem;
+        padding: 8px 10px;
+        justify-content: center;
+        text-align: center;
+        min-height: 36px;
+    }
+
+    .semester-selector-box {
+        padding: 6px 10px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .semester-selector-box label {
+        font-size: 0.74rem;
+    }
+
+    .semester-select {
+        width: 100%;
+        font-size: 14px;
+        padding: 6px 8px;
+    }
+
+    .scope-banner {
+        padding: 8px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .scope-banner > div {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .scope-banner .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-bar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    .nav-container {
+        padding: 2px 4px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .nav-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-tab {
+        padding: 10px 12px;
+        font-size: 0.78rem;
+        gap: 5px;
+        flex-shrink: 0;
+        min-height: 42px;
+    }
+
+    .main-wrapper {
+        padding: 0 10px;
+        margin: 10px auto;
+        width: 100%;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    .kpi-card {
+        padding: 10px 12px;
+    }
+
+    .kpi-title {
+        font-size: 0.68rem;
+    }
+
+    .kpi-value {
+        font-size: 1.2rem;
+    }
+
+    .kpi-sub {
+        font-size: 0.68rem;
+    }
+
+    .content-card {
+        margin-bottom: 14px;
+        border-radius: var(--radius-sm);
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 10px 12px;
+    }
+
+    .card-header > div,
+    .card-header .btn-group {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .card-header .btn {
+        flex: 1 1 auto;
+        justify-content: center;
+        min-height: 34px;
+    }
+
+    .card-body {
+        padding: 12px 10px;
+    }
+
+    /* Inputs on mobile: at least 15px to prevent browser auto-zoom */
+    .form-control {
+        font-size: 15px;
+        padding: 8px 10px;
+        min-height: 38px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    /* Make responsive table wrapper have clear scroll cues */
+    .table-responsive {
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        margin-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+        position: relative;
+    }
+
+    .data-table th, .data-table td {
+        padding: 7px 8px;
+        font-size: 0.78rem;
+        white-space: nowrap;
+    }
+
+    /* Teacher Ledger Mobile Layout */
+    .ledger-hero-box {
+        grid-template-columns: 1fr;
+        padding: 14px 12px;
+        gap: 10px;
+    }
+
+    .ledger-teacher-info h3 {
+        font-size: 1.05rem;
+    }
+
+    .ledger-stat-block {
+        padding: 8px;
+    }
+
+    .ledger-stat-block strong {
+        font-size: 1.05rem;
+    }
+
+    /* Modal Dialog Mobile Bottom Sheet Layout */
+    .modal-overlay {
+        padding: 6px;
+        align-items: flex-end;
+    }
+
+    .modal-card {
+        max-width: 100%;
+        width: 100%;
+        max-height: 94vh;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .modal-header {
+        padding: 10px 14px;
+    }
+
+    .modal-body {
+        padding: 12px 14px;
+        max-height: 70vh;
+    }
+
+    .modal-footer {
+        padding: 10px 14px;
+        flex-direction: column-reverse;
+        gap: 6px;
+    }
+
+    .modal-footer .btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 38px;
+    }
+
+    /* Bill Slip Mobile Preview Container */
+    .bill-slip-preview-container,
+    .dossier-preview-container {
+        padding: 8px 4px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        display: block;
+        border-radius: var(--radius-sm);
+    }
+
+    .official-bill-sheet,
+    .official-dossier-sheet {
+        margin: 0 auto;
+        min-width: 760px; /* Preserve authentic 12-column university paper proportions inside container */
+    }
+
+    /* Filter rows in tabs */
+    #tab-ledger .content-card .card-body > div {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 8px !important;
+    }
+
+    #tab-ledger .content-card .card-body > div > div {
+        min-width: 0 !important;
+        width: 100% !important;
+    }
+
+    /* BL/SC box and quick carrier bar */
+    #tab-bills .card-header > div {
+        min-width: 0 !important;
+        width: 100% !important;
+        flex-direction: column;
+        align-items: stretch !important;
+    }
+
+    #quick-carrier-amount,
+    #quick-carrier-voucher {
+        width: 100% !important;
+    }
+}
+
+/* 3. Small Smartphones (max-width: 480px) */
+@media (max-width: 480px) {
+    .app-header {
+        padding: 8px 10px;
+    }
+
+    .brand-header-logo {
+        height: 34px !important;
+        margin-right: 8px !important;
+    }
+
+    .brand-text h1 {
+        font-size: 0.88rem;
+    }
+
+    .brand-text p {
+        font-size: 0.66rem;
+    }
+
+    .header-controls .btn {
+        flex: 1 1 100%;
+        font-size: 0.72rem;
+        padding: 8px 10px;
+    }
+
+    .kpi-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .kpi-value {
+        font-size: 1.25rem;
+    }
+
+    .nav-tab {
+        padding: 8px 10px;
+        font-size: 0.74rem;
+    }
+
+    .main-wrapper {
+        padding: 0 4px;
+        margin: 6px auto;
+    }
+
+    .btn {
+        font-size: 0.75rem;
+    }
+}

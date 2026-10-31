@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Poster Presentation - MBSTU ICT Examination & Bill Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0b2545;
+            --primary: #133b68;
+            --primary-light: #1d4ed8;
+            --accent-gold: #f59e0b;
+            --accent-amber: #d97706;
+            --accent-green: #10b981;
+            --bg-canvas: #0f172a;
+            --bg-poster: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Hind Siliguri', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-dark);
+            line-height: 1.4;
+            padding: 20px 0 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Top Action Bar (Screen Only) */
+        .poster-controls {
+            width: 1400px;
+            max-width: 98vw;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px 24px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .poster-controls .btn-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-ctrl {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #0b2545;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+        .btn-print:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-link {
+            background: #1e293b;
+            color: #e2e8f0;
+            border: 1px solid #475569;
+        }
+        .btn-link:hover {
+            background: #334155;
+            color: #ffffff;
+        }
+
+        /* Poster Canvas Container: Standard Academic Ratio ~ 48" x 36" (4:3) */
+        .poster-wrapper {
+            width: 1400px;
+            max-width: 98vw;
+            background: var(--bg-poster);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Poster Header */
+        .poster-header {
+            background: linear-gradient(135deg, #07192f 0%, #0b2545 50%, #133b68 100%);
+            color: #ffffff;
+            padding: 24px 36px;
+            display: grid;
+            grid-template-columns: 140px 1fr 240px;
+            gap: 24px;
+            align-items: center;
+            border-bottom: 6px solid var(--accent-gold);
+            position: relative;
+        }
+
+        .poster-header .logo-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+        .poster-header .logo-box img {
+            width: 110px;
+            height: auto;
+            display: block;
+        }
+
+        .poster-header .title-box {
+            text-align: center;
+        }
+        .poster-header .uni-name {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            color: #93c5fd;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .poster-header .dept-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 10px;
+        }
+        .poster-header .project-title {
+            font-size: 1.7rem;
+            font-weight: 900;
+            line-height: 1.25;
+            color: #ffffff;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .poster-header .author-strip {
+            display: inline-flex;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            padding: 6px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+        }
+        .poster-header .author-strip span {
+            color: #f1f5f9;
+        }
+        .poster-header .author-strip strong {
+            color: var(--accent-gold);
+        }
+
+        .poster-header .qr-box {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .qr-item {
+            background: #ffffff;
+            padding: 6px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .qr-item img {
+            width: 80px;
+            height: 80px;
+            display: block;
+        }
+        .qr-item span {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-top: 4px;
+        }
+
+        /* 3-Column Poster Body Layout */
+        .poster-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.05fr;
+            gap: 20px;
+            padding: 24px 28px;
+            background: #f1f5f9;
+        }
+
+        .poster-column {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* Academic Section Card */
+        .p-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .p-card-header {
+            background: #ffffff;
+            padding: 10px 16px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .p-card-header h2 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .p-card-header .sec-badge {
+            background: var(--primary-dark);
+            color: var(--accent-gold);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+        }
+
+        .p-card-body {
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            color: #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .highlight-quote {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary-light);
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.82rem;
+            color: #1e3a8a;
+            font-weight: 500;
+        }
+
+        /* Custom Mini Tables */
+        .p-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+            margin: 4px 0;
+        }
+        .p-table th {
+            background: #e2e8f0;
+            color: #1e293b;
+            padding: 6px 8px;
+            text-align: left;
+            font-weight: 700;
+            border: 1px solid #cbd5e1;
+        }
+        .p-table td {
+            padding: 5px 8px;
+            border: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        .p-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        /* Pill tags */
+        .pill-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+        .pill {
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            border: 1px solid #bae6fd;
+        }
+        .pill.gold {
+            background: #fef3c7;
+            color: #b45309;
+            border-color: #fde68a;
+        }
+        .pill.green {
+            background: #d1fae5;
+            color: #065f46;
+            border-color: #a7f3d0;
+        }
+
+        /* Image Display in Poster Cards */
+        .poster-img-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+        }
+        .poster-img-box img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .poster-img-box .caption {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #64748b;
+            padding: 4px 8px;
+            background: #ffffff;
+        }
+
+        /* Side by Side Image Comparison */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        /* Metric KPI Grid */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .kpi-stat {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 6px;
+            text-align: center;
+        }
+        .kpi-stat .num {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--primary-dark);
+        }
+        .kpi-stat .lbl {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+        }
+
+        /* Key Results Banner */
+        .result-box {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .result-box .res-item {
+            text-align: center;
+        }
+        .result-box .res-val {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #065f46;
+        }
+        .result-box .res-lbl {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #047857;
+        }
+
+        /* Poster Footer */
+        .poster-footer {
+            background: #0b2545;
+            color: #ffffff;
+            padding: 14px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            border-top: 3px solid var(--accent-gold);
+        }
+        .poster-footer a {
+            color: #93c5fd;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Print Media Styles: Massive Large-Format Poster Printing */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .poster-controls {
+                display: none !important;
+            }
+            .poster-wrapper {
+                width: 100% !important;
+                max-width: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            @page {
+                size: 48in 36in landscape;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- On-Screen Action Bar -->
+    <div class="poster-controls">
+        <div style="color: #f8fafc; font-size: 0.95rem; font-weight: 700;">
+            🎓 MBSTU ICT Capstone Project & Lab Presentation Banner
+        </div>
+        <div class="btn-group">
+            <button class="btn-ctrl btn-print" onclick="window.print()">
+                🖨️ Print / Save as High-Res PDF Poster
+            </button>
+            <a href="index.html" class="btn-ctrl btn-link" target="_blank">
+                🌐 Live App Dashboard
+            </a>
+            <a href="THESIS_BOOK_REPORT.md" class="btn-ctrl btn-link" target="_blank">
+                📘 Full Thesis Book (1,820 Lines)
+            </a>
+            <a href="PROJECT_PROPOSAL.md" class="btn-ctrl btn-link" target="_blank">
+                📄 Proposal
+            </a>
+        </div>
+    </div>
+
+    <!-- Master Poster Banner Container -->
+    <div class="poster-wrapper">
+
+        <!-- Banner Header -->
+        <header class="poster-header">
+            <div class="logo-box">
+                <img src="assets/mbstu_logo.png" alt="MBSTU Seal">
+            </div>
+            <div class="title-box">
+                <div class="uni-name">Mawlana Bhashani Science and Technology University</div>
+                <div class="dept-name">Faculty of Engineering • Department of Information and Communication Technology (ICT)</div>
+                <h1 class="project-title">
+                    DESIGN AND IMPLEMENTATION OF AN AUTOMATED EXAMINATION, MODERATION, FACULTY REMUNERATION AND BILL MANAGEMENT SYSTEM
+                </h1>
+                <div class="author-strip">
+                    <span>Presented by: <strong>Md Tahmid Hasib Antor</strong> (Student ID: <strong>IT24055</strong>)</span>
+                    <span>•</span>
+                    <span>Course: <strong>Software Engineering Capstone Project & Lab</strong></span>
+                    <span>•</span>
+                    <span>Session: <strong>2023–2024 / 2024–2025</strong></span>
+                </div>
+            </div>
+            <div class="qr-box">
+                <div class="qr-item">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://antor1112225.github.io/MBSTU-ICT-Examination-and-Bill-Management-System/" alt="Live App QR">
+                    <span>LIVE DEMO</span>
+                </div>
+                <div class="qr-item">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/antor1112225/MBSTU-ICT-Examination-and-Bill-Management-System" alt="GitHub Repo QR">
+                    <span>GITHUB REPO</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 3-Column Poster Content Grid -->
+        <main class="poster-grid">
+
+            <!-- ===================== COLUMN 1 ===================== -->
+            <section class="poster-column">
+
+                <!-- 1. Problem Statement & Motivation -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">01</span>
+                        <h2>Problem Statement & Motivation</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <p>
+                            At MBSTU ICT Department, concluding semester final examinations across 4 academic years requires calculating faculty remuneration for internal and external teachers across <strong>14 statutory categories</strong>.
+                        </p>
+                        <div class="highlight-quote">
+                            <strong>Manual Paper Bottlenecks:</strong> Legacy handwritten bill slips led to arithmetic errors, omission of continuous assessments, moderation disputes, and zero audit transparency across academic sessions.
+                        </div>
+                        <ul style="padding-left: 18px; display: flex; flex-direction: column; gap: 4px;">
+                            <li><strong>Moderation Disputes:</strong> Allocating ৳18,000 pool manually across 4 members.</li>
+                            <li><strong>Ceiling Violations:</strong> Miscalculating Class Test limits based on course credit.</li>
+                            <li><strong>No Central Ledger:</strong> Teachers lacked visibility into billed vs disbursed dues.</li>
+                            <li><strong>External Examiners:</strong> Missing courier expense vouchers & parent university data.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- 2. Statutory 14-Category Rate Architecture -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">02</span>
+                        <h2>Statutory Honorarium Rate Model</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <table class="p-table">
+                            <thead>
+                                <tr>
+                                    <th>Category Duty (Bengali / English)</th>
+                                    <th>Statutory Basis</th>
+                                    <th>Rate (BDT)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Question Setting</strong> (প্রশ্নপত্র প্রণয়ন)</td>
+                                    <td>Per Course (Credit <em>C</em>)</td>
+                                    <td>3Cr: ৳4k | 2Cr: ৳3k</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Moderation</strong> (প্রশ্নপত্র মডারেশন)</td>
+                                    <td>Equal 4-Way Split</td>
+                                    <td><strong>৳4,500</strong> / member</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Script Evaluation</strong> (খাতা মূল্যায়ন)</td>
+                                    <td>Per Evaluated Script</td>
+                                    <td><strong>৳120.00</strong> / script</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Class Tests</strong> (ক্লাস টেস্ট পরীক্ষা)</td>
+                                    <td>Credit Ceiling Rule</td>
+                                    <td><strong>৳1,350.00</strong> / test</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Practical / Lab Exam</strong> (ব্যবহারিক)</td>
+                                    <td>Examinees × Days</td>
+                                    <td>৳100.00 / student-day</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tabulation & Scrutiny</strong> (টেবুলেশন)</td>
+                                    <td>Per Student / Script</td>
+                                    <td>Tab: ৳75 | Scrutiny: ৳25</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Committee Allowance</strong> (কমিটি ভাতা)</td>
+                                    <td>Per Semester Session</td>
+                                    <td>Chair: ৳2,250 | Mbr: ৳1,500</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Carrier Charge</strong> (ক্যারিয়ার/ডাকমাশুল)</td>
+                                    <td>Courier Voucher</td>
+                                    <td>৳800 - ৳1,500</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pill-container">
+                            <span class="pill gold">14 Statutory Duties</span>
+                            <span class="pill">Credit Ceilings</span>
+                            <span class="pill green">4-Way Moderation Split</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3. Class Test Ceiling Mathematical Formulation -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">03</span>
+                        <h2>Class Test Statutory Mathematical Model</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <p>Under MBSTU ICT examination statutes, continuous assessment honoraria are governed by strict credit-proportional upper limits:</p>
+                        <div class="highlight-quote" style="font-family: monospace; font-size: 0.8rem; background: #f8fafc; border-color: var(--accent-gold);">
+                            Max CTs(C) = 4 (if C ≥ 3.0), 3 (if 2.0 ≤ C &lt; 3.0), 2 (if C &lt; 2.0)<br/>
+                            Max Honorarium = Max CTs(C) × ৳1,350.00
+                        </div>
+                        <table class="p-table">
+                            <thead>
+                                <tr>
+                                    <th>Credit (<em>C</em>)</th>
+                                    <th>Max CTs</th>
+                                    <th>Rate</th>
+                                    <th>Max Honorarium</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>3.00 Credits</strong></td><td><strong>4 CTs</strong></td><td>৳1,350</td><td><strong>৳5,400.00</strong></td></tr>
+                                <tr><td><strong>2.00 Credits</strong></td><td><strong>3 CTs</strong></td><td>৳1,350</td><td><strong>৳4,050.00</strong></td></tr>
+                                <tr><td><strong>1.00 / 1.50 Cr</strong></td><td><strong>2 CTs</strong></td><td>৳1,350</td><td><strong>৳2,700.00</strong></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- ===================== COLUMN 2 ===================== -->
+            <section class="poster-column">
+
+                <!-- 4. System Architecture & Methodology -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">04</span>
+                        <h2>Agile Methodology & System Architecture</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <p>
+                            Built on <strong>Agile Evolutionary Prototyping</strong> with an offline-first, client-side MVC/MVVM architecture eliminating server subscription costs and public cloud data exposure.
+                        </p>
+                        <div class="kpi-row">
+                            <div class="kpi-stat">
+                                <div class="num">&lt; 15ms</div>
+                                <div class="lbl">Calculation</div>
+                            </div>
+                            <div class="kpi-stat">
+                                <div class="num">100%</div>
+                                <div class="lbl">Client Sandbox</div>
+                            </div>
+                            <div class="kpi-stat">
+                                <div class="num">A4 Fit</div>
+                                <div class="lbl">Zero Spillover</div>
+                            </div>
+                            <div class="kpi-stat">
+                                <div class="num">0 Cost</div>
+                                <div class="lbl">Static Host</div>
+                            </div>
+                        </div>
+                        <div class="pill-container">
+                            <span class="pill">Semantic HTML5</span>
+                            <span class="pill">CSS3 Paged Media</span>
+                            <span class="pill gold">ES6+ Pure Functions</span>
+                            <span class="pill green">LocalStorage Engine</span>
+                            <span class="pill">GitHub Pages SSL</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5. Executive Dashboard & Workload Breakdown -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">05</span>
+                        <h2>Executive Analytics & Course Workload</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <div class="poster-img-box">
+                            <img src="screenshots/dashboard_overview.png" alt="Executive Financial Dashboard">
+                            <div class="caption">Figure 1: Executive Dashboard with Real-Time KPIs & Multi-Semester Scope</div>
+                        </div>
+                        <div class="poster-img-box" style="margin-top: 6px;">
+                            <img src="screenshots/05_course_teacher_assignments.png" alt="Course Teacher Assignments">
+                            <div class="caption">Figure 2: Course Workload Grid with Credit Weights and Assigned Examiners</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 6. Question Moderation Register -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">06</span>
+                        <h2>Moderation Register & External Examiners</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <div class="poster-img-box">
+                            <img src="screenshots/04_moderation_register.png" alt="Moderation Register">
+                            <div class="caption">Figure 3: Equal 4-Way Moderation Pool Allocation (৳18,000 ÷ 4 = ৳4,500 each)</div>
+                        </div>
+                        <p style="font-size: 0.8rem; color: #475569; margin-top: 4px;">
+                            Seamlessly integrates external professors (RUET, DUET, JU, HSTU, PUST) under "Others" with institution addresses and registered courier allowance.
+                        </p>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- ===================== COLUMN 3 ===================== -->
+            <section class="poster-column">
+
+                <!-- 7. Faculty Financial Ledger -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">07</span>
+                        <h2>Faculty Earning & Payment Ledger</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <p>Tracks financial reconciliation: <strong>Accrued Work &rarr; Bill Prepared &rarr; Chairman Approved &rarr; Accounts Disbursed &rarr; Outstanding</strong>.</p>
+                        <div class="poster-img-box">
+                            <img src="screenshots/03_teacher_ledger_monir_morshed.png" alt="Teacher Ledger Dr. Monir">
+                            <div class="caption">Figure 4: Faculty Earning Ledger Displaying Activities, Billed Sum & Balance</div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 8. Physical Bill Replica & A4 Print Engine -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">08</span>
+                        <h2>1:1 Official Bill Replica & A4 Print Engine</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <div class="compare-grid">
+                            <div class="poster-img-box">
+                                <img src="screenshots/reference_paper_bill_form.png" alt="Original MBSTU Paper Form" style="height: 140px; object-fit: cover;">
+                                <div class="caption">MBSTU Paper Form</div>
+                            </div>
+                            <div class="poster-img-box">
+                                <img src="screenshots/07_official_bill_slip_monir.png" alt="Generated Official Bill" style="height: 140px; object-fit: cover;">
+                                <div class="caption">System Generated Slip</div>
+                            </div>
+                        </div>
+                        <div class="highlight-quote" style="margin-top: 6px;">
+                            <strong>Bengali Currency Engine (numberToBanglaWords):</strong><br/>
+                            <code>৳17,040</code> &rarr; <em>"সতেরো হাজার চল্লিশ টাকা মাত্র"</em><br/>
+                            <code>৳10,000</code> &rarr; <em>"দশ হাজার টাকা মাত্র"</em>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 9. Ground-Truth Validation & Results -->
+                <article class="p-card">
+                    <div class="p-card-header">
+                        <span class="sec-badge">09</span>
+                        <h2>Empirical Verification & Results</h2>
+                    </div>
+                    <div class="p-card-body">
+                        <table class="p-table">
+                            <thead>
+                                <tr>
+                                    <th>Item (Assoc. Prof. Rupali Sultana)</th>
+                                    <th>Paper Bill</th>
+                                    <th>System</th>
+                                    <th>Match</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Question Setting (3.0 Cr)</td><td>৳4,000.00</td><td>৳4,000.00</td><td><strong>100%</strong></td></tr>
+                                <tr><td>57 Scripts Evaluation (@ ৳120)</td><td>৳6,840.00</td><td>৳6,840.00</td><td><strong>100%</strong></td></tr>
+                                <tr><td>4 Class Tests for 3.0 Cr (@ ৳1,350)</td><td>৳5,400.00</td><td>৳5,400.00</td><td><strong>100%</strong></td></tr>
+                                <tr><td>Carrier / Courier Charge</td><td>৳800.00</td><td>৳800.00</td><td><strong>100%</strong></td></tr>
+                                <tr style="background: #fef3c7;">
+                                    <td><strong>Gross Calculated Total</strong></td>
+                                    <td><strong>৳17,040.00</strong></td>
+                                    <td><strong>৳17,040.00</strong></td>
+                                    <td><strong>Exact</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="result-box">
+                            <div class="res-item">
+                                <div class="res-val">20 / 20</div>
+                                <div class="res-lbl">Test Cases Passed</div>
+                            </div>
+                            <div class="res-item">
+                                <div class="res-val">0.00%</div>
+                                <div class="res-lbl">Calculation Error</div>
+                            </div>
+                            <div class="res-item">
+                                <div class="res-val">P = 1.0</div>
+                                <div class="res-lbl">A4 Single Page</div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+            </section>
+
+        </main>
+
+        <!-- Banner Footer -->
+        <footer class="poster-footer">
+            <div>
+                <strong>Author:</strong> Md Tahmid Hasib Antor (Student ID: IT24055) • Email: <a href="mailto:tahmidantor123@gmail.com">tahmidantor123@gmail.com</a> • Dept. of ICT, MBSTU
+            </div>
+            <div>
+                <strong>Repository:</strong> <a href="https://github.com/antor1112225/MBSTU-ICT-Examination-and-Bill-Management-System" target="_blank">github.com/antor1112225/MBSTU-ICT-Examination-and-Bill-Management-System</a>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>

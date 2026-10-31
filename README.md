@@ -2,6 +2,7 @@
 ### Software Engineering Capstone Project (Part I: Project Proposal & Prototyping)
 
 [![Live Demo](https://img.shields.io/badge/Live_System-GitHub_Pages-2563eb?style=for-the-badge&logo=googlechrome&logoColor=white)](https://antor1112225.github.io/MBSTU-ICT-Examination-and-Bill-Management-System/)
+[![Poster Presentation](https://img.shields.io/badge/Poster_Presentation-poster.html-f59e0b?style=for-the-badge&logo=airplayvideo&logoColor=black)](https://antor1112225.github.io/MBSTU-ICT-Examination-and-Bill-Management-System/poster.html)
 [![Thesis Book Report](https://img.shields.io/badge/Thesis_Book_Report-THESIS__BOOK__REPORT.md-7c3aed?style=for-the-badge&logo=book&logoColor=white)](./THESIS_BOOK_REPORT.md)
 [![Project Proposal](https://img.shields.io/badge/Academic_Proposal-PROJECT__PROPOSAL.md-16a34a?style=for-the-badge&logo=markdown&logoColor=white)](./PROJECT_PROPOSAL.md)
 [![GitHub Repo](https://img.shields.io/badge/Source_Code-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/antor1112225/MBSTU-ICT-Examination-and-Bill-Management-System)
@@ -26,6 +27,12 @@
 ---
 
 ## 📌 Submission Highlights for Course Instructors
+
+### 🖼️ Large-Format Academic Poster Presentation Banner
+A dedicated, large-format academic conference/capstone poster presentation banner designed for 48" × 36" (or A0/A1 landscape) physical and digital display.
+👉 **[View Academic Poster Presentation Banner (poster.html)](https://antor1112225.github.io/MBSTU-ICT-Examination-and-Bill-Management-System/poster.html)**
+
+---
 
 ### 📘 Comprehensive Thesis Book & Capstone Project Report
 The complete undergraduate thesis book and comprehensive software engineering project report has been compiled following formal academic guidelines.

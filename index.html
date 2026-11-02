@@ -30,7 +30,7 @@
                     </select>
                 </div>
                 <div class="dropdown">
-                    <button type="button" class="btn btn-outline btn-sm dropdown-toggle" onclick="App.toggleDropdown('header-actions-dropdown')">
+                    <button type="button" class="btn btn-outline btn-sm dropdown-toggle" onclick="App.toggleDropdown('header-actions-dropdown', event)">
                         ⚙️ System Actions
                     </button>
                     <div id="header-actions-dropdown" class="dropdown-menu">
@@ -260,7 +260,7 @@
                 <div class="card-header">
                     <div class="card-title">📚 Course Management &amp; Activity Breakdown (Scope: <span id="courses-scope-text">Consolidated</span>)</div>
                     <div class="dropdown">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('courses-actions-dropdown')">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('courses-actions-dropdown', event)">
                             ⚡ Course Actions
                         </button>
                         <div id="courses-actions-dropdown" class="dropdown-menu">
@@ -310,7 +310,7 @@
                             <option value="external">🌐 Filter: External (Others)</option>
                         </select>
                         <div class="dropdown">
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('teacher-actions-dropdown')">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('teacher-actions-dropdown', event)">
                                 ➕ Add Faculty / Examiner
                             </button>
                             <div id="teacher-actions-dropdown" class="dropdown-menu">
@@ -354,7 +354,7 @@
                 <div class="card-header">
                     <div class="card-title">📝 Dynamic Examination Activity Management (Scope: <span id="activities-scope-text">Consolidated</span>)</div>
                     <div class="dropdown">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('activity-actions-dropdown')">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('activity-actions-dropdown', event)">
                             ⚡ Activity Actions
                         </button>
                         <div id="activity-actions-dropdown" class="dropdown-menu">
@@ -416,7 +416,7 @@
                         </select>
                     </div>
                     <div class="dropdown" style="align-self: flex-end;">
-                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('ledger-actions-dropdown')">
+                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('ledger-actions-dropdown', event)">
                             ⚡ Ledger Actions
                         </button>
                         <div id="ledger-actions-dropdown" class="dropdown-menu">
@@ -524,7 +524,7 @@
                         </select>
                     </div>
                     <div class="dropdown">
-                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('dossier-actions-dropdown')">
+                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('dossier-actions-dropdown', event)">
                             ⚡ Dossier Actions
                         </button>
                         <div id="dossier-actions-dropdown" class="dropdown-menu">
@@ -571,7 +571,7 @@
                 <div class="card-header">
                     <div class="card-title">📄 Official Bill Slips &amp; Chairman Sanctions (Scope: <span id="bills-scope-text">Consolidated</span>)</div>
                     <div class="dropdown">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('bill-actions-dropdown')">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('bill-actions-dropdown', event)">
                             ⚡ Bill Actions
                         </button>
                         <div id="bill-actions-dropdown" class="dropdown-menu">
@@ -657,7 +657,7 @@
                     </div>
 
                     <div class="dropdown">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('printslip-actions-dropdown')">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('printslip-actions-dropdown', event)">
                             🖨️ Print &amp; Duties
                         </button>
                         <div id="printslip-actions-dropdown" class="dropdown-menu">
@@ -824,7 +824,7 @@
                         This system operates 100% offline using your browser's local storage. To ensure data safety across computers or after clearing browser cache, create periodic JSON backups.
                     </p>
                     <div class="dropdown">
-                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('backup-actions-dropdown')">
+                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('backup-actions-dropdown', event)">
                             💾 Database Operations
                         </button>
                         <div id="backup-actions-dropdown" class="dropdown-menu">

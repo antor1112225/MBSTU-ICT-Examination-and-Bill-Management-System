@@ -7675,7 +7675,10 @@ const App = {
     // --------------------------------------------------------------------------
     // Dropdown Action Menus & Dynamic Select Handlers
     // --------------------------------------------------------------------------
-    toggleDropdown(dropdownId) {
+    toggleDropdown(dropdownId, event) {
+        if (event && typeof event.stopPropagation === 'function') {
+            event.stopPropagation();
+        }
         const el = document.getElementById(dropdownId);
         if (!el) return;
         const isShown = el.classList.contains('show');

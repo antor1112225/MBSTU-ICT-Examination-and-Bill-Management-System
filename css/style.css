@@ -386,7 +386,8 @@ body {
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
     margin-bottom: 20px;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
 }
 
 .card-header {
@@ -1441,6 +1442,7 @@ body {
 .dropdown {
     position: relative;
     display: inline-block;
+    z-index: 50;
 }
 
 .dropdown-toggle {

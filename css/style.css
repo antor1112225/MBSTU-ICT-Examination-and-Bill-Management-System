@@ -1390,3 +1390,115 @@ body {
         font-size: 0.75rem;
     }
 }
+
+
+/* ==========================================================================
+   DROPDOWN ACTION MENUS & SELECT CONTROLS
+   ========================================================================== */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+}
+
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-left: 4px;
+    vertical-align: middle;
+    content: "";
+    border-top: 0.3em solid currentColor;
+    border-right: 0.3em solid transparent;
+    border-bottom: 0;
+    border-left: 0.3em solid transparent;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1050;
+    display: none;
+    min-width: 220px;
+    padding: 6px 0;
+    margin: 6px 0 0;
+    font-size: 0.85rem;
+    color: var(--text-dark, #1e293b);
+    text-align: left;
+    list-style: none;
+    background-color: #ffffff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.18), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    animation: dropdownFadeIn 0.15s ease-out;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu.dropdown-menu-left {
+    right: auto;
+    left: 0;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 9px 16px;
+    clear: both;
+    font-weight: 500;
+    color: var(--text-dark, #1e293b);
+    text-align: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    font-family: inherit;
+    font-size: 0.86rem;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    color: var(--primary, #0284c7);
+    background-color: #f1f5f9;
+}
+
+.dropdown-item.text-danger {
+    color: #ef4444;
+}
+
+.dropdown-item.text-danger:hover {
+    color: #b91c1c;
+    background-color: #fef2f2;
+}
+
+.dropdown-divider {
+    height: 0;
+    margin: 6px 0;
+    overflow: hidden;
+    border-top: 1px solid #e2e8f0;
+}

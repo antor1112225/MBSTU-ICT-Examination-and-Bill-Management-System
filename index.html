@@ -26,12 +26,25 @@
                         <option value="all">All Semesters (Consolidated)</option>
                     </select>
                 </div>
-                <button id="btn-load-demo-data" class="btn btn-warning btn-sm" title="Load Authentic MBSTU Demo Records">
-                    Load MBSTU Demo Data
-                </button>
-                <button id="btn-export-backup-quick" class="btn btn-outline btn-sm" title="Download JSON Backup">
-                    Backup JSON
-                </button>
+                <div class="dropdown">
+                    <button type="button" class="btn btn-outline btn-sm dropdown-toggle" onclick="App.toggleDropdown('header-actions-dropdown')">
+                        ⚙️ System Actions
+                    </button>
+                    <div id="header-actions-dropdown" class="dropdown-menu">
+                        <button type="button" class="dropdown-item" onclick="document.getElementById('btn-load-demo-data').click()">
+                            📥 Load MBSTU Demo Data
+                        </button>
+                        <button type="button" class="dropdown-item" onclick="document.getElementById('btn-export-backup-quick').click()">
+                            💾 Backup JSON Database
+                        </button>
+                        <button type="button" class="dropdown-item" onclick="App.openModal('modal-exclusion-log')">
+                            🛡️ External Audit Log
+                        </button>
+                    </div>
+                </div>
+                <!-- Hidden anchors for existing event listener bindings -->
+                <button id="btn-load-demo-data" style="display:none;"></button>
+                <button id="btn-export-backup-quick" style="display:none;"></button>
             </div>
         </div>
     </header>
@@ -156,14 +169,22 @@
                         <span class="badge badge-recorded">System Operational • Internal Only</span>
                     </div>
                 </div>
-                <div class="card-body" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="App.openModal('modal-activity')">+ Log Exam Activity</button>
-                    <button class="btn btn-secondary" onclick="App.openModal('modal-custom-activity')">+ Add Custom Activity Type</button>
-                    <button class="btn btn-secondary" onclick="App.openModal('modal-bill')">+ Prepare Official Bill Slip</button>
-                    <button class="btn btn-warning" onclick="App.openModal('modal-payment')">+ Record Accounts Disbursement</button>
-                    <button class="btn btn-outline" onclick="App.switchTab('assignments')">🎓 Assign Course Teachers</button>
-                    <button class="btn btn-outline" onclick="App.switchTab('moderation')">📋 Moderation Register</button>
-                    <button class="btn btn-outline" onclick="App.switchTab('ledger')">🔍 View Teacher Ledger</button>
+                <div class="card-body">
+                    <div style="display: flex; align-items: center; gap: 12px; max-width: 550px; flex-wrap: wrap;">
+                        <label for="dashboard-quick-actions" style="font-weight: 700; font-size: 0.88rem; white-space: nowrap; color: var(--text-dark);">
+                            ⚡ Quick Action (বাছাই করুন):
+                        </label>
+                        <select id="dashboard-quick-actions" class="form-control" style="flex: 1; min-width: 250px; font-weight: 500;" onchange="App.handleQuickActionSelect(this)">
+                            <option value="">-- Choose Quick Academic / Financial Action --</option>
+                            <option value="modal-activity">➕ Log Exam Activity Record</option>
+                            <option value="modal-custom-activity">⚙️ Add Custom Activity Type</option>
+                            <option value="modal-bill">📄 Prepare Official Bill Slip</option>
+                            <option value="modal-payment">💰 Record Accounts Disbursement</option>
+                            <option value="tab-assignments">🎓 Assign Course Teachers</option>
+                            <option value="tab-moderation">📋 Moderation Register Dossier</option>
+                            <option value="tab-ledger">🔍 View Teacher Ledger &amp; Balance</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -235,9 +256,14 @@
             <div class="content-card">
                 <div class="card-header">
                     <div class="card-title">📚 Course Management &amp; Activity Breakdown (Scope: <span id="courses-scope-text">Consolidated</span>)</div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-outline btn-sm" onclick="App.printCourseSummaryTable()">🖨️ Print Course Summary</button>
-                        <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-course')">+ Add New Course</button>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('courses-actions-dropdown')">
+                            ⚡ Course Actions
+                        </button>
+                        <div id="courses-actions-dropdown" class="dropdown-menu">
+                            <button type="button" class="dropdown-item" onclick="App.openModal('modal-course')">➕ Add New Course</button>
+                            <button type="button" class="dropdown-item" onclick="App.printCourseSummaryTable()">🖨️ Print Course Summary</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -274,14 +300,27 @@
             <div class="content-card">
                 <div class="card-header" style="flex-wrap: wrap; gap: 10px;">
                     <div class="card-title">👨‍🏫 Faculty &amp; Examiners Directory (Internal &amp; External)</div>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <div class="btn-group" style="display: flex; gap: 4px;">
-                            <button class="btn btn-outline btn-sm active" id="btn-filter-tchr-all" onclick="App.filterTeachersDirectory('all')">All Examiners</button>
-                            <button class="btn btn-outline btn-sm" id="btn-filter-tchr-internal" onclick="App.filterTeachersDirectory('internal')">Internal ICT</button>
-                            <button class="btn btn-outline btn-sm" id="btn-filter-tchr-external" onclick="App.filterTeachersDirectory('external')">🌐 External (Others)</button>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <select id="select-filter-teacher" class="form-control" style="width: auto; min-width: 170px; height: 32px; padding: 2px 8px; font-size: 0.82rem; font-weight: 600;" onchange="App.filterTeachersDirectory(this.value)">
+                            <option value="all">👥 Filter: All Examiners</option>
+                            <option value="internal">🏫 Filter: Internal ICT</option>
+                            <option value="external">🌐 Filter: External (Others)</option>
+                        </select>
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('teacher-actions-dropdown')">
+                                ➕ Add Faculty / Examiner
+                            </button>
+                            <div id="teacher-actions-dropdown" class="dropdown-menu">
+                                <button type="button" class="dropdown-item" onclick="App.openModal('modal-teacher')">🏫 Add Internal Faculty Member</button>
+                                <button type="button" class="dropdown-item" onclick="App.openAddExternalTeacherModal()">🌐 Add External Examiner (Others)</button>
+                            </div>
                         </div>
-                        <button class="btn btn-secondary btn-sm" onclick="App.openAddExternalTeacherModal()">+ Add External (Others)</button>
-                        <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-teacher')">+ Add Faculty Member</button>
+                        <!-- Hidden anchors for button filter compatibility -->
+                        <span style="display:none;">
+                            <button id="btn-filter-tchr-all"></button>
+                            <button id="btn-filter-tchr-internal"></button>
+                            <button id="btn-filter-tchr-external"></button>
+                        </span>
                     </div>
                 </div>
                 <div class="card-body">
@@ -311,10 +350,15 @@
             <div class="content-card">
                 <div class="card-header">
                     <div class="card-title">📝 Dynamic Examination Activity Management (Scope: <span id="activities-scope-text">Consolidated</span>)</div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-outline btn-sm" onclick="App.printActivityLedger()">🖨️ Print Activity Ledger</button>
-                        <button class="btn btn-secondary btn-sm" onclick="App.openModal('modal-custom-activity')">+ Add Custom Activity Type</button>
-                        <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-activity')">+ Log Activity Record</button>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('activity-actions-dropdown')">
+                            ⚡ Activity Actions
+                        </button>
+                        <div id="activity-actions-dropdown" class="dropdown-menu">
+                            <button type="button" class="dropdown-item" onclick="App.openModal('modal-activity')">➕ Log Activity Record</button>
+                            <button type="button" class="dropdown-item" onclick="App.openModal('modal-custom-activity')">⚙️ Add Custom Activity Type</button>
+                            <button type="button" class="dropdown-item" onclick="App.printActivityLedger()">🖨️ Print Activity Ledger</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -368,10 +412,15 @@
                             <option value="Paid">Paid</option>
                         </select>
                     </div>
-                    <div style="display: flex; gap: 8px; align-self: flex-end;">
-                        <button class="btn btn-outline" onclick="App.printTeacherLedger()">🖨️ Print Ledger</button>
-                        <button class="btn btn-outline" onclick="App.exportTeacherLedgerCSV()">Export CSV</button>
-                        <button class="btn btn-primary" onclick="App.prepareSlipForSelectedTeacher()">Generate Bill Slip &rarr;</button>
+                    <div class="dropdown" style="align-self: flex-end;">
+                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('ledger-actions-dropdown')">
+                            ⚡ Ledger Actions
+                        </button>
+                        <div id="ledger-actions-dropdown" class="dropdown-menu">
+                            <button type="button" class="dropdown-item" onclick="App.prepareSlipForSelectedTeacher()">📄 Generate Bill Slip &rarr;</button>
+                            <button type="button" class="dropdown-item" onclick="App.printTeacherLedger()">🖨️ Print Ledger</button>
+                            <button type="button" class="dropdown-item" onclick="App.exportTeacherLedgerCSV()">📊 Export CSV</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -471,13 +520,14 @@
                         <select id="dossier-semester-select" class="form-control" style="max-width: 480px;" onchange="App.handleDossierSemesterChange(this.value)">
                         </select>
                     </div>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-primary" onclick="App.openEditDossierModal()">
-                            ✏️ Edit Dossier Details
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('dossier-actions-dropdown')">
+                            ⚡ Dossier Actions
                         </button>
-                        <button class="btn btn-secondary" onclick="App.printModerationDossier()">
-                            🖨️ Print Dossier PDF (Ctrl+P)
-                        </button>
+                        <div id="dossier-actions-dropdown" class="dropdown-menu">
+                            <button type="button" class="dropdown-item" onclick="App.openEditDossierModal()">✏️ Edit Dossier Details</button>
+                            <button type="button" class="dropdown-item" onclick="App.printModerationDossier()">🖨️ Print Dossier PDF</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -517,9 +567,14 @@
             <div class="content-card">
                 <div class="card-header">
                     <div class="card-title">📄 Official Bill Slips &amp; Chairman Sanctions (Scope: <span id="bills-scope-text">Consolidated</span>)</div>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-outline btn-sm" onclick="App.printConsolidatedBillStatement()">🖨️ 7. Consolidated Bill Statement</button>
-                        <button class="btn btn-primary btn-sm" onclick="App.openModal('modal-bill')">+ Prepare New Bill Slip</button>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('bill-actions-dropdown')">
+                            ⚡ Bill Actions
+                        </button>
+                        <div id="bill-actions-dropdown" class="dropdown-menu">
+                            <button type="button" class="dropdown-item" onclick="App.openModal('modal-bill')">➕ Prepare New Bill Slip</button>
+                            <button type="button" class="dropdown-item" onclick="App.printConsolidatedBillStatement()">🖨️ 7. Consolidated Bill Statement</button>
+                        </div>
                     </div>
                 </div>
                 <div class="card-body">
@@ -598,9 +653,14 @@
                         <input type="text" id="quick-carrier-voucher" placeholder="Voucher / Memo No" style="width: 145px; padding: 4px 6px; font-size: 0.82rem; border: 1px solid #93c5fd; border-radius: 4px;" title="Carrier Voucher Number" onchange="App.handleQuickCarrierChange()">
                     </div>
 
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <button type="button" class="btn btn-outline btn-sm" onclick="App.openBLSCDutyModal()" title="Add Backlog or Special Carry Duty">+ Add BL / SC Duty</button>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()" title="Print / Export to PDF">🖨️ প্রিন্ট করুন (Print A4)</button>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('printslip-actions-dropdown')">
+                            🖨️ Print &amp; Duties
+                        </button>
+                        <div id="printslip-actions-dropdown" class="dropdown-menu">
+                            <button type="button" class="dropdown-item" onclick="window.print()">🖨️ প্রিন্ট করুন (Print A4 Official Bill)</button>
+                            <button type="button" class="dropdown-item" onclick="App.openBLSCDutyModal()">➕ Add Backlog / Special Carry Duty</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -760,15 +820,19 @@
                     <p style="margin-bottom: 16px; color: var(--text-muted);">
                         This system operates 100% offline using your browser's local storage. To ensure data safety across computers or after clearing browser cache, create periodic JSON backups.
                     </p>
-                    <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-                        <button class="btn btn-primary" onclick="App.exportFullJSONBackup()">⬇️ Export Full JSON Database Backup</button>
-                        <label class="btn btn-outline" style="cursor: pointer; margin-bottom: 0;">
-                            ⬆️ Import JSON Database Backup
-                            <input type="file" id="file-import-json" accept=".json" style="display: none;" onchange="App.importFullJSONBackup(event)">
-                        </label>
-                        <button class="btn btn-warning" onclick="App.exportAllCSVs()">📊 Export Consolidated Financial CSVs</button>
-                        <button class="btn btn-danger" onclick="App.confirmResetAllData()">⚠️ Factory Reset Database</button>
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('backup-actions-dropdown')">
+                            💾 Database Operations
+                        </button>
+                        <div id="backup-actions-dropdown" class="dropdown-menu">
+                            <button type="button" class="dropdown-item" onclick="App.exportFullJSONBackup()">⬇️ Export Full JSON Database Backup</button>
+                            <button type="button" class="dropdown-item" onclick="document.getElementById('file-import-json').click()">⬆️ Import JSON Database Backup</button>
+                            <button type="button" class="dropdown-item" onclick="App.exportAllCSVs()">📊 Export Consolidated Financial CSVs</button>
+                            <div class="dropdown-divider"></div>
+                            <button type="button" class="dropdown-item text-danger" onclick="App.confirmResetAllData()">⚠️ Factory Reset Database</button>
+                        </div>
                     </div>
+                    <input type="file" id="file-import-json" accept=".json" style="display: none;" onchange="App.importFullJSONBackup(event)">
                 </div>
             </div>
         </section>
@@ -1208,6 +1272,25 @@
             <form id="form-custom-activity" onsubmit="App.handleSaveCustomActivityType(event)">
                 <div class="modal-body">
                     <div class="form-grid">
+                        <div class="form-group" style="grid-column: 1 / -1; background: #eff6ff; padding: 12px; border-radius: 8px; border: 1px solid #bfdbfe;">
+                            <label class="form-label" for="cust-preset-select" style="font-weight: 700; color: #1e40af; margin-bottom: 6px;">
+                                ⚡ Quick Select Duty Template (বাছাই করুন):
+                            </label>
+                            <select id="cust-preset-select" class="form-control" onchange="App.handleCustomTemplateSelect(this.value)">
+                                <option value="">-- ড্রপডাউন থেকে বাছাই করুন (অটোফিল হবে) অথবা নিচে টাইপ করুন --</option>
+                                <option value="scrutiny">স্ক্রুটিনি ও নিরীক্ষা (Scrutiny &amp; Verification) — ৳২৫ / স্ক্রিপ্ট</option>
+                                <option value="tabulation">ট্যাবুলেশন কার্য (Tabulation Examination Duty) — ৳৭৫ / শিক্ষার্থী</option>
+                                <option value="viva">মৌখিক পরীক্ষা (Viva-Voce Examination Duty) — ৳১০০ / পরীক্ষার্থী</option>
+                                <option value="practical">ব্যবহারিক পরীক্ষা (Practical / Lab Examination) — ৳১০০ / পরীক্ষার্থী</option>
+                                <option value="typing">প্রশ্নপত্র কম্পোজ ও মুদ্রণ (Question Paper Typing &amp; Printing) — ৳২০০ / পৃষ্ঠা</option>
+                                <option value="seminar">সেমিনার ও প্রকল্প মূল্যায়ন (Seminar / Project Presentation) — ৳৩০০ / উপস্থাপনা</option>
+                                <option value="thesis">স্নাতকোত্তর থিসিস ডিফেন্স (M.Sc. / Thesis Defense Evaluation) — ৳৫০০ / থিসিস</option>
+                                <option value="internship">ইন্টার্নশিপ মূল্যায়ন (Industrial Internship Evaluation) — ৳১০০০ / রিপোর্ট</option>
+                                <option value="class_test">ধারাবাহিক মূল্যায়ন / ক্লাস টেস্ট (Continuous Assessment CT) — ৳১৩৫০ / সেকশন</option>
+                                <option value="carrier">প্রশ্নপত্র ও উত্তরপত্র বহন ভাতা (Question &amp; Script Carrier Allowance) — ৳৮০০ / ট্রিপ</option>
+                                <option value="custom">✏️ নতুন কাস্টম ডিউটি (নিজে টাইপ করুন / Manual Input)</option>
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label class="form-label" for="cust-name-bn">Activity Name in Bengali *</label>
                             <input type="text" id="cust-name-bn" class="form-control" placeholder="e.g. স্ক্রুটিনি ও নিরীক্ষা" required>

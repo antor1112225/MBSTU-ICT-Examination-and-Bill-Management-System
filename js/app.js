@@ -767,6 +767,8 @@ const App = {
             const btn = document.getElementById(`btn-filter-tchr-${f}`);
             if (btn) btn.classList.toggle('active', f === filterType);
         });
+        const sel = document.getElementById('select-filter-teacher');
+        if (sel && sel.value !== filterType) sel.value = filterType;
         this.renderTeachersTable();
     },
 
@@ -7514,6 +7516,130 @@ const App = {
         this.state.selectedTeacherId = 't_monir';
 
         this.saveState();
+    },
+
+    // --------------------------------------------------------------------------
+    // Dropdown Action Menus & Dynamic Select Handlers
+    // --------------------------------------------------------------------------
+    toggleDropdown(dropdownId) {
+        const el = document.getElementById(dropdownId);
+        if (!el) return;
+        const isShown = el.classList.contains('show');
+        this.closeAllDropdowns();
+        if (!isShown) {
+            el.classList.add('show');
+        }
+    },
+
+    closeAllDropdowns() {
+        document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+    },
+
+    handleQuickActionSelect(selectEl) {
+        if (!selectEl || !selectEl.value) return;
+        const val = selectEl.value;
+        selectEl.value = '';
+        if (val.startsWith('modal-')) {
+            this.openModal(val);
+        } else if (val.startsWith('tab-')) {
+            this.switchTab(val.replace('tab-', ''));
+        }
+    },
+
+    handleCustomTemplateSelect(val) {
+        const presets = {
+            scrutiny: {
+                bn: 'স্ক্রুটিনি ও নিরীক্ষা',
+                en: 'Scrutiny and Verification',
+                unit: 'per_script',
+                rate: 25,
+                desc: 'Scrutiny committee examination answer script verification (৳25/script)'
+            },
+            tabulation: {
+                bn: 'ট্যাবুলেশন কার্য',
+                en: 'Tabulation Examination Duty',
+                unit: 'per_student',
+                rate: 75,
+                desc: 'Tabulator remuneration for semester examination result preparation (৳75/student)'
+            },
+            viva: {
+                bn: 'মৌখিক পরীক্ষা',
+                en: 'Viva-Voce Examination Duty',
+                unit: 'per_student',
+                rate: 100,
+                desc: 'Oral examination board member evaluation (৳100/candidate)'
+            },
+            practical: {
+                bn: 'ব্যবহারিক পরীক্ষা',
+                en: 'Practical / Lab Examination',
+                unit: 'per_student',
+                rate: 100,
+                desc: 'Laboratory practical examination assessment allowance (৳100/candidate)'
+            },
+            typing: {
+                bn: 'প্রশ্নপত্র কম্পোজ ও মুদ্রণ',
+                en: 'Question Paper Typing and Printing',
+                unit: 'fixed',
+                rate: 200,
+                desc: 'Confidential examination question paper compose & print duty (৳200/page)'
+            },
+            seminar: {
+                bn: 'সেমিনার ও প্রকল্প মূল্যায়ন',
+                en: 'Seminar / Project Defense Evaluation',
+                unit: 'fixed',
+                rate: 300,
+                desc: 'Seminar defense evaluation committee honorarium (৳300/presentation)'
+            },
+            thesis: {
+                bn: 'স্নাতকোত্তর থিসিস ডিফেন্স',
+                en: 'M.Sc. / Thesis Defense Evaluation',
+                unit: 'fixed',
+                rate: 500,
+                desc: 'Postgraduate M.Sc. thesis examination board evaluation (৳500/candidate)'
+            },
+            internship: {
+                bn: 'ইন্টার্নশিপ মূল্যায়ন',
+                en: 'Industrial Internship Evaluation',
+                unit: 'fixed',
+                rate: 1000,
+                desc: 'Undergraduate industrial attachment / internship report evaluation (৳1000/report)'
+            },
+            class_test: {
+                bn: 'ধারাবাহিক মূল্যায়ন / ক্লাস টেস্ট',
+                en: 'Continuous Assessment / Class Test',
+                unit: 'fixed',
+                rate: 1350,
+                desc: 'Continuous in-semester assessment / CT grading allowance (৳1350/section)'
+            },
+            carrier: {
+                bn: 'প্রশ্নপত্র ও উত্তরপত্র বহন ভাতা',
+                en: 'Question & Script Carrier Allowance',
+                unit: 'fixed',
+                rate: 800,
+                desc: 'Confidential examination script transport conveyance (৳800/trip)'
+            },
+            custom: {
+                bn: '',
+                en: '',
+                unit: 'per_script',
+                rate: 10,
+                desc: ''
+            }
+        };
+
+        if (!val || !presets[val]) return;
+        const p = presets[val];
+        const elBn = document.getElementById('cust-name-bn');
+        const elEn = document.getElementById('cust-name-en');
+        const elUnit = document.getElementById('cust-unit');
+        const elRate = document.getElementById('cust-rate');
+        const elDesc = document.getElementById('cust-desc');
+
+        if (elBn && p.bn !== undefined) elBn.value = p.bn;
+        if (elEn && p.en !== undefined) elEn.value = p.en;
+        if (elUnit && p.unit) elUnit.value = p.unit;
+        if (elRate && p.rate !== undefined) elRate.value = p.rate;
+        if (elDesc && p.desc !== undefined) elDesc.value = p.desc;
     }
 };
 
@@ -7529,3 +7655,12 @@ if (document.readyState === 'loading') {
     App.init();
 }
 
+
+// Global outside click listener to close dropdowns
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) {
+        if (window.App && typeof window.App.closeAllDropdowns === 'function') {
+            window.App.closeAllDropdowns();
+        }
+    }
+});

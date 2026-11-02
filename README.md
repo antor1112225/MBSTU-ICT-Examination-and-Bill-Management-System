@@ -5,6 +5,7 @@
 [![Poster Presentation](https://img.shields.io/badge/Poster_Presentation-poster.html-f59e0b?style=for-the-badge&logo=airplayvideo&logoColor=black)](https://antor1112225.github.io/MBSTU-ICT-Examination-and-Bill-Management-System/poster.html)
 [![Thesis Book Report](https://img.shields.io/badge/Thesis_Book_Report-THESIS__BOOK__REPORT.md-7c3aed?style=for-the-badge&logo=book&logoColor=white)](./THESIS_BOOK_REPORT.md)
 [![Project Proposal](https://img.shields.io/badge/Academic_Proposal-PROJECT__PROPOSAL.md-16a34a?style=for-the-badge&logo=markdown&logoColor=white)](./PROJECT_PROPOSAL.md)
+[![Viva Defense Guide](https://img.shields.io/badge/Viva_Defense_Guide-PROJECT__EXPLANATION__AND__VIVA__GUIDE.md-0284c7?style=for-the-badge&logo=googledocs&logoColor=white)](./PROJECT_EXPLANATION_AND_VIVA_GUIDE.md)
 [![GitHub Repo](https://img.shields.io/badge/Source_Code-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/antor1112225/MBSTU-ICT-Examination-and-Bill-Management-System)
 
 ---
@@ -37,6 +38,13 @@ A dedicated, large-format academic conference/capstone poster presentation banne
 ### 📘 Comprehensive Thesis Book & Capstone Project Report
 The complete undergraduate thesis book and comprehensive software engineering project report has been compiled following formal academic guidelines.
 👉 **[Read the Full Thesis Book & Lab Report (THESIS_BOOK_REPORT.md)](./THESIS_BOOK_REPORT.md)**
+
+---
+
+### 🎓 Comprehensive Technical Documentation & Viva Defense Guide
+The complete 10-page system architecture, calculation engine breakdown, and defense Q&A handbook.
+👉 **[Read the Full Documentation & Viva Defense Guide (PROJECT_EXPLANATION_AND_VIVA_GUIDE.md)](./PROJECT_EXPLANATION_AND_VIVA_GUIDE.md)**  
+📄 **[Download Official Publication-Grade PDF (MBSTU_ICT_Exam_Bill_System_Documentation_and_Viva_Guide.pdf)](./pdf_exports/MBSTU_ICT_Exam_Bill_System_Documentation_and_Viva_Guide.pdf)**
 
 ---
 

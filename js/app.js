@@ -592,8 +592,14 @@ const App = {
         return this.state.teachers.filter(t => !t.isExternal && t.id !== 't_exc_rakib_rafiq_kamal');
     },
 
+    toBanglaDigits(val) {
+        if (val === null || val === undefined) return '';
+        const digits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        return val.toString().replace(/[0-9]/g, d => digits[Number(d)]);
+    },
+
     formatCurrency(val) {
-        return '৳' + (Number(val) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        return '৳ ' + (Number(val) || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     },
 
     updateSemesterSelectors() {
@@ -794,10 +800,10 @@ const App = {
         setVal('kpi-total-courses', this.getFilteredCourses().length);
         setVal('kpi-total-teachers', this.state.teachers.length);
         setVal('kpi-total-activities', filteredActs.length);
-        setVal('kpi-total-gross', '৳' + totalGross.toLocaleString('en-US', { minimumFractionDigits: 2 }));
-        setVal('kpi-total-approved', '৳' + totalApproved.toLocaleString('en-US', { minimumFractionDigits: 2 }));
-        setVal('kpi-total-paid', '৳' + totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2 }));
-        setVal('kpi-total-outstanding', '৳' + totalOutstanding.toLocaleString('en-US', { minimumFractionDigits: 2 }));
+        setVal('kpi-total-gross', '৳' + totalGross.toLocaleString('bn-BD', { minimumFractionDigits: 2 }));
+        setVal('kpi-total-approved', '৳' + totalApproved.toLocaleString('bn-BD', { minimumFractionDigits: 2 }));
+        setVal('kpi-total-paid', '৳' + totalPaid.toLocaleString('bn-BD', { minimumFractionDigits: 2 }));
+        setVal('kpi-total-outstanding', '৳' + totalOutstanding.toLocaleString('bn-BD', { minimumFractionDigits: 2 }));
     },
 
     renderRecentPayments() {
@@ -825,7 +831,7 @@ const App = {
                     <td><code>${bill.billNo}</code></td>
                     <td>${p.paymentMethod}</td>
                     <td>${p.hasRevenueStamp ? '<span class="badge badge-paid">৳10 Stamp Affixed</span>' : '<span class="badge badge-unpaid">No Stamp</span>'}</td>
-                    <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-mono);">৳${(p.amountPaid || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(p.amountPaid || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                 </tr>
             `;
         }).join('');
@@ -953,10 +959,10 @@ const App = {
                     <td><strong>${teacher.nameEn}</strong><br><small style="color:var(--text-muted);">${teacher.nameBn}</small></td>
                     <td><span class="badge ${vBadge}">${c.assignmentStatus || 'Verified'}</span></td>
                     <td><span class="badge badge-secondary">${activities.length} entries</span></td>
-                    <td style="text-align: right; font-weight: 700; font-family: var(--font-mono);">৳${totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: 700; color: var(--secondary); font-family: var(--font-mono);">৳${approved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-mono);">৳${paid.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: 700; color: #dc2626; font-family: var(--font-mono);">৳${outstanding.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${totalAmount.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--secondary); font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${approved.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${paid.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: #dc2626; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${outstanding.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                     <td>
                         <div style="display: flex; gap: 4px;">
                             <button class="btn btn-primary btn-sm" onclick="App.openCourseBreakdown('${c.id}')">Breakdown</button>
@@ -1059,7 +1065,7 @@ const App = {
                         <td>${actTchr.nameEn}</td>
                         <td>${a.workloadQuantity}</td>
                         <td>৳${Number(a.rateApplied).toFixed(2)}</td>
-                        <td style="text-align: right; font-weight: 700; font-family: var(--font-mono);">৳${(a.calculatedAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                        <td style="text-align: right; font-weight: 700; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(a.calculatedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                         <td><span class="badge ${a.billStatus === 'Paid' ? 'badge-paid' : (a.billStatus === 'Approved' ? 'badge-approved' : 'badge-recorded')}">${a.billStatus}</span></td>
                         <td><code>${a.relatedBillId || 'Unbilled'}</code></td>
                     </tr>
@@ -1097,19 +1103,19 @@ const App = {
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px;">
                 <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 10px; border-radius: 6px; text-align: center;">
                     <span style="font-size: 0.7rem; color: #1e40af; font-weight: 700; text-transform: uppercase;">Total Gross</span>
-                    <div style="font-size: 1.15rem; font-weight: 800; color: #1e3a8a; font-family: var(--font-mono);">৳${totalGross.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: #1e3a8a; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${totalGross.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</div>
                 </div>
                 <div style="background: #fefce8; border: 1px solid #fef08a; padding: 10px; border-radius: 6px; text-align: center;">
                     <span style="font-size: 0.7rem; color: #854d0e; font-weight: 700; text-transform: uppercase;">Approved</span>
-                    <div style="font-size: 1.15rem; font-weight: 800; color: #713f12; font-family: var(--font-mono);">৳${approved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: #713f12; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${approved.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</div>
                 </div>
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 10px; border-radius: 6px; text-align: center;">
                     <span style="font-size: 0.7rem; color: #166534; font-weight: 700; text-transform: uppercase;">Actually Paid</span>
-                    <div style="font-size: 1.15rem; font-weight: 800; color: #14532d; font-family: var(--font-mono);">৳${totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: #14532d; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${totalPaid.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</div>
                 </div>
                 <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 10px; border-radius: 6px; text-align: center;">
                     <span style="font-size: 0.7rem; color: #991b1b; font-weight: 700; text-transform: uppercase;">Outstanding Due</span>
-                    <div style="font-size: 1.15rem; font-weight: 800; color: #7f1d1d; font-family: var(--font-mono);">৳${outstanding.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: #7f1d1d; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${outstanding.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</div>
                 </div>
             </div>
 
@@ -1321,7 +1327,7 @@ const App = {
                     <td>${a.workloadQuantity}</td>
                     <td>৳${Number(a.rateApplied).toFixed(2)}</td>
                     <td>${methodBadge}</td>
-                    <td style="text-align: right; font-weight: 700; color: var(--primary); font-family: var(--font-mono);">৳${(a.calculatedAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--primary); font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(a.calculatedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                     <td><span class="badge ${a.billStatus === 'Paid' ? 'badge-paid' : (a.billStatus === 'Approved' ? 'badge-approved' : 'badge-recorded')}">${a.billStatus}</span></td>
                     <td>
                         <button class="btn btn-outline btn-sm" onclick="App.deleteActivity('${a.id}')">Delete</button>
@@ -1441,7 +1447,7 @@ const App = {
 
         const previewEl = document.getElementById('act-calc-preview');
         if (previewEl) {
-            previewEl.textContent = '৳' + total.toLocaleString('en-US', { minimumFractionDigits: 2 });
+            previewEl.textContent = '৳' + total.toLocaleString('bn-BD', { minimumFractionDigits: 2 });
         }
         return total;
     },
@@ -1618,11 +1624,11 @@ const App = {
         const totalPaid = teacherPayments.reduce((sum, p) => sum + (p.amountPaid || 0), 0);
         const totalOutstanding = Math.max(0, totalApproved - totalPaid);
 
-        document.getElementById('ledger-stat-accrued').textContent = '৳' + totalAccrued.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        document.getElementById('ledger-stat-billed').textContent = '৳' + totalBilled.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        document.getElementById('ledger-stat-approved').textContent = '৳' + totalApproved.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        document.getElementById('ledger-stat-paid').textContent = '৳' + totalPaid.toLocaleString('en-US', { minimumFractionDigits: 2 });
-        document.getElementById('ledger-stat-outstanding').textContent = '৳' + totalOutstanding.toLocaleString('en-US', { minimumFractionDigits: 2 });
+        document.getElementById('ledger-stat-accrued').textContent = '৳' + totalAccrued.toLocaleString('bn-BD', { minimumFractionDigits: 2 });
+        document.getElementById('ledger-stat-billed').textContent = '৳' + totalBilled.toLocaleString('bn-BD', { minimumFractionDigits: 2 });
+        document.getElementById('ledger-stat-approved').textContent = '৳' + totalApproved.toLocaleString('bn-BD', { minimumFractionDigits: 2 });
+        document.getElementById('ledger-stat-paid').textContent = '৳' + totalPaid.toLocaleString('bn-BD', { minimumFractionDigits: 2 });
+        document.getElementById('ledger-stat-outstanding').textContent = '৳' + totalOutstanding.toLocaleString('bn-BD', { minimumFractionDigits: 2 });
 
         // Render activities breakdown table
         const tbodyBreakdown = document.getElementById('tbody-teacher-courses-breakdown');
@@ -1658,10 +1664,10 @@ const App = {
                             <td>${catName}</td>
                             <td>${a.workloadQuantity}</td>
                             <td>৳${Number(a.rateApplied).toFixed(2)}</td>
-                            <td style="text-align: right; font-weight: 700; font-family: var(--font-mono);">৳${(a.calculatedAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                            <td style="text-align: right; color: var(--secondary); font-family: var(--font-mono);">৳${itemApproved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                            <td style="text-align: right; color: #15803d; font-family: var(--font-mono);">৳${itemPaid.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                            <td style="text-align: right; color: #dc2626; font-family: var(--font-mono);">৳${itemOutstanding.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right; font-weight: 700; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(a.calculatedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right; color: var(--secondary); font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${itemApproved.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right; color: #15803d; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${itemPaid.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right; color: #dc2626; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${itemOutstanding.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                             <td><code>${a.relatedBillId || 'Unbilled'}</code></td>
                         </tr>
                     `;
@@ -1687,7 +1693,7 @@ const App = {
                             <td>${p.paymentMethod}</td>
                             <td>${p.hasRevenueStamp ? '<span class="badge badge-paid">৳10 Stamp Affixed</span>' : '<span class="badge badge-unpaid">No Stamp</span>'}</td>
                             <td>${p.recordedBy || 'Accounts'}</td>
-                            <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-mono);">৳${(p.amountPaid || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(p.amountPaid || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                         </tr>
                     `;
                 }).join('');
@@ -1878,10 +1884,10 @@ const App = {
                 <div class="dossier-section-title">৩. প্রশ্নপত্র মডারেশন ও ৪. মডারেশন পারিশ্রমিক বিবরণী ঃ</div>
                 <div class="dossier-calc-box">
                     <div>
-                        <strong>মডারেশন হিসাব:</strong> (${mod.courseCount}টি কোর্সের জন্য ${mod.questionCount}টি প্রশ্ন) &times; ${mod.ratePerQuestion}/- ঃ <strong>৳${mod.totalAmount.toLocaleString('en-US')}/- টাকা</strong>
+                        <strong>মডারেশন হিসাব:</strong> (${mod.courseCount}টি কোর্সের জন্য ${mod.questionCount}টি প্রশ্ন) &times; ${mod.ratePerQuestion}/- ঃ <strong>৳${mod.totalAmount.toLocaleString('bn-BD')}/- টাকা</strong>
                     </div>
                     <div>
-                        (কমিটির ৪ জন শিক্ষকের প্রত্যেকের প্রাপ্য অংশঃ <strong>৳${memberShare.toLocaleString('en-US')}/-</strong>)
+                        (কমিটির ৪ জন শিক্ষকের প্রত্যেকের প্রাপ্য অংশঃ <strong>৳${memberShare.toLocaleString('bn-BD')}/-</strong>)
                     </div>
                 </div>
                 <table class="dossier-grid-table">
@@ -1898,25 +1904,25 @@ const App = {
                             <td style="text-align: center;">০১</td>
                             <td><strong>${comm.chairman.name}</strong>, ${comm.chairman.designation}</td>
                             <td>সভাপতি</td>
-                            <td style="text-align: right; font-weight: bold;">৳${memberShare.toLocaleString('en-US')}.00</td>
+                            <td style="text-align: right; font-weight: bold;">৳${memberShare.toLocaleString('bn-BD')}.00</td>
                         </tr>
                         <tr>
                             <td style="text-align: center;">০২</td>
                             <td><strong>${comm.member1.name}</strong>, ${comm.member1.designation}</td>
                             <td>অভ্যন্তরীণ সদস্য</td>
-                            <td style="text-align: right; font-weight: bold;">৳${memberShare.toLocaleString('en-US')}.00</td>
+                            <td style="text-align: right; font-weight: bold;">৳${memberShare.toLocaleString('bn-BD')}.00</td>
                         </tr>
                         <tr>
                             <td style="text-align: center;">০৩</td>
                             <td><strong>${comm.member2.name}</strong>, ${comm.member2.designation}</td>
                             <td>অভ্যন্তরীণ সদস্য</td>
-                            <td style="text-align: right; font-weight: bold;">৳${memberShare.toLocaleString('en-US')}.00</td>
+                            <td style="text-align: right; font-weight: bold;">৳${memberShare.toLocaleString('bn-BD')}.00</td>
                         </tr>
                         <tr style="background: #fffbeb;">
                             <td style="text-align: center;">০৪</td>
                             <td><strong>${comm.externalMember.name}</strong>, ${comm.externalMember.designation || 'প্রফেসর'}</td>
                             <td>বহিঃস্থ সদস্য (${comm.externalMember.inst || 'অন্যান্য বিশ্ববিদ্যালয়'})</td>
-                            <td style="text-align: right; font-weight: bold;">৳${memberShare.toLocaleString('en-US')}.00</td>
+                            <td style="text-align: right; font-weight: bold;">৳${memberShare.toLocaleString('bn-BD')}.00</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1930,7 +1936,7 @@ const App = {
                 <td><strong>${t.name}</strong>, ${t.designation}</td>
                 <td style="text-align: center; font-weight: bold;">${t.count}টি প্রশ্ন</td>
                 <td style="text-align: center;">৳${t.rate || 200}/-</td>
-                <td style="text-align: right; font-weight: bold;">৳${(t.total || t.count * 200).toLocaleString('en-US')}.00</td>
+                <td style="text-align: right; font-weight: bold;">৳${(t.total || t.count * 200).toLocaleString('bn-BD')}.00</td>
             </tr>
         `).join('');
 
@@ -1956,7 +1962,7 @@ const App = {
                             <td colspan="2" style="text-align: right;">সর্বমোট টাইপকৃত প্রশ্ন ঃ</td>
                             <td style="text-align: center;">${totalTypingCount}টি প্রশ্ন</td>
                             <td style="text-align: center;">-</td>
-                            <td style="text-align: right; color: var(--primary);">৳${totalTyping.toLocaleString('en-US')}.00</td>
+                            <td style="text-align: right; color: var(--primary);">৳${totalTyping.toLocaleString('bn-BD')}.00</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1972,7 +1978,7 @@ const App = {
                 <td><strong>${l.examiner}</strong></td>
                 <td style="text-align: center; font-weight: bold;">${l.candidates} জন</td>
                 <td style="text-align: center;">৳${l.rate || 100}/-</td>
-                <td style="text-align: right; font-weight: bold;">৳${(l.total || l.candidates * (l.rate || 100)).toLocaleString('en-US')}.00</td>
+                <td style="text-align: right; font-weight: bold;">৳${(l.total || l.candidates * (l.rate || 100)).toLocaleString('bn-BD')}.00</td>
             </tr>
         `).join('');
 
@@ -1997,7 +2003,7 @@ const App = {
                         ${labRows}
                         <tr style="background: #f1f5f9; font-weight: bold;">
                             <td colspan="6" style="text-align: right;">ল্যাব / ব্যবহারিক পরীক্ষা মোট সম্মানী ঃ</td>
-                            <td style="text-align: right; color: var(--primary);">৳${totalLab.toLocaleString('en-US')}.00</td>
+                            <td style="text-align: right; color: var(--primary);">৳${totalLab.toLocaleString('bn-BD')}.00</td>
                         </tr>
                     </tbody>
                 </table>
@@ -2014,7 +2020,7 @@ const App = {
                 <td><strong>${th.teacherName}</strong></td>
                 <td style="text-align: center; font-weight: bold;">${th.scriptCount}</td>
                 <td style="text-align: center;">৳${th.rate || 120}/-</td>
-                <td style="text-align: right; font-weight: bold;">৳${(th.total || th.scriptCount * 120).toLocaleString('en-US')}.00</td>
+                <td style="text-align: right; font-weight: bold;">৳${(th.total || th.scriptCount * 120).toLocaleString('bn-BD')}.00</td>
             </tr>
         `).join('');
 
@@ -2043,7 +2049,7 @@ const App = {
                             <td colspan="5" style="text-align: right;">৩য় পরীক্ষক সর্বমোট খাতা ও সম্মানী ঃ</td>
                             <td style="text-align: center;">${totalThirdScripts}</td>
                             <td style="text-align: center;">-</td>
-                            <td style="text-align: right; color: var(--primary);">৳${totalThirdTaka.toLocaleString('en-US')}.00</td>
+                            <td style="text-align: right; color: var(--primary);">৳${totalThirdTaka.toLocaleString('bn-BD')}.00</td>
                         </tr>
                     </tbody>
                 </table>
@@ -2066,7 +2072,7 @@ const App = {
                     &bull; নিয়মিত পরীক্ষার্থীদের সংখ্যা ঃ <strong>${tab.regularCount} জন</strong><br>
                     &bull; ব্যাকলগ পরীক্ষার্থীদের সংখ্যা ঃ <strong>${tab.backlogCount} জন</strong><br>
                     ${tab.specialCount ? '&bull; স্পেশাল পরীক্ষার্থীদের সংখ্যা ঃ <strong>' + tab.specialCount + ' জন</strong><br>' : ''}
-                    &bull; সর্বমোট পরীক্ষার্থী ঃ <strong>${tab.totalCount} জন</strong> &times; ৳${tab.rateRegular || 75}/- = <strong>৳${(tab.totalAmount || tab.totalCount * 75).toLocaleString('en-US')}/- টাকা</strong>
+                    &bull; সর্বমোট পরীক্ষার্থী ঃ <strong>${tab.totalCount} জন</strong> &times; ৳${tab.rateRegular || 75}/- = <strong>৳${(tab.totalAmount || tab.totalCount * 75).toLocaleString('bn-BD')}/- টাকা</strong>
                 </div>
             </div>
         `;
@@ -2114,10 +2120,10 @@ const App = {
                     <td><strong>${t.nameBn}</strong><br><small style="color: #475569;">${t.nameEn}</small></td>
                     <td>${t.designation}</td>
                     <td><span class="badge badge-secondary">${duties.join(', ') || 'কোর্স শিক্ষক / পরীক্ষক'}</span></td>
-                    <td style="text-align: right; font-weight: bold;">৳${accrued.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: bold; color: var(--secondary);">৳${approved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: bold; color: #166534;">৳${paid.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: bold; color: ${outstanding > 0 ? '#b91c1c' : '#1e293b'};">৳${outstanding.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: bold;">৳${accrued.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: bold; color: var(--secondary);">৳${approved.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: bold; color: #166534;">৳${paid.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: bold; color: ${outstanding > 0 ? '#b91c1c' : '#1e293b'};">৳${outstanding.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                     <td>${billRef}</td>
                     <td style="text-align: center;">${actionBtn}</td>
                 </tr>
@@ -2149,10 +2155,10 @@ const App = {
                         ${teacherDutyRows}
                         <tr style="background: #e2e8f0; font-weight: 800; border-top: 2px solid #000;">
                             <td colspan="4" style="text-align: right;">সেমিস্টার সর্বমোট আর্থিক হিসাব ঃ</td>
-                            <td style="text-align: right;">৳${totalDossierAccrued.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                            <td style="text-align: right; color: var(--secondary);">৳${totalDossierApproved.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                            <td style="text-align: right; color: #166534;">৳${totalDossierPaid.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                            <td style="text-align: right; color: #b91c1c;">৳${totalDossierOutstanding.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right;">৳${totalDossierAccrued.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right; color: var(--secondary);">৳${totalDossierApproved.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right; color: #166534;">৳${totalDossierPaid.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                            <td style="text-align: right; color: #b91c1c;">৳${totalDossierOutstanding.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                             <td colspan="2">-</td>
                         </tr>
                     </tbody>
@@ -2375,10 +2381,10 @@ const App = {
                     <td><strong>${teacher.nameEn}</strong></td>
                     <td><span class="badge badge-secondary">${sem.session}</span> ${sem.yearLevel} ${sem.semesterNumber}</td>
                     <td>${b.preparationDate}</td>
-                    <td style="text-align: right; font-weight: 700; font-family: var(--font-mono);">৳${(b.grossAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: 700; color: var(--secondary); font-family: var(--font-mono);">৳${(b.approvedAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-mono);">৳${(b.paidAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td style="text-align: right; font-weight: 700; color: #dc2626; font-family: var(--font-mono);">৳${(b.outstandingBalance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(b.grossAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: var(--secondary); font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(b.approvedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(b.paidAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: #dc2626; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(b.outstandingBalance || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                     <td>${b.chairmanSigned ? '<span class="badge badge-verified">✓ Sanctioned</span>' : '<button class="btn btn-warning btn-sm" onclick="App.approveBill(\'' + b.id + '\')">Sanction</button>'}</td>
                     <td><span class="badge ${statusBadge}">${b.status}</span></td>
                     <td>
@@ -2448,7 +2454,7 @@ const App = {
                                 <strong style="color: #1e3a8a; font-size: 0.88rem;">📄 Official Bill Slip Already Generated:</strong>
                                 <code style="font-size: 0.88rem; font-weight: 800; color: #1e40af; margin-left: 4px;">${existingBill.billNo}</code>
                                 <div style="font-size: 0.8rem; color: #475569; margin-top: 3px;">
-                                    Approved Total: <strong>৳${(existingBill.approvedAmount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong> &bull; Paid: <strong>৳${(existingBill.paidAmount || 0).toLocaleString()}</strong> &bull; Status: <span class="badge ${badgeClass}">${existingBill.status}</span>
+                                    Approved Total: <strong>৳${(existingBill.approvedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</strong> &bull; Paid: <strong>৳${(existingBill.paidAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</strong> &bull; Status: <span class="badge ${badgeClass}">${existingBill.status}</span>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-secondary btn-sm" onclick="App.closeModal('modal-bill'); App.viewPrintSlipForBill('${existingBill.id}');">
@@ -2502,7 +2508,7 @@ const App = {
                         <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; cursor: pointer;">
                             <input type="checkbox" class="bill-act-checkbox" value="${a.id}" checked>
                             <span style="flex: 1;"><code>${course.code}</code> &bull; ${cat} (Qty: ${a.workloadQuantity})</span>
-                            <strong style="color: var(--primary);">৳${(a.calculatedAmount || 0).toLocaleString()}</strong>
+                            <strong style="color: var(--primary);">৳${(a.calculatedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</strong>
                         </label>
                     </div>
                 `;
@@ -2525,7 +2531,7 @@ const App = {
                         <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; cursor: pointer;">
                             <input type="checkbox" class="bill-act-checkbox" value="${a.id}" ${isRevising ? 'checked' : ''}>
                             <span style="flex: 1;"><code>${course.code}</code> &bull; ${cat} (Qty: ${a.workloadQuantity}) <span class="badge badge-secondary" style="font-size: 0.68rem;">Included in Bill</span></span>
-                            <strong style="color: #334155;">৳${(a.calculatedAmount || 0).toLocaleString()}</strong>
+                            <strong style="color: #334155;">৳${(a.calculatedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</strong>
                         </label>
                     </div>
                 `;
@@ -2754,7 +2760,7 @@ const App = {
                     <td><code>${p.receiptVoucherNo}</code></td>
                     <td>${p.hasRevenueStamp ? '<span class="badge badge-paid">৳10 Stamp Affixed</span>' : '<span class="badge badge-unpaid">No Stamp</span>'}</td>
                     <td>${p.recordedBy || 'Accounts'}</td>
-                    <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-mono);">৳${(p.amountPaid || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; font-weight: 700; color: #15803d; font-family: var(--font-bengali), \'SutonnyMJ\', serif;">৳${(p.amountPaid || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                     <td>
                         <button class="btn btn-outline btn-sm" onclick="App.deletePayment('${p.id}')">Delete</button>
                     </td>
@@ -2788,7 +2794,7 @@ const App = {
         this.state.bills.forEach(b => {
             if (b.status !== 'Paid') {
                 const t = this.state.teachers.find(x => x.id === b.teacherId) || { nameEn: 'Unknown' };
-                options += `<option value="${b.id}">${b.billNo} - ${t.nameEn} (Outstanding: ৳${(b.outstandingBalance || 0).toLocaleString()})</option>`;
+                options += `<option value="${b.id}">${b.billNo} - ${t.nameEn} (Outstanding: ৳${(b.outstandingBalance || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })})</option>`;
             }
         });
         payBillSelect.innerHTML = options;
@@ -2801,7 +2807,7 @@ const App = {
         const amountInput = document.getElementById('pay-amount');
 
         if (bill) {
-            if (maxDisplay) maxDisplay.textContent = '৳' + (bill.outstandingBalance || 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
+            if (maxDisplay) maxDisplay.textContent = '৳' + (bill.outstandingBalance || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 });
             if (amountInput) {
                 amountInput.value = bill.outstandingBalance || 0;
                 amountInput.max = bill.outstandingBalance || 0;
@@ -2825,7 +2831,7 @@ const App = {
         }
 
         if (amount > (bill.outstandingBalance + 0.01)) {
-            alert(`Payment exceeds current outstanding balance (৳${bill.outstandingBalance.toLocaleString()}).`);
+            alert(`Payment exceeds current outstanding balance (৳${bill.outstandingBalance.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}).`);
             return;
         }
 
@@ -2860,7 +2866,7 @@ const App = {
         this.closeModal('modal-payment');
         event.target.reset();
         this.renderAll();
-        alert(`Payment of ৳${amount.toLocaleString()} recorded successfully with revenue stamp receipt acknowledgment!`);
+        alert(`Payment of ৳${amount.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} recorded successfully with revenue stamp receipt acknowledgment!`);
     },
 
     // --------------------------------------------------------------------------
@@ -2874,7 +2880,7 @@ const App = {
         let options = '';
         this.state.bills.forEach(b => {
             const t = this.state.teachers.find(x => x.id === b.teacherId) || { nameEn: 'Unknown' };
-            options += `<option value="${b.id}">${b.billNo} &bull; ${t.nameEn} (৳${(b.approvedAmount || 0).toLocaleString()})</option>`;
+            options += `<option value="${b.id}">${b.billNo} &bull; ${t.nameEn} (৳${(b.approvedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })})</option>`;
         });
         select.innerHTML = options || '<option value="">No Bills Available</option>';
 
@@ -2994,10 +3000,10 @@ const App = {
                 if (carrierSum > 0) {
                     totalTaka += carrierSum;
                     codeStr = bill.carrierVoucherNo ? `ভাউচার: ${bill.carrierVoucherNo}` : 'কুরিয়ার রশিদ';
-                    const takaDisplay = carrierSum.toLocaleString('en-US', { minimumFractionDigits: 0 });
+                    const takaDisplay = carrierSum.toLocaleString('bn-BD', { minimumFractionDigits: 0 });
                     htmlRows += `
                         <tr>
-                            <td style="text-align: center; font-weight: 700;">14</td>
+                            <td style="text-align: center; font-weight: 700; font-family: var(--font-bengali);">১৪</td>
                             <td style="text-align: left; font-weight: 600;">${rule.nameBn}</td>
                             <td style="text-align: center; font-size: 7.2pt;">${sem.semesterName || 'বিএসসি (ইঞ্জিঃ) পরীক্ষা'}</td>
                             <td style="text-align: center;">${sem.academicYear || '২০২৫'}</td>
@@ -3007,7 +3013,7 @@ const App = {
                             <td style="text-align: center;">-</td>
                             <td style="text-align: center;">-</td>
                             <td style="text-align: center;">-</td>
-                            <td style="text-align: right; font-weight: 800; font-family: monospace;">${takaDisplay}</td>
+                            <td style="text-align: right; font-weight: 800; font-family: var(--font-bengali), 'SutonnyMJ', serif; font-size: 8.5pt;">${takaDisplay}</td>
                             <td style="text-align: center;">০০</td>
                         </tr>
                     `;
@@ -3086,7 +3092,7 @@ const App = {
             }
 
             const isBlank = sumTaka <= 0;
-            const takaDisplay = isBlank ? '-' : sumTaka.toLocaleString('en-US', { minimumFractionDigits: 0 });
+            const takaDisplay = isBlank ? '-' : sumTaka.toLocaleString('bn-BD', { minimumFractionDigits: 0 });
             const poisaDisplay = isBlank ? '-' : '০০';
             const rowExamName = isBlank ? '-' : (sem.semesterName || 'বিএসসি (ইঞ্জিঃ) ফাইনাল পরীক্ষা');
             const rowExamYear = isBlank ? '-' : (sem.academicYear || '২০২৫');
@@ -3094,7 +3100,7 @@ const App = {
 
             htmlRows += `
                 <tr>
-                    <td style="text-align: center; font-weight: 700;">${i}</td>
+                    <td style="text-align: center; font-weight: 700; font-family: var(--font-bengali);">${this.toBanglaDigits(i)}</td>
                     <td style="text-align: left; font-weight: 600;">${rule.nameBn}</td>
                     <td style="text-align: center; font-size: 7.2pt;">${rowExamName}</td>
                     <td style="text-align: center;">${rowExamYear}</td>
@@ -3104,18 +3110,18 @@ const App = {
                     <td style="text-align: center;">${daysStr}</td>
                     <td style="text-align: center;">${creditStr}</td>
                     <td style="text-align: center;">${testStr}</td>
-                    <td style="text-align: right; font-weight: 800; font-family: monospace;">${takaDisplay}</td>
+                    <td style="text-align: right; font-weight: 800; font-family: var(--font-bengali), 'SutonnyMJ', serif; font-size: 8.5pt;">${takaDisplay}</td>
                     <td style="text-align: center;">${poisaDisplay}</td>
                 </tr>
             `;
         }
 
         rowsTbody.innerHTML = htmlRows;
-        setVal('slip-total-amount-display', totalTaka.toLocaleString('en-US', { minimumFractionDigits: 0 }));
-        setVal('slip-total-taka', totalTaka.toLocaleString('en-US', { minimumFractionDigits: 0 }) + '/-');
+        setVal('slip-total-amount-display', totalTaka.toLocaleString('bn-BD', { minimumFractionDigits: 0 }));
+        setVal('slip-total-taka', totalTaka.toLocaleString('bn-BD', { minimumFractionDigits: 0 }) + '/-');
         setVal('slip-total-words-display', numberToBanglaWords(totalTaka) + ' টাকা মাত্র');
         setVal('slip-sanction-words', numberToBanglaWords(totalTaka) + ' টাকা মাত্র');
-        setVal('slip-sanction-amount', totalTaka.toLocaleString('en-US', { minimumFractionDigits: 0 }) + '/-');
+        setVal('slip-sanction-amount', totalTaka.toLocaleString('bn-BD', { minimumFractionDigits: 0 }) + '/-');
         setVal('slip-sanction-teacher-name', `${teacher.nameBn} (${teacher.nameEn})`);
         setVal('slip-sanction-session', sem.session);
         setVal('slip-sanction-exam-name', sem.semesterName || 'বিএসসি (ইঞ্জিঃ) ফাইনাল পরীক্ষা');
@@ -3335,7 +3341,7 @@ const App = {
         }
 
         if (preview) {
-            preview.textContent = '৳' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            preview.textContent = '৳' + total.toLocaleString('bn-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
         return total;
     },
@@ -3502,8 +3508,8 @@ const App = {
                 <td><strong>${r.nameBn}</strong></td>
                 <td>${r.nameEn}</td>
                 <td><span class="badge badge-secondary">${r.unit}</span></td>
-                <td><strong>৳${Number(r.defaultRate).toFixed(2)}</strong></td>
-                <td>৳${Number(r.minCharge || 0).toFixed(2)}</td>
+                <td><strong style="font-family: var(--font-bengali);">৳ ${(Number(r.defaultRate) || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</strong></td>
+                <td style="font-family: var(--font-bengali);">৳ ${(Number(r.minCharge || 0)).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                 <td><small>${r.desc || 'Official MBSTU Examination Regulation'}</small></td>
                 <td>
                     <button class="btn btn-outline btn-sm" onclick="App.openEditRateModal(${r.cat})">Edit Rate</button>
@@ -3888,7 +3894,7 @@ const App = {
                     <td style="border: 1px solid #000; padding: 4px;">${teacher.nameEn}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${a.workloadQuantity}</td>
                     <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${Number(a.rateApplied).toFixed(2)}</td>
-                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(a.calculatedAmount || 0).toLocaleString()}</td>
+                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(a.calculatedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${a.billStatus}</td>
                 </tr>
             `;
@@ -3926,10 +3932,10 @@ const App = {
                     <td style="border: 1px solid #000; padding: 4px;">${teacher.nameEn}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${sem.session} • ${sem.yearLevel} ${sem.semesterNumber}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${b.preparationDate}</td>
-                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(b.grossAmount || 0).toLocaleString()}</td>
-                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(b.approvedAmount || 0).toLocaleString()}</td>
-                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(b.paidAmount || 0).toLocaleString()}</td>
-                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(b.outstandingBalance || 0).toLocaleString()}</td>
+                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(b.grossAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(b.approvedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(b.paidAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
+                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(b.outstandingBalance || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${b.status}</td>
                 </tr>
             `;
@@ -3977,7 +3983,7 @@ const App = {
                     <td style="border: 1px solid #000; padding: 4px;">${course.code}: ${course.title}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${cat}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${a.workloadQuantity}</td>
-                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(a.calculatedAmount || 0).toLocaleString()}</td>
+                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${(a.calculatedAmount || 0).toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${a.billStatus}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${a.relatedBillId || 'Unbilled'}</td>
                 </tr>
@@ -4029,7 +4035,7 @@ const App = {
                     <td style="border: 1px solid #000; padding: 4px;">${c.credit.toFixed(2)} (${c.courseType})</td>
                     <td style="border: 1px solid #000; padding: 4px;">${teacher.nameEn}</td>
                     <td style="border: 1px solid #000; padding: 4px;">${c.assignmentStatus}</td>
-                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${total.toLocaleString()}</td>
+                    <td style="border: 1px solid #000; padding: 4px; text-align: right;">৳${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}</td>
                 </tr>
             `;
         }).join('');

@@ -1296,7 +1296,25 @@
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label class="form-label" for="act-category">Activity Category *</label>
-                            <select id="act-category" class="form-control" onchange="App.handleActivityCategoryChange()" required></select>
+                            <select id="act-category" class="form-control" onchange="App.handleActivityCategoryChange()" required>
+                                <option value="">-- Select Category / Activity Type --</option>
+                                <optgroup label="Official MBSTU Statutory Categories (1-14)">
+                                    <option value="1">1. প্রশ্নপত্র প্রণয়ন (Question Paper Setting) — ৳4000/৳1200</option>
+                                    <option value="2">2. প্রশ্নপত্র পরিমার্জন ও সমন্বয় (Question Moderation Board) — ৳1600</option>
+                                    <option value="3">3. উত্তরপত্র পরীক্ষণ ও মূল্যায়ন (Answer Script Evaluation) — ৳120/script</option>
+                                    <option value="4">4. মৌখিক পরীক্ষা মূল্যায়ন (Viva-Voce Board) — ৳100/candidate</option>
+                                    <option value="5">5. ব্যবহারিক / ল্যাব পরীক্ষা মূল্যায়ন (Practical Lab Exam) — ৳100/candidate</option>
+                                    <option value="6">6. ট্যাবুলেশন কার্য (Semester Tabulation) — ৳75/student</option>
+                                    <option value="7">7. স্ক্রুটিনি ও নিরীক্ষা কার্য (Answer Script Scrutiny) — ৳25/script</option>
+                                    <option value="8">8. প্রশ্নপত্র কম্পিউটার টাইপিং ও মুদ্রণ (Compose &amp; Printing) — ৳200/page</option>
+                                    <option value="9">9. পরীক্ষা পরিচালনা ও ইনভিজিলেশন (Invigilation Duty) — ৳400/session</option>
+                                    <option value="10">10. টার্ম পেপার ও অ্যাসাইনমেন্ট মূল্যায়ন (Term Paper Evaluation) — ৳100</option>
+                                    <option value="11">11. সেমিনার ও প্রকল্প মূল্যায়ন (Seminar &amp; Project Evaluation) — ৳300</option>
+                                    <option value="12">12. থিসিস ও গবেষণাপত্র মূল্যায়ন (M.Sc. Thesis Defense) — ৳500</option>
+                                    <option value="13">13. ধারাবাহিক মূল্যায়ন / ক্লাস টেস্ট (Continuous Assessment CT) — ৳1350/section</option>
+                                    <option value="14">14. প্রশ্নপত্র ও উত্তরপত্র বহন ভাতা (Question &amp; Script Carrier) — ৳800/trip</option>
+                                </optgroup>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="act-date">Activity / Exam Date *</label>

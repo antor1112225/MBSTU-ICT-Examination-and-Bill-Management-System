@@ -435,9 +435,17 @@ const App = {
         if (modal) {
             modal.classList.add('active');
             if (id === 'modal-activity') {
+                this.populateActivityCategorySelect();
+                this.handleActivitySemesterChange();
                 const dateEl = document.getElementById('act-date');
                 if (dateEl && !dateEl.value) {
                     dateEl.value = new Date().toISOString().split('T')[0];
+                }
+                const presetSel = document.getElementById('act-smart-preset');
+                if (presetSel && presetSel.value) {
+                    this.handleSmartDutyPreset(presetSel.value);
+                } else {
+                    this.calculateActivityPreview();
                 }
             }
             if (id === 'modal-custom-activity') {
@@ -515,6 +523,7 @@ const App = {
     // --------------------------------------------------------------------------
     renderAll() {
         this.updateSemesterSelectors();
+        this.populateActivityCategorySelect();
         this.updateScopeDisplay();
         this.renderKPIs();
         this.renderRecentPayments();
@@ -1558,7 +1567,21 @@ const App = {
 
     handleSaveActivity(event) {
         event.preventDefault();
-        const catVal = document.getElementById('act-category').value;
+        let catVal = document.getElementById('act-category').value;
+        const smartPresetVal = document.getElementById('act-smart-preset') ? document.getElementById('act-smart-preset').value : '';
+        if (!catVal && smartPresetVal) {
+            const mapPresetToCat = {
+                q_set_full: '1', q_set_half: '1', q_mod_member: '2',
+                eval_reg_57: '3', eval_bl_18: '3', eval_sc_11: '3',
+                viva_57: '4', lab_57: '5', tab_86: '6', scrutiny_57: '7',
+                ct_4: '13', ct_3: '13', carrier_trip: '14'
+            };
+            if (mapPresetToCat[smartPresetVal]) {
+                catVal = mapPresetToCat[smartPresetVal];
+                const catEl = document.getElementById('act-category');
+                if (catEl) catEl.value = catVal;
+            }
+        }
         const method = document.getElementById('act-calc-method').value;
         const calculatedAmount = this.calculateActivityPreview();
 
@@ -8075,6 +8098,10 @@ const App = {
         if (!presetKey || presetKey === 'custom') return;
 
         const catSelect = document.getElementById('act-category');
+        if (catSelect && catSelect.options.length <= 1) {
+            this.populateActivityCategorySelect();
+        }
+
         const workloadInput = document.getElementById('act-workload');
         const workloadPreset = document.getElementById('act-workload-preset');
         const rateInput = document.getElementById('act-rate');
@@ -8100,7 +8127,15 @@ const App = {
         const p = presets[presetKey];
         if (!p) return;
 
-        if (catSelect) catSelect.value = p.cat;
+        if (catSelect) {
+            catSelect.value = p.cat;
+            for (let i = 0; i < catSelect.options.length; i++) {
+                if (catSelect.options[i].value === p.cat) {
+                    catSelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
         if (workloadInput) workloadInput.value = p.workload;
         if (workloadPreset) workloadPreset.value = p.workload.toString();
         if (rateInput) rateInput.value = p.rate;

@@ -431,6 +431,7 @@ const App = {
     // Modal Helpers
     // --------------------------------------------------------------------------
     openModal(id) {
+        this.closeAllDropdowns();
         const modal = document.getElementById(id);
         if (modal) {
             modal.classList.add('active');
@@ -2497,6 +2498,7 @@ const App = {
     },
 
     printModerationDossier() {
+        this.closeAllDropdowns();
         this.switchTab('moderation');
         window.print();
     },
@@ -8202,7 +8204,7 @@ if (document.readyState === 'loading') {
 
 // Global outside click listener to close dropdowns
 document.addEventListener('click', (e) => {
-    if (!e.target.closest('.dropdown')) {
+    if (e.target.closest('.dropdown-item') || !e.target.closest('.dropdown')) {
         if (window.App && typeof window.App.closeAllDropdowns === 'function') {
             window.App.closeAllDropdowns();
         }

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBSTU ICT Exam & Bill Management System — Documentation & Viva Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --accent: #0284c7;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --bg-light: #f8fafc;
+            --border: #e2e8f0;
+            --border-dark: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans Bengali', sans-serif;
+            color: var(--text-dark);
+            background: #ffffff;
+            line-height: 1.65;
+            font-size: 10pt;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        @page {
+            size: A4;
+            margin: 16mm 14mm 16mm 14mm;
+        }
+
+        .cover-page {
+            page-break-after: always;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px 20px;
+            border: 3px double var(--primary);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .cover-logo {
+            height: 100px;
+            width: auto;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+        }
+
+        .cover-uni {
+            font-size: 16pt;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .cover-dept {
+            font-size: 12.5pt;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 25px;
+        }
+
+        .cover-title-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 100%);
+            border: 1.5px solid #bae6fd;
+            border-radius: 12px;
+            padding: 24px 20px;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .cover-title {
+            font-size: 17pt;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.35;
+            margin-bottom: 10px;
+        }
+
+        .cover-subtitle {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #0369a1;
+            line-height: 1.4;
+        }
+
+        .cover-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            text-align: left;
+            margin-top: 25px;
+            padding: 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 9.5pt;
+        }
+
+        .meta-col strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 4px;
+            font-size: 10pt;
+        }
+
+        .cover-footer {
+            font-size: 9pt;
+            color: var(--text-muted);
+            margin-top: 15px;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+            width: 100%;
+        }
+
+        /* Chapter & Content Formatting */
+        .chapter {
+            page-break-before: always;
+            margin-top: 10px;
+        }
+
+        .chapter:first-of-type {
+            page-break-before: auto;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary);
+            font-weight: 700;
+            page-break-after: avoid;
+        }
+
+        h2 {
+            font-size: 14pt;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 4px;
+            margin: 20px 0 12px;
+        }
+
+        h3 {
+            font-size: 11.5pt;
+            color: #0369a1;
+            margin: 14px 0 6px;
+        }
+
+        h4 {
+            font-size: 10.5pt;
+            margin: 10px 0 4px;
+        }
+
+        p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin: 8px 0 12px 22px;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 16px;
+            font-size: 9pt;
+            page-break-inside: avoid;
+        }
+
+        th, td {
+            border: 1px solid var(--border-dark);
+            padding: 6px 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: #0f172a;
+            color: #f8fafc;
+            font-family: 'Fira Code', monospace;
+            font-size: 8pt;
+            padding: 10px 14px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0 14px;
+            line-height: 1.45;
+            page-break-inside: avoid;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 8.5pt;
+            background: #f1f5f9;
+            color: #be123c;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        /* Callouts / Alerts */
+        .callout {
+            border-left: 4px solid var(--primary);
+            background: #f0fdf4;
+            padding: 10px 14px;
+            margin: 12px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 9.5pt;
+            page-break-inside: avoid;
+        }
+
+        .callout-info {
+            border-left-color: #0284c7;
+            background: #f0f9ff;
+        }
+
+        .callout-warning {
+            border-left-color: #d97706;
+            background: #fffbeb;
+        }
+
+        /* Viva Box */
+        .viva-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin: 14px 0;
+            padding: 12px 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            page-break-inside: avoid;
+        }
+
+        .viva-q {
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 10.5pt;
+            margin-bottom: 6px;
+        }
+
+        .viva-a {
+            color: #334155;
+            font-size: 9.5pt;
+            line-height: 1.55;
+            background: #f8fafc;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #10b981;
+        }
+
+        /* Architecture Diagram Box */
+        .diagram-svg-box {
+            text-align: center;
+            margin: 16px 0;
+            padding: 12px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- COVER PAGE -->
+    <div class="cover-page">
+        <div>
+            <img src="../assets/mbstu_logo.png" alt="MBSTU Logo" class="cover-logo">
+            <div class="cover-uni">মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়</div>
+            <div class="cover-dept">Department of Information and Communication Technology (ICT)</div>
+            <p style="font-weight: 600; color: #64748b; font-size: 10pt;">Santosh, Tangail-1902, Bangladesh</p>
+        </div>
+
+        <div class="cover-title-box">
+            <div class="cover-title">MBSTU ICT Department Examination, Moderation &amp; Bill Management System</div>
+            <div class="cover-subtitle">🎓 Comprehensive Technical Documentation, System Architecture, Viva Defense Guide &amp; Evaluative Analysis</div>
+        </div>
+
+        <div class="cover-meta-grid">
+            <div class="meta-col">
+                <strong>👤 Submitting Student / Author:</strong>
+                Md Tahmid Hasib Antor<br>
+                <strong>Student ID:</strong> IT24055<br>
+                <strong>Department:</strong> Department of ICT<br>
+                <strong>Faculty:</strong> Faculty of Engineering<br>
+                <strong>Institution:</strong> MBSTU
+            </div>
+            <div class="meta-col">
+                <strong>🏛️ Academic Course Details:</strong>
+                <strong>Course:</strong> Software Engineering Capstone Project<br>
+                <strong>Academic Session:</strong> 2023–2024 / 2024–2025<br>
+                <strong>Live URL:</strong> antor1112225.github.io/...<br>
+                <strong>Date of Submission:</strong> November 2026
+            </div>
+        </div>
+
+        <div class="cover-footer">
+            Official Academic Submission Document • Department of Information and Communication Technology, MBSTU
+        </div>
+    </div>
+
+    <!-- MAIN BODY -->
+    <div class="chapter">
+        <h2>📑 সূচিপত্র (Table of Contents)</h2>
+        <ol style="font-size: 10pt; line-height: 1.8;">
+            <li><strong>Antigravity IDE-তে প্রজেক্ট সেটআপ ও ফাইল স্ট্রাকচার</strong></li>
+            <li><strong>সিস্টেম কীভাবে কাজ করছে: আর্কিটেকচার ও ডেটা ফ্লো</strong></li>
+            <li><strong>মূল কোড মডিউল ও ক্যালকুলেশন ইঞ্জিন বিশ্লেষণ</strong></li>
+            <li><strong>প্রজেক্টের কাজ (Core Purpose &amp; Objective)</strong></li>
+            <li><strong>ফিচারসমূহ (Comprehensive Features)</strong></li>
+            <li><strong>সুবিধাসমূহ / উপযোগিতা (Real-world Benefits)</strong></li>
+            <li><strong>সীমাবদ্ধতা (Current Limitations)</strong></li>
+            <li><strong>ভবিষ্যৎ উন্নয়ন পরিকল্পনা (Future Enhancements)</strong></li>
+            <li><strong>ডিফেন্স ও ভাইভা সম্ভাব্য প্রশ্নোত্তর (Expected Viva Questions &amp; Model Answers)</strong></li>
+        </ol>
+    </div>
+
+    <div class="chapter">
+        <h2>1. Antigravity IDE-তে প্রজেক্ট সেটআপ ও ফাইল স্ট্রাকচার</h2>
+        
+        <h3>ক. প্রজেক্টের লোকেশন ও ওপেন করার নিয়ম</h3>
+        <p>প্রজেক্টের সম্পূর্ণ কোডবেস লোকাল ড্রাইভে রয়েছে:</p>
+        <pre><code>C:\Users\Antor\.gemini\antigravity\scratch\MBSTU_ICT_EXAM_BILL_SYSTEM</code></pre>
+        
+        <p><strong>Antigravity IDE-তে ওপেন করার ধাপ:</strong></p>
+        <ol>
+            <li>Antigravity IDE-এর মেনু থেকে <strong>File &gt; Open Folder...</strong> সিলেক্ট করুন।</li>
+            <li>পাথ হিসেবে <code>MBSTU_ICT_EXAM_BILL_SYSTEM</code> ফোল্ডারটি ব্রাউজ করে <strong>Select Folder</strong> চাপুন।</li>
+            <li>এটি ওপেন হলে প্রজেক্টের সম্পূর্ণ ফাইল ট্রি IDE-এর লেফট এক্সপ্লোরারে চলে আসবে।</li>
+            <li>কোনো ধরনের Node.js ডিপেন্ডেন্সি ইনস্টলেশন বা জটিল ডাটাবেস সার্ভার কনফিগারেশন ছাড়াই সরাসরি <code>index.html</code> ডাবল-ক্লিক করে বা ব্রাউজারে রান করলেই সম্পূর্ণ সিস্টেম লাইভ কাজ করবে।</li>
+        </ol>
+
+        <h3>খ. ফাইল ডিরেক্টরি কাঠামো</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 25%;">ফাইল / ডিরেক্টরি</th>
+                    <th>বর্ণনা ও দায়িত্ব</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>index.html</code></td>
+                    <td>কোর অ্যাপ্লিকেশন লেআউট (১০টি ট্যাব, ১৮টি মডাল, অফিসিয়াল ১৪-রো বিল ফরম ও মডারেশন শীট)।</td>
+                </tr>
+                <tr>
+                    <td><code>css/style.css</code></td>
+                    <td>SutonnyMJ টাইপোগ্রাফি, রেসপন্সিভ গ্রিড, অ্যাকশন বাটন এবং A4 প্রিন্ট লেআউট।</td>
+                </tr>
+                <tr>
+                    <td><code>js/app.js</code></td>
+                    <td>সম্পূর্ণ সেন্ট্রাল স্টেট ইঞ্জিন, ১৪টি সংবিধিবদ্ধ রুলস, ক্যালকুলেশন ইঞ্জিন ও এক্সপোর্ট লজিক।</td>
+                </tr>
+                <tr>
+                    <td><code>poster.html</code></td>
+                    <td>৪৮" × ৩৬" একাডেমিক পোস্টার প্রেজেন্টেশন ব্যানার।</td>
+                </tr>
+                <tr>
+                    <td><code>PROJECT_PROPOSAL.md</code></td>
+                    <td>একাডেমিক প্রপোজাল ও ৬টি সফটওয়্যার ইঞ্জিনিয়ারিং ডায়াগ্রাম।</td>
+                </tr>
+                <tr>
+                    <td><code>THESIS_BOOK_REPORT.md</code></td>
+                    <td>কমপ্লিট আন্ডারগ্র্যাজুয়েট থিসিস বুক ও ল্যাব রিপোর্ট।</td>
+                </tr>
+                <tr>
+                    <td><code>assets/mbstu_logo.png</code></td>
+                    <td>বিশ্ববিদ্যালয়ের অফিসিয়াল লোগো ও এম্ব্লেম।</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chapter">
+        <h2>2. সিস্টেম কীভাবে কাজ করছে: আর্কিটেকচার ও ডেটা ফ্লো</h2>
+        <p>সিস্টেমটি একটি আধুনিক <strong>ক্লায়েন্ট-সাইড সিঙ্গেল পেজ অ্যাপ্লিকেশন (SPA)</strong> যা <strong>Event-Driven MVC (Model-View-Controller)</strong> প্যাটার্ন অনুসরণ করে।</p>
+
+        <div class="diagram-svg-box">
+            <svg width="100%" height="240" viewBox="0 0 720 240" xmlns="http://www.w3.org/2000/svg">
+                <style>
+                    .box { fill: #f0f9ff; stroke: #0284c7; stroke-width: 1.5; rx: 6; }
+                    .box-state { fill: #ecfdf5; stroke: #10b981; stroke-width: 1.5; rx: 6; }
+                    .box-view { fill: #fef2f2; stroke: #ef4444; stroke-width: 1.5; rx: 6; }
+                    .txt { font-family: 'Inter', sans-serif; font-size: 11px; fill: #0f172a; text-anchor: middle; font-weight: 600; }
+                    .subtxt { font-size: 9px; fill: #64748b; text-anchor: middle; }
+                    .arrow { stroke: #0284c7; stroke-width: 1.8; marker-end: url(#arrowhead); fill: none; }
+                </style>
+                <defs>
+                    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+                        <polygon points="0 0, 8 3, 0 6" fill="#0284c7"/>
+                    </marker>
+                </defs>
+                <!-- Inputs -->
+                <rect x="20" y="20" width="180" height="60" class="box"/>
+                <text x="110" y="45" class="txt">১. ইউজার ইন্টারফেস</text>
+                <text x="110" y="60" class="subtxt">ড্রপডাউন ও প্রিসেট বাটন</text>
+
+                <!-- Controller -->
+                <rect x="270" y="20" width="180" height="60" class="box"/>
+                <text x="360" y="45" class="txt">২. কন্ট্রোলার ও রুল ইঞ্জিন</text>
+                <text x="360" y="60" class="subtxt">১৪টি সংবিধিবদ্ধ রেট ক্যালকুলেটর</text>
+
+                <!-- State -->
+                <rect x="520" y="20" width="180" height="60" class="box-state"/>
+                <text x="610" y="45" class="txt">৩. রিঅ্যাকটিভ সেন্ট্রাল স্টেট</text>
+                <text x="610" y="60" class="subtxt">App.state &amp; LocalStorage</text>
+
+                <!-- Views -->
+                <rect x="80" y="140" width="160" height="65" class="box-view"/>
+                <text x="160" y="165" class="txt">ড্যাশবোর্ড KPI</text>
+                <text x="160" y="180" class="subtxt">গ্রস, অনুমোদিত ও বকেয়া</text>
+
+                <rect x="280" y="140" width="160" height="65" class="box-view"/>
+                <text x="360" y="165" class="txt">মডারেশন বিবরণী</text>
+                <text x="360" y="180" class="subtxt">৯টি সংবিধিবদ্ধ সেকশন</text>
+
+                <rect x="480" y="140" width="160" height="65" class="box-view"/>
+                <text x="560" y="165" class="txt">১৪-রো অফিশিয়াল বিল ফরম</text>
+                <text x="560" y="180" class="subtxt">SutonnyMJ &amp; A4 Printable PDF</text>
+
+                <!-- Connecting Arrows -->
+                <path d="M 200 50 L 265 50" class="arrow"/>
+                <path d="M 450 50 L 515 50" class="arrow"/>
+                <path d="M 580 80 L 560 135" class="arrow"/>
+                <path d="M 610 80 L 360 135" class="arrow"/>
+                <path d="M 640 80 L 180 135" class="arrow"/>
+            </svg>
+        </div>
+
+        <p><strong>ডেটা ফ্লো প্রক্রিয়া:</strong></p>
+        <ol>
+            <li><strong>ইনপুট রিসিভিং:</strong> ব্যবহারকারী যখন ড্রপডাউন থেকে কোর্স, সেমিস্টার এবং ১-ক্লিক ডিউটি সিলেক্ট করেন, কন্ট্রোলার স্বয়ংক্রিয়ভাবে ক্রেডিট লোড করে।</li>
+            <li><strong>রুল প্রসেসিং:</strong> কোর্সের ক্রেডিটের ওপর ভিত্তি করে প্রশ্নপত্র ও ক্লাস টেস্টের সংবিধিবদ্ধ কাউন্ট নির্ধারিত হয়।</li>
+            <li><strong>এক্সক্লুশন হ্যান্ডলিং:</strong> শিক্ষক যদি এক্সটার্নাল হন, তার পেমেন্ট আইসিটি ডিপার্টমেন্টের অভ্যন্তরীণ বাজেটে যুক্ত না হয়ে এক্সক্লুশন লগ ও মডারেশন বিবরণীতে পৃথকভাবে ট্র্যাক হয়।</li>
+            <li><strong>অফিসিয়াল রেন্ডারিং:</strong> স্টেট আপডেটের সাথে সাথে SutonnyMJ ফন্ট এবং বাংলা সংখ্যা/কথায় কনভার্ট হয়ে অফিসিয়াল ১৪-রো বিলে প্রতিফলিত হয়।</li>
+        </ol>
+    </div>
+
+    <div class="chapter">
+        <h2>3. মূল কোড মডিউল ও ক্যালকুলেশন ইঞ্জিন বিশ্লেষণ</h2>
+        
+        <h3>ক. ১৪টি সংবিধিবদ্ধ ক্যাটাগরি ক্যালকুলেশন ইঞ্জিন</h3>
+        <p>বিশ্ববিদ্যালয়ের নিয়ম অনুযায়ী ক্রেডিট এবং উত্তরপত্রের পরিমাণের ওপর ভিত্তি করে ডাইনামিক রেট ক্যালকুলেট হয়:</p>
+
+        <pre><code>// js/app.js: ক্যালকুলেশন রুল ইঞ্জিন
+calculateStatutoryDutyAmount(dutyType, credit, studentCount, durationHours) {
+    switch (dutyType) {
+        case 'question_setting':
+            // ৩.০০ ক্রেডিট বা তার বেশি হলে ৪০০০/- টাকা (হাফ পার্ট ২০০০/- টাকা)
+            // ২.০০ ক্রেডিট হলে ২৪০০/- টাকা (হাফ পার্ট ১২০০/- টাকা)
+            return credit &gt;= 3.0 ? 4000 : (credit &gt;= 2.0 ? 2400 : 1600);
+
+        case 'moderation_board':
+            // ৪ জন সদস্যের জন্য প্রতি কোর্সে ১৬০০/- টাকা
+            return 1600;
+
+        case 'script_evaluation':
+            // প্রতি উত্তরপত্র ১২০/- টাকা (সর্বনিম্ন ১০০০/- টাকা)
+            const scriptTotal = studentCount * 120;
+            return Math.max(scriptTotal, 1000);
+
+        case 'class_test':
+            // ৩.০০ ক্রেডিটে ৪টি, ২.০০ ক্রেডিটে ৩টি, ১.০০ ক্রেডিটে ২টি সিটি (প্রতি সিটি ১২০০/- টাকা)
+            const ctCount = credit &gt;= 3.0 ? 4 : (credit &gt;= 2.0 ? 3 : 2);
+            return ctCount * 1200;
+
+        case 'lab_exam':
+            // ল্যাব এক্সাম ডিউটি প্রতি পরীক্ষা ১০০০/- টাকা
+            return 1000;
+
+        case 'tabulation':
+            // ট্যাবুলেশন প্রতি শিক্ষার্থী ৭৫/- টাকা
+            return studentCount * 75;
+
+        default:
+            return 0;
+    }
+}</code></pre>
+
+        <h3>খ. বাংলা সংখ্যা ও SutonnyMJ টাইপোগ্রাফি ইঞ্জিন</h3>
+        <p>অফিসিয়াল লেটারহেড ও বিলে সংখ্যা এবং টাকা কথায় বাংলা লিপিতে উপস্থাপনের জন্য পিওর জেএস অ্যালগরিদম ব্যবহৃত হয়েছে:</p>
+
+        <pre><code>// js/app.js: সংখ্যা থেকে বাংলা অংকে রূপান্তর
+convertToBengaliNumerals(num) {
+    if (num === null || num === undefined) return '০';
+    const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+    return num.toString().replace(/[0-9]/g, d =&gt; bnDigits[parseInt(d, 10)]);
+}</code></pre>
+
+        <div class="callout callout-info">
+            <strong>💡 SutonnyMJ প্রিন্টিং টেকনোলজি:</strong> অফিশিয়াল বিলে সিএসএসের <code>@font-face</code> রুল দ্বারা লোকাল ও ওয়েব ফন্ট হিসেবে SutonnyMJ এমবেড করা হয়েছে এবং ফলব্যাক হিসেবে ইউনিকোড নিকোশ ও সোলায়মানলিপি রাখা হয়েছে, যাতে যেকোনো ডিভাইসে প্রিন্ট দিলে অক্ষরের শেপ অপরিবর্তিত থাকে।
+        </div>
+    </div>
+
+    <div class="chapter">
+        <h2>4. প্রজেক্টের কাজ (Core Purpose &amp; Objective)</h2>
+        <p>মাওলানা ভাসানী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়ের ইনফরমেশন এন্ড কমিউনিকেশন টেকনোলজি (ICT) বিভাগের পরীক্ষা সংক্রান্ত যাবতীয় আর্থিক ও প্রশাসনিক জটিলতা নিরসন করাই এই প্রজেক্টের মূল কাজ।</p>
+        
+        <ul>
+            <li><strong>কাগজবিহীন ডিজিটাল বিলিং:</strong> পরীক্ষার পর শিক্ষকদের পারিশ্রমিক হিসাব করার ধীরগতির হস্তলিখিত প্রক্রিয়াকে শতভাগ স্বয়ংক্রিয় করা।</li>
+            <li><strong>হিউম্যান এরর নির্মূল:</strong> প্রশ্নপত্র তৈরি, মডারেশন, খাতা দেখা, ল্যাব পরীক্ষা এবং ক্লাস টেস্টের ম্যানুয়াল গণনার ভুল স্থায়ীভাবে বন্ধ করা।</li>
+            <li><strong>অডিট ও অনুমোদন স্বচ্ছতা:</strong> বিভাগীয় চেয়ারম্যান, পরীক্ষা নিয়ন্ত্রক এবং অর্থ ও হিসাব দপ্তরের জন্য তাৎক্ষণিক অডিট লগ এবং সংবিধিবদ্ধ মডারেশন বিবরণী তৈরি করা।</li>
+            <li><strong>১:১ অফিসিয়াল ফর্ম রিপ্লিকা:</strong> বিশ্ববিদ্যালয়ের অনুমোদিত নীল-বর্ডারের ১৪-কলামের বিল ফরমের অবিকল লেআউটে তাৎক্ষণিক প্রিন্টেবল স্লিপ প্রদান করা।</li>
+        </ul>
+    </div>
+
+    <div class="chapter">
+        <h2>5. ফিচারসমূহ (Comprehensive Features)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 30%;">ফিচার ক্যাটাগরি</th>
+                    <th>বিস্তারিত সুবিধাসমূহ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>১. স্মার্ট ১-ক্লিক ডিউটি প্রিসেট</strong></td>
+                    <td>প্রশ্নপত্র প্রণয়ন, খাতা মূল্যায়ন, স্ক্রুটিনি বা ট্যাবুলেশন ড্রপডাউন থেকে সিলেক্ট করলেই রেট, ইউনিট ও সূত্র স্বয়ংক্রিয়ভাবে বসে যায়।</td>
+                </tr>
+                <tr>
+                    <td><strong>২. ১৪টি সংবিধিবদ্ধ ক্যাটাগরি</strong></td>
+                    <td>বিশ্ববিদ্যালয় সিন্ডিকেট ও একাডেমিক কাউন্সিল অনুমোদিত ১ থেকে ১৪তম প্রতিটি ডিউটি টাইপ কোডে সংরক্ষিত।</td>
+                </tr>
+                <tr>
+                    <td><strong>৩. ক্রেডিট-ভিত্তিক ক্লাস টেস্ট রুল</strong></td>
+                    <td>৩.০০ বা তদূর্ধ্ব ক্রেডিটে ৪টি সিটি, ২.০০ ক্রেডিটে ৩টি সিটি এবং ১.০০ ক্রেডিটে ২টি সিটির স্বয়ংক্রিয় হিসাব।</td>
+                </tr>
+                <tr>
+                    <td><strong>৪. এক্সটার্নাল টিচার এক্সক্লুশন লগ</strong></td>
+                    <td>রুয়েট, ডুয়েট, জাবি বা হাবিপ্রবির বহিঃস্থ শিক্ষকদের পারিশ্রমিক অভ্যন্তরীণ শিক্ষকদের বাজেট থেকে পৃথক করে স্বয়ংক্রিয় এক্সক্লুশন লগ তৈরি।</td>
+                </tr>
+                <tr>
+                    <td><strong>৫. কুরিয়ার / ট্রানজিট ভাউচার (Row 14)</strong></td>
+                    <td>প্রশ্নপত্র ও উত্তরপত্র প্রেরণের ডাক/ক্যারিয়ার খরচ ভাউচার নং সহ ১৪ নং সারিতে স্বয়ংক্রিয়ভাবে যোগ হওয়া।</td>
+                </tr>
+                <tr>
+                    <td><strong>৬. লাইভ ফর্মুলা ক্যালকুলেশন প্রিভিউ</strong></td>
+                    <td>ইনপুট দেওয়ার সময়েই স্ক্রিনে সরাসরি দেখা যায় কোন সূত্রে মোট টাকা হিসাব হচ্ছে।</td>
+                </tr>
+                <tr>
+                    <td><strong>৭. SutonnyMJ ও বাংলা কথায় রূপান্তর</strong></td>
+                    <td>টাকার অঙ্ক শতভাগ সুতন্বীএমজে ফন্টে বাংলা সংখ্যা এবং কথায় (In Words) রূপান্তর।</td>
+                </tr>
+                <tr>
+                    <td><strong>৮. ৫০ টাকার রাজস্ব স্ট্যাম্প বক্স</strong></td>
+                    <td>৫০০ টাকার বেশি বিলে বিশ্ববিদ্যালয়ের অডিট নিয়ম অনুযায়ী ৫০ টাকার রেভিনিউ স্ট্যাম্পের নির্ধারিত বক্স।</td>
+                </tr>
+                <tr>
+                    <td><strong>৯. সম্পূর্ণ অফলাইন ও জিরো ডিপেন্ডেন্সি</strong></td>
+                    <td>ইন্টারনেট ছাড়া কেবল ব্রাউজারে চলে; ডাটাবেস ব্যাকআপ ও রিস্টোর সম্পূর্ণ JSON ফাইল আকারে সংরক্ষিত।</td>
+                </tr>
+                <tr>
+                    <td><strong>১০. রেসপন্সিভ মোবাইল ইন্টারফেস</strong></td>
+                    <td>ডেস্কটপ, ল্যাপটপ, ট্যাবলেট বা স্মার্টফোন—যেকোনো ডিভাইসে অনায়াসে ব্যবহার উপযোগী।</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chapter">
+        <h2>6. সুবিধাসমূহ / উপযোগিতা (Real-world Benefits)</h2>
+        <ol>
+            <li><strong>সময় সাশ্রয় (Time Efficiency):</strong> পূর্বে একটি সেমিস্টারের সকল শিক্ষকের বিল হাতে লিখতে ও হিসাব মেলাতে ২ থেকে ৩ সপ্তাহ সময় লাগত; বর্তমানে মাত্র <strong>২ মিনিটে</strong> সমগ্র সেমিস্টারের বিল ও বিবরণী প্রস্তুত হয়।</li>
+            <li><strong>শতভাগ নির্ভুল গাণিতিক হিসাব (Zero Mathematical Error):</strong> জাভাস্ক্রিপ্ট রুল ইঞ্জিনের কারণে ভুল রেট প্রয়োগ বা যোগের ভুল হওয়ার কোনো অবকাশ নেই।</li>
+            <li><strong>আর্থিক অডিট জবাবদিহিতা (Audit Trail &amp; Transparency):</strong> প্রতিটি বিলের সাথে সংশ্লিষ্ট কোর্স কোড, সেমিস্টার, ক্রেডিট ও তারিখ স্বয়ংক্রিয়ভাবে সংরক্ষিত থাকে।</li>
+            <li><strong>জিরো সার্ভার খরচ (Zero Operational Cost):</strong> কোনো পেইড ক্লাউড সার্ভার বা ডাটাবেস হোস্টিং ফি প্রয়োজন হয় না।</li>
+            <li><strong>কাগজ অপচয় হ্রাস:</strong> স্ক্রিনে ফাইনাল চেক করার পর কেবল অনুমোদিত বিলটি প্রিন্ট করা যায়, ফলে ভুল বিল রিপ্রিন্ট করার কাগজ অপচয় রোধ হয়।</li>
+        </ol>
+
+        <h2>7. সীমাবদ্ধতা (Current Limitations)</h2>
+        <ul>
+            <li><strong>ব্রাউজার লোকাল স্টোরেজ নির্ভরতা:</strong> ডাটা ব্যবহারকারীর লোকাল ব্রাউজারের <code>localStorage</code>-এ জমা থাকে। ব্রাউজার ক্যাশ ও ডাটা সম্পূর্ণ মুছে ফেললে ব্যাকআপ ফাইল থেকে রিস্টোর করতে হয়।</li>
+            <li><strong>একক ব্যবহারকারী মোড (Single-user Local Environment):</strong> একাধিক শিক্ষক একই সাথে বিভিন্ন কম্পিউটার থেকে রিয়েল-টাইমে ডাটা এন্ট্রি দিতে পারেন না (কেননা সেন্ট্রাল ক্লাউড ডাটাবেজ এখনও সংযুক্ত হয়নি)।</li>
+            <li><strong>ডিজিটাল ক্রিপ্টোগ্রাফিক স্বাক্ষরের অনুপস্থিতি:</strong> প্রিন্ট করার পর বিভাগীয় প্রধান ও শিক্ষকদের সনাতন কলমে স্বাক্ষর করতে হয়; পিকেআই (PKI) ভিত্তিক ডিজিটাল সিগনেচার এখনও যুক্ত করা হয়নি।</li>
+        </ul>
+
+        <h2>8. ভবিষ্যৎ উন্নয়ন পরিকল্পনা (Future Enhancements)</h2>
+        <ul>
+            <li><strong>ক্লাউড ডাটাবেস ইন্টিগ্রেশন:</strong> Firebase বা PostgreSQL ব্যাকএন্ড যুক্ত করে মাল্টি-ইউজার সিঙ্ক্রোনাইজেশন।</li>
+            <li><strong>রোল-ভিত্তিক অ্যাক্সেস কন্ট্রোল (RBAC):</strong> শিক্ষক, পরীক্ষা কমিটি সভাপতি, বিভাগীয় চেয়ারম্যান এবং অডিট সেকশনের পৃথক লগইন পোর্টাল।</li>
+            <li><strong>এসএমএস ও ইমেইল নোটিফিকেশন:</strong> বিল অনুমোদন ও অ্যাকাউন্টস সেকশন থেকে বিল ছাড় হলে শিক্ষকদের মোবাইলে স্বয়ংক্রিয় অ্যালার্ট।</li>
+            <li><strong>ডিজিটাল সিগনেচার:</strong> চেয়ারম্যান ও শিক্ষকদের ওটিপি/ডিজিটাল সাইন দিয়ে সরাসরি ই-সাইন বিল অনুমোদন।</li>
+        </ul>
+    </div>
+
+    <div class="chapter">
+        <h2>9. ডিফেন্স ও ভাইভা সম্ভাব্য প্রশ্নোত্তর (Expected Viva Questions &amp; Model Answers)</h2>
+        
+        <div class="viva-card">
+            <div class="viva-q">প্রশ্ন ১: আপনি এই প্রজেক্টের জন্য কোনো ফ্রেমওয়ার্ক (যেমন React বা Angular) ব্যবহার না করে ভ্যানিলা জাভাস্ক্রিপ্ট (Vanilla JS) কেন ব্যবহার করলেন?</div>
+            <div class="viva-a">
+                <strong>আদর্শ উত্তর:</strong><br>
+                "স্যার, বিশ্ববিদ্যালয়ের বিভাগীয় পর্যায়ে এমন একটি সফটওয়্যার প্রয়োজন ছিল যা কোনো নোড রানটাইম, ডিপেন্ডেন্সি ইন্সটলেশন বা বড় সার্ভার সেটআপ ছাড়াই যেকোনো সাধারণ কম্পিউটারের ব্রাউজারে তাৎক্ষণিকভাবে রান করতে পারে। ভ্যানিলা জাভাস্ক্রিপ্ট ব্যবহারের ফলে প্রজেক্টটি অত্যন্ত ফাস্ট, লাইটওয়েট এবং জিরো ডিপেন্ডেন্সি সম্পন্ন হয়েছে। একই সাথে এটি ব্রাউজারের প্রিন্টিং এপিআই এবং ডম ম্যানিপুলেশনকে শতভাগ নিবিড়ভাবে নিয়ন্ত্রণ করতে সক্ষম হয়েছে।"
+            </div>
+        </div>
+
+        <div class="viva-card">
+            <div class="viva-q">প্রশ্ন ২: বিশ্ববিদ্যালয়ের সংবিধিবদ্ধ বিলিং রুলস (Statutory Rules) কীভাবে কোডে হ্যান্ডেল করেছেন?</div>
+            <div class="viva-a">
+                <strong>আদর্শ উত্তর:</strong><br>
+                "স্যার, মাভাবিপ্রবির একাডেমিক কাউন্সিল ও পরীক্ষা অধ্যাদেশ অনুযায়ী মোট ১৪টি আনুষ্ঠানিক ক্যাটাগরি কোডে অন্তর্ভুক্ত করা হয়েছে। যেমন: প্রশ্নপত্র প্রণয়নে ৩.০০ বা তার বেশি ক্রেডিটের জন্য ৪,০০০/- টাকা এবং ২.০০ ক্রেডিটের জন্য ২,৪০০/- টাকা; খাতা দেখার ক্ষেত্রে প্রতি স্ক্রিপ্ট ১২০/- টাকা এবং সর্বনিম্ন ১,০০০/- টাকার শর্ত; এবং ক্লাস টেস্টের ক্ষেত্রে ৩ ক্রেডিটে ৪টি ও ২ ক্রেডিটে ৩টি সিটির গাণিতিক শর্ত কোডের ক্যালকুলেশন ইঞ্জিনে অটোমেট করা হয়েছে।"
+            </div>
+        </div>
+
+        <div class="viva-card">
+            <div class="viva-q">প্রশ্ন ৩: এক্সটার্নাল পরীক্ষকদের (External Teachers) ক্ষেত্রে বিলের হিসাব কীভাবে আলাদা রাখা হয়েছে?</div>
+            <div class="viva-a">
+                <strong>আদর্শ উত্তর:</strong><br>
+                "স্যার, অন্য বিশ্ববিদ্যালয়ের (যেমন RUET, DUET, JU) বহিঃস্থ শিক্ষকদের বিল আইসিটি বিভাগের নিয়মিত অভ্যন্তরীণ বাজেটে অন্তর্ভুক্ত করা যায় না। সিস্টেমের স্টেট ইঞ্জিনে <code>isExternal: true</code> ফ্ল্যাগ ব্যবহার করা হয়েছে। ফলে অভ্যন্তরীণ শিক্ষকদের লেজারে এক্সটার্নালদের বিল ওভারল্যাপ হয় না, বরং তাদের জন্য একটি সুনির্দিষ্ট <strong>External Audit &amp; Exclusion Log</strong> তৈরি হয় এবং মডারেশন বিবরণীতে তাদের নাম ও বিশ্ববিদ্যালয়ের ঠিকানা সঠিকভাবে লিপিবদ্ধ থাকে।"
+            </div>
+        </div>
+
+        <div class="viva-card">
+            <div class="viva-q">প্রশ্ন ৪: সুতন্বীএমজে (SutonnyMJ) এবং বাংলা সংখ্যা প্রিন্টিংয়ে কীভাবে পারফেক্ট রেজোলিউশন অর্জন করলেন?</div>
+            <div class="viva-a">
+                <strong>আদর্শ উত্তর:</strong><br>
+                "স্যার, অফিশিয়াল সরকারি কাজের জন্য সুতন্বীএমজে ফন্ট একটি আবশ্যকীয় মানদণ্ড। আমরা সিএসএসে <code>@font-face</code> দিয়ে সুতন্বীএমজে এমবেড করেছি এবং পাশাপাশি ইউনিকোড নিকোশ ও সোলায়মানলিপি ফলব্যাক রেখেছি। জাভাস্ক্রিপ্ট ইঞ্জিনে একটি ডেডিকেটেড কনভার্টার ফাংশন রয়েছে যা সাধারণ ডেসিমাল সংখ্যাকে তাৎক্ষণিকভাবে বাংলা সংখ্যায় এবং কথায় (যেমন: 'ছয় হাজার তিনশত টাকা মাত্র') রূপান্তর করে।"
+            </div>
+        </div>
+
+        <div class="viva-card">
+            <div class="viva-q">প্রশ্ন ৫: ড্রপডাউন মেনু এবং রেসপন্সিভনেসের সমস্যা কীভাবে সমাধান করেছেন?</div>
+            <div class="viva-a">
+                <strong>আদর্শ উত্তর:</strong><br>
+                "স্যার, কার্ড কন্টেইনারে পূর্বে <code>overflow: hidden</code> থাকায় ড্রপডাউন মেনু নিচে কাট-অফ হয়ে যেত। আমরা কন্টেইনারে <code>overflow: visible</code> করেছি, <code>z-index: 1070</code> দিয়ে সর্বোচ্চ স্তরে তুলেছি এবং অ্যাকশনগুলোকে সরাসরি দৃশ্যমান বাটনে রূপান্তর করেছি। ফলে মোবাইল এবং ডেস্কটপ উভয় ডিভাইসেই ইউজার ইন্টারফেস শতভাগ স্মুথলি কাজ করে।"
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -440,6 +440,11 @@ const App = {
                     dateEl.value = new Date().toISOString().split('T')[0];
                 }
             }
+            if (id === 'modal-custom-activity') {
+                if (typeof this.updateCustomPreviewCard === 'function') {
+                    this.updateCustomPreviewCard();
+                }
+            }
         }
     },
 
@@ -1636,15 +1641,36 @@ const App = {
 
     handleSaveCustomActivityType(event) {
         event.preventDefault();
+        const bnSel = document.getElementById('cust-name-bn-select');
+        const bnInp = document.getElementById('cust-name-bn');
+        const enSel = document.getElementById('cust-name-en-select');
+        const enInp = document.getElementById('cust-name-en');
+        const rateSel = document.getElementById('cust-rate-select');
+        const rateInp = document.getElementById('cust-rate');
+        const descSel = document.getElementById('cust-desc-select');
+        const descInp = document.getElementById('cust-desc');
+        const unitSel = document.getElementById('cust-unit');
+
+        const nameBn = (bnInp && bnInp.value.trim()) || (bnSel && bnSel.value !== 'other' ? bnSel.value : '') || 'কাস্টম পরীক্ষা দায়িত্ব';
+        const nameEn = (enInp && enInp.value.trim()) || (enSel && enSel.value !== 'other' ? enSel.value : '') || 'Custom Examination Duty';
+        let defaultRate = 0;
+        if (rateInp && rateInp.value) {
+            defaultRate = parseFloat(rateInp.value) || 0;
+        } else if (rateSel && rateSel.value !== 'custom') {
+            defaultRate = parseFloat(rateSel.value) || 0;
+        }
+        const desc = (descInp && descInp.value.trim()) || (descSel && descSel.value !== 'custom' ? descSel.value : '') || 'Departmental exam duty';
+        const unit = unitSel ? unitSel.value : 'per_script';
+
         const custom = {
             id: 'cust_' + Date.now(),
             cat: 100 + this.state.customActivityTypes.length,
-            nameBn: document.getElementById('cust-name-bn').value.trim(),
-            nameEn: document.getElementById('cust-name-en').value.trim(),
-            unit: document.getElementById('cust-unit').value,
-            defaultRate: parseFloat(document.getElementById('cust-rate').value) || 0,
+            nameBn: nameBn,
+            nameEn: nameEn,
+            unit: unit,
+            defaultRate: defaultRate,
             minCharge: 0,
-            desc: document.getElementById('cust-desc').value.trim()
+            desc: desc
         };
 
         this.state.customActivityTypes.push(custom);
@@ -7711,23 +7737,37 @@ const App = {
             },
             class_test: {
                 bn: 'ধারাবাহিক মূল্যায়ন / ক্লাস টেস্ট',
-                en: 'Continuous Assessment / Class Test',
+                en: 'Continuous Assessment CT Duty',
                 unit: 'fixed',
                 rate: 1350,
-                desc: 'Continuous in-semester assessment / CT grading allowance (৳1350/section)'
+                desc: 'Continuous Assessment Class Test evaluation remuneration (৳1350/section)'
             },
             carrier: {
                 bn: 'প্রশ্নপত্র ও উত্তরপত্র বহন ভাতা',
                 en: 'Question & Script Carrier Allowance',
                 unit: 'fixed',
                 rate: 800,
-                desc: 'Confidential examination script transport conveyance (৳800/trip)'
+                desc: 'Confidential question paper & answer script transit carrier allowance (৳800/trip)'
+            },
+            coordinator: {
+                bn: 'পরীক্ষা কমিটি সমন্বয়ক ভাতা',
+                en: 'Exam Committee Coordination Honorarium',
+                unit: 'fixed',
+                rate: 2000,
+                desc: 'Examination Committee Chairman & Coordinator honorarium (৳2000)'
+            },
+            invigilator: {
+                bn: 'পরীক্ষা হল ইনভিজিলেশন ভাতা',
+                en: 'Examination Hall Invigilation',
+                unit: 'per_session',
+                rate: 400,
+                desc: 'Examination Hall invigilation & invigilator honorarium (৳400/session)'
             },
             custom: {
                 bn: '',
                 en: '',
                 unit: 'per_script',
-                rate: 10,
+                rate: 25,
                 desc: ''
             }
         };
@@ -7735,16 +7775,167 @@ const App = {
         if (!val || !presets[val]) return;
         const p = presets[val];
         const elBn = document.getElementById('cust-name-bn');
+        const elBnSel = document.getElementById('cust-name-bn-select');
         const elEn = document.getElementById('cust-name-en');
+        const elEnSel = document.getElementById('cust-name-en-select');
         const elUnit = document.getElementById('cust-unit');
         const elRate = document.getElementById('cust-rate');
+        const elRateSel = document.getElementById('cust-rate-select');
         const elDesc = document.getElementById('cust-desc');
+        const elDescSel = document.getElementById('cust-desc-select');
 
-        if (elBn && p.bn !== undefined) elBn.value = p.bn;
-        if (elEn && p.en !== undefined) elEn.value = p.en;
-        if (elUnit && p.unit) elUnit.value = p.unit;
-        if (elRate && p.rate !== undefined) elRate.value = p.rate;
-        if (elDesc && p.desc !== undefined) elDesc.value = p.desc;
+        if (val === 'custom') {
+            if (elBn) { elBn.style.display = 'block'; elBn.value = ''; elBn.focus(); }
+            if (elBnSel) elBnSel.value = 'other';
+            if (elEn) { elEn.style.display = 'block'; elEn.value = ''; }
+            if (elEnSel) elEnSel.value = 'other';
+            if (elRate) { elRate.style.display = 'block'; elRate.value = '25'; }
+            if (elRateSel) elRateSel.value = 'custom';
+            if (elDesc) { elDesc.style.display = 'block'; elDesc.value = ''; }
+            if (elDescSel) elDescSel.value = 'custom';
+        } else {
+            if (elBn) { elBn.style.display = 'none'; elBn.value = p.bn; }
+            if (elBnSel) elBnSel.value = p.bn;
+            if (elEn) { elEn.style.display = 'none'; elEn.value = p.en; }
+            if (elEnSel) elEnSel.value = p.en;
+            if (elUnit && p.unit) elUnit.value = p.unit;
+            if (elRate) { elRate.style.display = 'none'; elRate.value = p.rate; }
+            if (elRateSel) elRateSel.value = p.rate.toString();
+            if (elDesc) { elDesc.style.display = 'none'; elDesc.value = p.desc; }
+            if (elDescSel) elDescSel.value = p.desc;
+        }
+        this.updateCustomPreviewCard();
+    },
+
+    handleCustomNameSelect(val) {
+        const inp = document.getElementById('cust-name-bn');
+        if (val === 'other') {
+            if (inp) {
+                inp.style.display = 'block';
+                inp.value = '';
+                inp.focus();
+            }
+        } else {
+            if (inp) {
+                inp.style.display = 'none';
+                inp.value = val;
+            }
+            const map = {
+                'স্ক্রুটিনি ও নিরীক্ষা': { en: 'Scrutiny and Verification', unit: 'per_script', rate: 25, desc: 'Scrutiny committee examination answer script verification (৳25/script)' },
+                'ট্যাবুলেশন কার্য': { en: 'Tabulation Examination Duty', unit: 'per_student', rate: 75, desc: 'Tabulator remuneration for semester examination result preparation (৳75/student)' },
+                'মৌখিক পরীক্ষা': { en: 'Viva-Voce Examination Duty', unit: 'per_student', rate: 100, desc: 'Oral examination board member evaluation (৳100/candidate)' },
+                'ব্যবহারিক পরীক্ষা': { en: 'Practical / Lab Examination', unit: 'per_student', rate: 100, desc: 'Laboratory practical examination assessment allowance (৳100/candidate)' },
+                'প্রশ্নপত্র কম্পোজ ও মুদ্রণ': { en: 'Question Paper Typing and Printing', unit: 'fixed', rate: 200, desc: 'Confidential examination question paper compose & print duty (৳200/page)' },
+                'সেমিনার ও প্রকল্প মূল্যায়ন': { en: 'Seminar / Project Defense Evaluation', unit: 'fixed', rate: 300, desc: 'Seminar defense evaluation committee honorarium (৳300/presentation)' },
+                'স্নাতকোত্তর থিসিস ডিফেন্স': { en: 'M.Sc. / Thesis Defense Evaluation', unit: 'fixed', rate: 500, desc: 'Postgraduate M.Sc. thesis examination board evaluation (৳500/candidate)' },
+                'ইন্টার্নশিপ মূল্যায়ন': { en: 'Industrial Internship Evaluation', unit: 'fixed', rate: 1000, desc: 'Undergraduate industrial attachment / internship report evaluation (৳1000/report)' },
+                'ধারাবাহিক মূল্যায়ন / ক্লাস টেস্ট': { en: 'Continuous Assessment CT Duty', unit: 'fixed', rate: 1350, desc: 'Continuous Assessment Class Test evaluation remuneration (৳1350/section)' },
+                'প্রশ্নপত্র ও উত্তরপত্র বহন ভাতা': { en: 'Question & Script Carrier Allowance', unit: 'fixed', rate: 800, desc: 'Confidential question paper & answer script transit carrier allowance (৳800/trip)' },
+                'পরীক্ষা কমিটি সমন্বয়ক ভাতা': { en: 'Exam Committee Coordination Honorarium', unit: 'fixed', rate: 2000, desc: 'Examination Committee Chairman & Coordinator honorarium (৳2000)' },
+                'পরীক্ষা হল ইনভিজিলেশন ভাতা': { en: 'Examination Hall Invigilation', unit: 'per_session', rate: 400, desc: 'Examination Hall invigilation & invigilator honorarium (৳400/session)' }
+            };
+            if (map[val]) {
+                const info = map[val];
+                const enSel = document.getElementById('cust-name-en-select');
+                const enInp = document.getElementById('cust-name-en');
+                if (enSel) enSel.value = info.en;
+                if (enInp) { enInp.value = info.en; enInp.style.display = 'none'; }
+
+                const unitSel = document.getElementById('cust-unit');
+                if (unitSel) unitSel.value = info.unit;
+
+                const rateSel = document.getElementById('cust-rate-select');
+                const rateInp = document.getElementById('cust-rate');
+                if (rateSel) rateSel.value = info.rate.toString();
+                if (rateInp) { rateInp.value = info.rate; rateInp.style.display = 'none'; }
+
+                const descSel = document.getElementById('cust-desc-select');
+                const descInp = document.getElementById('cust-desc');
+                if (descSel) descSel.value = info.desc;
+                if (descInp) { descInp.value = info.desc; descInp.style.display = 'none'; }
+            }
+        }
+        this.updateCustomPreviewCard();
+    },
+
+    handleCustomEnglishSelect(val) {
+        const inp = document.getElementById('cust-name-en');
+        if (val === 'other') {
+            if (inp) {
+                inp.style.display = 'block';
+                inp.value = '';
+                inp.focus();
+            }
+        } else {
+            if (inp) {
+                inp.style.display = 'none';
+                inp.value = val;
+            }
+        }
+    },
+
+    handleCustomRateSelect(val) {
+        const inp = document.getElementById('cust-rate');
+        if (val === 'custom') {
+            if (inp) {
+                inp.style.display = 'block';
+                inp.value = '';
+                inp.focus();
+            }
+        } else {
+            if (inp) {
+                inp.style.display = 'none';
+                inp.value = parseFloat(val) || 0;
+            }
+        }
+        this.updateCustomPreviewCard();
+    },
+
+    handleCustomDescSelect(val) {
+        const inp = document.getElementById('cust-desc');
+        if (val === 'custom') {
+            if (inp) {
+                inp.style.display = 'block';
+                inp.value = '';
+                inp.focus();
+            }
+        } else {
+            if (inp) {
+                inp.style.display = 'none';
+                inp.value = val;
+            }
+        }
+    },
+
+    updateCustomPreviewCard() {
+        const rateInp = document.getElementById('cust-rate');
+        const rateSel = document.getElementById('cust-rate-select');
+        let rate = 0;
+        if (rateSel && rateSel.value !== 'custom') {
+            rate = parseFloat(rateSel.value) || 0;
+        } else if (rateInp) {
+            rate = parseFloat(rateInp.value) || 0;
+        }
+
+        const unitSel = document.getElementById('cust-unit');
+        const unit = unitSel ? unitSel.value : 'per_script';
+        const unitLabels = {
+            per_script: 'প্রতি উত্তরপত্র',
+            per_student: 'প্রতি পরীক্ষার্থী',
+            per_session: 'প্রতি দিন/অধিবেশন',
+            fixed: 'এককালীন নির্ধারিত',
+            manual: 'হাতে লেখা'
+        };
+
+        const formulaEl = document.getElementById('cust-calc-formula');
+        const rateBadge = document.getElementById('cust-calc-rate-badge');
+
+        const rateFormatted = this.formatCurrency(rate);
+
+        if (rateBadge) rateBadge.textContent = rateFormatted;
+        if (formulaEl) {
+            formulaEl.textContent = `কাজের পরিমাণ (${unitLabels[unit] || unit}) × ${rateFormatted} = মোট টাকা`;
+        }
     },
 
     handleInternalTeacherPresetSelect(key) {

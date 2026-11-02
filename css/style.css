@@ -801,9 +801,19 @@ body {
     cursor: pointer;
 }
 
+.modal-card > form {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
 .modal-body {
     padding: 16px 18px;
     overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 .modal-footer {

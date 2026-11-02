@@ -1427,21 +1427,22 @@
 
     <!-- MODAL: ADD CUSTOM ACTIVITY TYPE -->
     <div id="modal-custom-activity" class="modal-overlay">
-        <div class="modal-card">
+        <div class="modal-card" style="max-width: 680px;">
             <div class="modal-header">
-                <h3>Add Custom Dynamic Activity Type</h3>
+                <h3>⚡ Add Custom Examination Activity Type</h3>
                 <button class="modal-close-btn" onclick="App.closeModal('modal-custom-activity')">&times;</button>
             </div>
             <form id="form-custom-activity" onsubmit="App.handleSaveCustomActivityType(event)">
                 <div class="modal-body">
                     <div class="form-grid">
-                        <div class="form-group" style="grid-column: 1 / -1; background: #eff6ff; padding: 12px; border-radius: 8px; border: 1px solid #bfdbfe;">
+                        <!-- Smart 1-Click Duty Template Dropdown -->
+                        <div class="form-group" style="grid-column: 1 / -1; background: #eff6ff; padding: 12px; border-radius: 8px; border: 1.5px solid #bfdbfe;">
                             <label class="form-label" for="cust-preset-select" style="font-weight: 700; color: #1e40af; margin-bottom: 6px;">
-                                ⚡ Quick Select Duty Template (বাছাই করুন):
+                                🎯 ১-ক্লিকে অ্যাক্টিভিটি বাছাই করুন (ড্রপডাউন সিলেক্ট করলেই সব ফিল্ড অটোফিল হবে):
                             </label>
                             <select id="cust-preset-select" class="form-control" onchange="App.handleCustomTemplateSelect(this.value)">
-                                <option value="">-- ড্রপডাউন থেকে বাছাই করুন (অটোফিল হবে) অথবা নিচে টাইপ করুন --</option>
-                                <option value="scrutiny">স্ক্রুটিনি ও নিরীক্ষা (Scrutiny &amp; Verification) — ৳২৫ / স্ক্রিপ্ট</option>
+                                <option value="">-- ড্রপডাউন থেকে কার্যক্রম নির্বাচন করুন --</option>
+                                <option value="scrutiny">স্ক্রুটিনি ও উত্তরপত্র নিরীক্ষা (Scrutiny &amp; Verification) — ৳২৫ / স্ক্রিপ্ট</option>
                                 <option value="tabulation">ট্যাবুলেশন কার্য (Tabulation Examination Duty) — ৳৭৫ / শিক্ষার্থী</option>
                                 <option value="viva">মৌখিক পরীক্ষা (Viva-Voce Examination Duty) — ৳১০০ / পরীক্ষার্থী</option>
                                 <option value="practical">ব্যবহারিক পরীক্ষা (Practical / Lab Examination) — ৳১০০ / পরীক্ষার্থী</option>
@@ -1451,34 +1452,133 @@
                                 <option value="internship">ইন্টার্নশিপ মূল্যায়ন (Industrial Internship Evaluation) — ৳১০০০ / রিপোর্ট</option>
                                 <option value="class_test">ধারাবাহিক মূল্যায়ন / ক্লাস টেস্ট (Continuous Assessment CT) — ৳১৩৫০ / সেকশন</option>
                                 <option value="carrier">প্রশ্নপত্র ও উত্তরপত্র বহন ভাতা (Question &amp; Script Carrier Allowance) — ৳৮০০ / ট্রিপ</option>
-                                <option value="custom">✏️ নতুন কাস্টম ডিউটি (নিজে টাইপ করুন / Manual Input)</option>
+                                <option value="coordinator">পরীক্ষা কমিটি সমন্বয়ক / সভাপতি ভাতা (Committee Coordinator) — ৳২০০০ / এককালীন</option>
+                                <option value="invigilator">পরীক্ষা হল ইনভিজিলেশন / পরিদর্শক ভাতা (Hall Invigilation) — ৳৪০০ / সেশন</option>
+                                <option value="custom">✏️ অন্যান্য / কাস্টম ডিউটি (হাতে লিখুন / Manual Input)</option>
                             </select>
                         </div>
+
+                        <!-- Activity Name in Bengali Dropdown -->
                         <div class="form-group">
-                            <label class="form-label" for="cust-name-bn">Activity Name in Bengali *</label>
-                            <input type="text" id="cust-name-bn" class="form-control" placeholder="e.g. স্ক্রুটিনি ও নিরীক্ষা" required>
+                            <label class="form-label" for="cust-name-bn-select">Activity Name in Bengali (বাংলা নাম) *</label>
+                            <select id="cust-name-bn-select" class="form-control" onchange="App.handleCustomNameSelect(this.value)">
+                                <option value="">-- বাংলা নাম বাছাই করুন --</option>
+                                <option value="স্ক্রুটিনি ও নিরীক্ষা">স্ক্রুটিনি ও নিরীক্ষা (Scrutiny)</option>
+                                <option value="ট্যাবুলেশন কার্য">ট্যাবুলেশন কার্য (Tabulation)</option>
+                                <option value="মৌখিক পরীক্ষা">মৌখিক পরীক্ষা (Viva-Voce)</option>
+                                <option value="ব্যবহারিক পরীক্ষা">ব্যবহারিক পরীক্ষা (Practical/Lab)</option>
+                                <option value="প্রশ্নপত্র কম্পোজ ও মুদ্রণ">প্রশ্নপত্র কম্পোজ ও মুদ্রণ (Compose &amp; Print)</option>
+                                <option value="সেমিনার ও প্রকল্প মূল্যায়ন">সেমিনার ও প্রকল্প মূল্যায়ন (Seminar/Project)</option>
+                                <option value="স্নাতকোত্তর থিসিস ডিফেন্স">স্নাতকোত্তর থিসিস ডিফেন্স (Thesis Defense)</option>
+                                <option value="ইন্টার্নশিপ মূল্যায়ন">ইন্টার্নশিপ মূল্যায়ন (Internship)</option>
+                                <option value="ধারাবাহিক মূল্যায়ন / ক্লাস টেস্ট">ধারাবাহিক মূল্যায়ন / ক্লাস টেস্ট (CT)</option>
+                                <option value="প্রশ্নপত্র ও উত্তরপত্র বহন ভাতা">প্রশ্নপত্র ও উত্তরপত্র বহন ভাতা (Carrier)</option>
+                                <option value="পরীক্ষা কমিটি সমন্বয়ক ভাতা">পরীক্ষা কমিটি সমন্বয়ক ভাতা (Coordinator)</option>
+                                <option value="পরীক্ষা হল ইনভিজিলেশন ভাতা">পরীক্ষা হল ইনভিজিলেশন ভাতা (Invigilation)</option>
+                                <option value="other">✏️ অন্যান্য (হাতে লিখুন)</option>
+                            </select>
+                            <input type="text" id="cust-name-bn" class="form-control" style="display: none; margin-top: 6px;" placeholder="বাংলায় কার্যক্রমের নাম লিখুন" required>
                         </div>
+
+                        <!-- Activity Name in English Dropdown -->
                         <div class="form-group">
-                            <label class="form-label" for="cust-name-en">Activity Name in English *</label>
-                            <input type="text" id="cust-name-en" class="form-control" placeholder="e.g. Scrutiny and Verification" required>
+                            <label class="form-label" for="cust-name-en-select">Activity Name in English (ইংরেজি নাম) *</label>
+                            <select id="cust-name-en-select" class="form-control" onchange="App.handleCustomEnglishSelect(this.value)">
+                                <option value="">-- Select English Name --</option>
+                                <option value="Scrutiny and Verification">Scrutiny and Verification</option>
+                                <option value="Tabulation Examination Duty">Tabulation Examination Duty</option>
+                                <option value="Viva-Voce Examination Duty">Viva-Voce Examination Duty</option>
+                                <option value="Practical / Lab Examination">Practical / Lab Examination</option>
+                                <option value="Question Paper Typing and Printing">Question Paper Typing and Printing</option>
+                                <option value="Seminar / Project Defense Evaluation">Seminar / Project Defense Evaluation</option>
+                                <option value="M.Sc. / Thesis Defense Evaluation">M.Sc. / Thesis Defense Evaluation</option>
+                                <option value="Industrial Internship Evaluation">Industrial Internship Evaluation</option>
+                                <option value="Continuous Assessment CT Duty">Continuous Assessment CT Duty</option>
+                                <option value="Question &amp; Script Carrier Allowance">Question &amp; Script Carrier Allowance</option>
+                                <option value="Exam Committee Coordination Honorarium">Exam Committee Coordination Honorarium</option>
+                                <option value="Examination Hall Invigilation">Examination Hall Invigilation</option>
+                                <option value="other">✏️ Other (Type manually)</option>
+                            </select>
+                            <input type="text" id="cust-name-en" class="form-control" style="display: none; margin-top: 6px;" placeholder="Enter activity name in English" required>
                         </div>
+
+                        <!-- Calculation Unit -->
                         <div class="form-group">
-                            <label class="form-label" for="cust-unit">Calculation Unit *</label>
-                            <select id="cust-unit" class="form-control" required>
-                                <option value="per_script">Per Script Checked</option>
-                                <option value="per_student">Per Student / Examinee</option>
-                                <option value="per_session">Per Session / Day</option>
-                                <option value="fixed">Fixed Amount</option>
-                                <option value="manual">Manual Amount</option>
+                            <label class="form-label" for="cust-unit">Calculation Unit (গণনার ভিত্তি) *</label>
+                            <select id="cust-unit" class="form-control" onchange="App.updateCustomPreviewCard()" required>
+                                <option value="per_script">Per Script Checked (প্রতি উত্তরপত্র)</option>
+                                <option value="per_student">Per Student / Examinee (প্রতি পরীক্ষার্থী)</option>
+                                <option value="per_session">Per Session / Day (প্রতি অধিবেশন / দিন)</option>
+                                <option value="fixed">Fixed Official Amount (এককালীন নির্ধারিত টাকা)</option>
+                                <option value="manual">Manual Total Amount (হাতে লেখা টাকার পরিমাণ)</option>
                             </select>
                         </div>
+
+                        <!-- Default Rate Dropdown -->
                         <div class="form-group">
-                            <label class="form-label" for="cust-rate">Default Rate (৳) *</label>
-                            <input type="number" id="cust-rate" class="form-control" value="10" step="0.01" required>
+                            <label class="form-label" for="cust-rate-select">Default Rate (৳ রেট ড্রপডাউন) *</label>
+                            <select id="cust-rate-select" class="form-control" onchange="App.handleCustomRateSelect(this.value)">
+                                <option value="25">৳ ২৫.০০ (স্ক্রুটিনি প্রতি উত্তরপত্র)</option>
+                                <option value="75">৳ ৭৫.০০ (ট্যাবুলেশন প্রতি শিক্ষার্থী)</option>
+                                <option value="100">৳ ১০০.০০ (ভাইভা ও প্র্যাকটিক্যাল প্রতি শিক্ষার্থী)</option>
+                                <option value="200">৳ ২০০.০০ (প্রশ্ন কম্পোজ ও মুদ্রণ প্রতি পৃষ্ঠা)</option>
+                                <option value="300">৳ ৩০০.০০ (সেমিনার ডিফেন্স প্রতি উপস্থাপনা)</option>
+                                <option value="400">৳ ৪০০.০০ (পরীক্ষা হল ইনভিজিলেশন প্রতি অধিবেশন)</option>
+                                <option value="500">৳ ৫০০.০০ (থিসিস ডিফেন্স প্রতি থিসিস)</option>
+                                <option value="800">৳ ৮০০.০০ (বহন ভাতা প্রতি ট্রিপ)</option>
+                                <option value="1000">৳ ১,০০০.০০ (ইন্টার্নশিপ মূল্যায়ন প্রতি রিপোর্ট)</option>
+                                <option value="1200">৳ ১,২০০.০০ (হাফ প্রশ্নপত্র প্রণয়ন - ২.০০ ক্রেডিট)</option>
+                                <option value="1350">৳ ১,৩৫০.০০ (ধারাবাহিক মূল্যায়ন - ৩ ক্রেডিট)</option>
+                                <option value="2000">৳ ২,০০০.০০ (সমন্বয়ক / মডারেশন পুল শেয়ার)</option>
+                                <option value="4000">৳ ৪,০০০.০০ (সম্পূর্ণ প্রশ্নপত্র প্রণয়ন - ৩.০০ ক্রেডিট)</option>
+                                <option value="10">৳ ১০.০০ (প্রতি স্ক্রিপ্ট / মিনিমাম রেট)</option>
+                                <option value="50">৳ ৫০.০০ (সাধারণ ইউনিট রেট)</option>
+                                <option value="custom">✏️ কাস্টম টাকার অঙ্ক (হাতে লিখুন)</option>
+                            </select>
+                            <input type="number" id="cust-rate" class="form-control" value="25" step="0.01" style="display: none; margin-top: 6px;" required oninput="App.updateCustomPreviewCard()">
                         </div>
+
+                        <!-- Description & Regulation Basis Dropdown -->
                         <div class="form-group" style="grid-column: 1 / -1;">
-                            <label class="form-label" for="cust-desc">Description &amp; Regulation Basis</label>
-                            <input type="text" id="cust-desc" class="form-control" placeholder="e.g. Scrutiny committee examination duty allowance">
+                            <label class="form-label" for="cust-desc-select">Description &amp; Regulation Basis (বিধিমালার বিবরণ) *</label>
+                            <select id="cust-desc-select" class="form-control" onchange="App.handleCustomDescSelect(this.value)">
+                                <option value="Scrutiny committee examination answer script verification (৳25/script)">স্ক্রুটিনি ও উত্তরপত্র নিরীক্ষা কমিটি বিধিমালা (৳২৫ / স্ক্রিপ্ট)</option>
+                                <option value="Tabulator remuneration for semester examination result preparation (৳75/student)">ট্যাবুলেশন ও ফল প্রস্তুতকরণ বিধিমালা (৳৭৫ / শিক্ষার্থী)</option>
+                                <option value="Oral examination board member evaluation (৳100/candidate)">মৌখিক পরীক্ষা বোর্ড মূল্যায়ন ভাতা বিধি (৳১০০ / পরীক্ষার্থী)</option>
+                                <option value="Laboratory practical examination assessment allowance (৳100/candidate)">ব্যবহারিক ল্যাব পরীক্ষা মূল্যায়ন ভাতা বিধি (৳১০০ / পরীক্ষার্থী)</option>
+                                <option value="Confidential examination question paper compose & print duty (৳200/page)">গোপনীয় প্রশ্নপত্র কম্পোজ ও মুদ্রণ কার্যবিধি (৳২০০ / পৃষ্ঠা)</option>
+                                <option value="Seminar defense evaluation committee honorarium (৳300/presentation)">সেমিনার ও প্রজেক্ট ডিফেন্স মূল্যায়ন বিধি (৳৩০০ / প্রেজেন্টেশন)</option>
+                                <option value="Postgraduate Thesis defense evaluation committee (৳500/thesis)">স্নাতকোত্তর থিসিস ডিফেন্স ও মূল্যায়ন বিধিমালা (৳৫০০ / থিসিস)</option>
+                                <option value="Industrial Internship supervision and report evaluation (৳1000/report)">ইন্টার্নশিপ সুপারভিশন ও রিপোর্ট মূল্যায়ন বিধি (৳১,০০০ / রিপোর্ট)</option>
+                                <option value="Continuous Assessment Class Test evaluation remuneration (৳1350/section)">ধারাবাহিক মূল্যায়ন ক্লাস টেস্ট ভাতা বিধি (৳১,৩৫০ / সেকশন)</option>
+                                <option value="Confidential question paper & answer script transit carrier allowance (৳800/trip)">প্রশ্নপত্র ও উত্তরপত্র গোপনীয় বহন ও পরিবহন ভাতা (৳৮০০ / ট্রিপ)</option>
+                                <option value="Examination Committee Chairman & Coordinator honorarium (৳2000)">পরীক্ষা কমিটি সমন্বয়ক ও সভাপতি সম্মাননা ভাতা (৳২,০০০)</option>
+                                <option value="Examination Hall invigilation & invigilator honorarium (৳400/session)">পরীক্ষা হল পরিদর্শক / ইনভিজিলেটর ভাতা (৳৪০০ / সেশন)</option>
+                                <option value="custom">✏️ অন্যান্য বিবরণী (হাতে লিখুন / Manual Note)</option>
+                            </select>
+                            <input type="text" id="cust-desc" class="form-control" style="display: none; margin-top: 6px;" placeholder="বিধিমালার বিবরণ লিখুন">
+                        </div>
+
+                        <!-- Live Calculation Preview Card -->
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <div id="cust-calc-card" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                                    <div>
+                                        <span style="font-size: 0.76rem; font-weight: 700; color: #166534; text-transform: uppercase;">
+                                            🧮 মাভাবিপ্রবি নির্ধারিত রেট ও হিসাব সূত্র:
+                                        </span>
+                                        <div id="cust-calc-formula" style="font-size: 0.95rem; font-weight: 700; color: #15803d; margin-top: 4px; font-family: var(--font-bengali), 'SutonnyMJ', serif;">
+                                            কাজের পরিমাণ × ৳ ২৫.০০ = মোট প্রাপ্য টাকা
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <span style="font-size: 0.74rem; color: #166534; font-weight: 700;">ডিফল্ট রেট</span>
+                                        <div id="cust-calc-rate-badge" style="font-size: 1.4rem; font-weight: 800; color: #1e3a8a; font-family: var(--font-bengali), 'SutonnyMJ', serif;">
+                                            ৳ ২৫.০০
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

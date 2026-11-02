@@ -728,22 +728,28 @@ const App = {
         const dept = document.getElementById('tchr-department');
         const inst = document.getElementById('tchr-institution');
         const title = document.getElementById('modal-teacher-title');
+        const internalPresetBox = document.getElementById('box-internal-teacher-preset');
+        const externalHintBox = document.getElementById('box-external-examiner-hint');
 
         if (val === 'external') {
+            if (internalPresetBox) internalPresetBox.style.display = 'none';
+            if (externalHintBox) externalHintBox.style.display = 'block';
             if (dept) {
                 dept.removeAttribute('readonly');
                 dept.style.background = '#ffffff';
                 dept.value = '';
-                dept.placeholder = 'e.g. Dept. of CSE / EEE';
+                dept.placeholder = 'e.g. Dept. of CSE / EEE (হাত এ লিখুন)';
             }
             if (inst) {
                 inst.removeAttribute('readonly');
                 inst.style.background = '#ffffff';
                 inst.value = '';
-                inst.placeholder = 'e.g. RUET, Rajshahi / DUET / JU / BUET';
+                inst.placeholder = 'e.g. RUET, Rajshahi / DUET / JU / BUET (হাত এ লিখুন)';
             }
-            if (title) title.textContent = 'Add External / Other University Examiner';
+            if (title) title.textContent = 'Add External Examiner / Others (বহিরাগত শিক্ষক — হাত এ লিখুন)';
         } else {
+            if (internalPresetBox) internalPresetBox.style.display = 'block';
+            if (externalHintBox) externalHintBox.style.display = 'none';
             if (dept) {
                 dept.setAttribute('readonly', 'true');
                 dept.style.background = '#f1f5f9';
@@ -754,7 +760,7 @@ const App = {
                 inst.style.background = '#f1f5f9';
                 inst.value = 'MBSTU';
             }
-            if (title) title.textContent = 'Add Internal ICT Faculty Member';
+            if (title) title.textContent = 'Add Internal ICT Faculty Member (ড্রপডাউন থেকে বাছাই করুন)';
         }
     },
 
@@ -7646,6 +7652,176 @@ const App = {
         if (elUnit && p.unit) elUnit.value = p.unit;
         if (elRate && p.rate !== undefined) elRate.value = p.rate;
         if (elDesc && p.desc !== undefined) elDesc.value = p.desc;
+    },
+
+    handleInternalTeacherPresetSelect(key) {
+        const teacherPresets = {
+            shahin: {
+                bn: 'ড. মুহাম্মদ শাহীন উদ্দিন',
+                en: 'Dr. Muhammad Shahin Uddin',
+                desig: 'Professor',
+                phone: '01711223344',
+                email: 'shahin.ict@mbstu.ac.bd'
+            },
+            sajjad: {
+                bn: 'ড. মো: সাজ্জাদ হোসেন',
+                en: 'Dr. Md. Sazzad Hossain',
+                desig: 'Professor',
+                phone: '01712334455',
+                email: 'sazzad.ict@mbstu.ac.bd'
+            },
+            nargis: {
+                bn: 'ড. নার্গিস আক্তার',
+                en: 'Dr. Nargis Akter',
+                desig: 'Associate Professor',
+                phone: '01713445566',
+                email: 'nargis.ict@mbstu.ac.bd'
+            },
+            monir: {
+                bn: 'ড. মনির মোর্শেদ',
+                en: 'Dr. Monir Morshed',
+                desig: 'Associate Professor',
+                phone: '01714556677',
+                email: 'monirmorshed.ict@mbstu.ac.bd'
+            },
+            ziaur: {
+                bn: 'মো: জিয়াউর রহমান',
+                en: 'Md. Ziaur Rahman',
+                desig: 'Assistant Professor',
+                phone: '01715667788',
+                email: 'ziaur.ict@mbstu.ac.bd'
+            },
+            mostofa: {
+                bn: 'মোস্তফা কামাল',
+                en: 'Mostofa Kamal',
+                desig: 'Assistant Professor',
+                phone: '01716778899',
+                email: 'mostofa.ict@mbstu.ac.bd'
+            },
+            khairul: {
+                bn: 'মো: খায়রুল ইসলাম',
+                en: 'Md. Khairul Islam',
+                desig: 'Assistant Professor',
+                phone: '01717889900',
+                email: 'khairul.ict@mbstu.ac.bd'
+            },
+            abir: {
+                bn: 'মো: আবির হোসেন',
+                en: 'Md. Abir Hossain',
+                desig: 'Assistant Professor',
+                phone: '01718990011',
+                email: 'abir.ict@mbstu.ac.bd'
+            },
+            shakil: {
+                bn: 'মো: শাকিল হোসেন',
+                en: 'Md. Shakil Hossain',
+                desig: 'Lecturer',
+                phone: '01719001122',
+                email: 'shakil.ict@mbstu.ac.bd'
+            },
+            taslima: {
+                bn: 'তাসলিমা আক্তার',
+                en: 'Taslima Akter',
+                desig: 'Lecturer',
+                phone: '01720112233',
+                email: 'taslima.ict@mbstu.ac.bd'
+            }
+        };
+
+        if (!key || !teacherPresets[key]) return;
+        const p = teacherPresets[key];
+        const elBn = document.getElementById('tchr-name-bn');
+        const elEn = document.getElementById('tchr-name-en');
+        const elDesig = document.getElementById('tchr-designation');
+        const elPhone = document.getElementById('tchr-phone');
+        const elEmail = document.getElementById('tchr-email');
+
+        if (elBn) elBn.value = p.bn;
+        if (elEn) elEn.value = p.en;
+        if (elDesig) elDesig.value = p.desig;
+        if (elPhone) elPhone.value = p.phone;
+        if (elEmail) elEmail.value = p.email;
+    },
+
+    handleCoursePresetSelect(code) {
+        const coursePresets = {
+            'ICT-1101': { code: 'ICT-1101', title: 'Structured Programming Language', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-1102': { code: 'ICT-1102', title: 'Structured Programming Language Sessional', credit: '1.50', type: 'Lab/Sessional', students: 57, tests: 0 },
+            'ICT-1103': { code: 'ICT-1103', title: 'Discrete Mathematics', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-1105': { code: 'ICT-1105', title: 'Electrical Circuits and Devices', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-1106': { code: 'ICT-1106', title: 'Electrical Circuits and Devices Sessional', credit: '1.50', type: 'Lab/Sessional', students: 57, tests: 0 },
+            'ICT-1201': { code: 'ICT-1201', title: 'Object Oriented Programming', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-1202': { code: 'ICT-1202', title: 'Object Oriented Programming Sessional', credit: '1.50', type: 'Lab/Sessional', students: 57, tests: 0 },
+            'ICT-1203': { code: 'ICT-1203', title: 'Data Structure and Algorithms', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-1204': { code: 'ICT-1204', title: 'Data Structure and Algorithms Sessional', credit: '1.50', type: 'Lab/Sessional', students: 57, tests: 0 },
+            'ICT-2101': { code: 'ICT-2101', title: 'Digital Logic Design', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-2102': { code: 'ICT-2102', title: 'Digital Logic Design Sessional', credit: '1.50', type: 'Lab/Sessional', students: 57, tests: 0 },
+            'ICT-2103': { code: 'ICT-2103', title: 'Computer Organization and Architecture', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-2111': { code: 'ICT-2111', title: 'Continuous Assessment / Signals and Systems', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-2201': { code: 'ICT-2201', title: 'Microprocessor and Assembly Language', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-2202': { code: 'ICT-2202', title: 'Microprocessor and Assembly Sessional', credit: '1.50', type: 'Lab/Sessional', students: 57, tests: 0 },
+            'ICT-3101': { code: 'ICT-3101', title: 'Operating Systems and System Programming', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-3103': { code: 'ICT-3103', title: 'Database Management Systems', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-3104': { code: 'ICT-3104', title: 'DBMS Sessional', credit: '1.50', type: 'Lab/Sessional', students: 57, tests: 0 },
+            'ICT-3201': { code: 'ICT-3201', title: 'Computer Networks', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-3203': { code: 'ICT-3203', title: 'Software Engineering', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-4101': { code: 'ICT-4101', title: 'Artificial Intelligence and Neural Networks', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-4201': { code: 'ICT-4201', title: 'Cryptography and Network Security', credit: '3.00', type: 'Theory', students: 57, tests: 4 },
+            'ICT-4200': { code: 'ICT-4200', title: 'Project and Thesis Defense', credit: '6.00', type: 'Lab/Sessional', students: 57, tests: 0 }
+        };
+
+        if (!code || !coursePresets[code]) return;
+        const p = coursePresets[code];
+        const elCode = document.getElementById('crs-code');
+        const elTitle = document.getElementById('crs-title');
+        const elCredit = document.getElementById('crs-credit');
+        const elType = document.getElementById('crs-type');
+        const elStudents = document.getElementById('crs-students');
+        const elTests = document.getElementById('crs-tests');
+
+        if (elCode) elCode.value = p.code;
+        if (elTitle) elTitle.value = p.title;
+        if (elCredit) elCredit.value = p.credit;
+        if (elType) elType.value = p.type;
+        if (elStudents) elStudents.value = p.students;
+        if (elTests) elTests.value = p.tests;
+    },
+
+    handleWorkloadPresetSelect(val) {
+        const el = document.getElementById('act-workload');
+        if (!el || !val) return;
+        if (val === 'custom') {
+            el.focus();
+            return;
+        }
+        if (val === '1_trip') {
+            el.value = 1;
+        } else {
+            el.value = val;
+        }
+        this.calculateActivityPreview();
+    },
+
+    handleBLWorkloadPreset(val) {
+        const el = document.getElementById('bl-workload');
+        if (!el || !val) return;
+        if (val === 'custom') {
+            el.focus();
+            return;
+        }
+        el.value = val;
+        this.calculateBLPreview();
+    },
+
+    handleSemesterAutoFill() {
+        const session = document.getElementById('sem-session') ? document.getElementById('sem-session').value : '2023-2024';
+        const year = document.getElementById('sem-academic-year') ? document.getElementById('sem-academic-year').value : '2025';
+        const yearLevel = document.getElementById('sem-year-level') ? document.getElementById('sem-year-level').value : '2nd Year';
+        const semNum = document.getElementById('sem-number') ? document.getElementById('sem-number').value : '1st Semester';
+        const examNameEl = document.getElementById('sem-exam-name');
+        if (examNameEl) {
+            examNameEl.value = `${yearLevel} ${semNum} Final Examination ${year}`;
+        }
     }
 };
 

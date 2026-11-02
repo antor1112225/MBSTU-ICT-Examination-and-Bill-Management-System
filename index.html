@@ -860,11 +860,22 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label" for="sem-session">Academic Session *</label>
-                            <input type="text" id="sem-session" class="form-control" placeholder="e.g. 2023-2024" required>
+                            <select id="sem-session" class="form-control" onchange="App.handleSemesterAutoFill()" required>
+                                <option value="2024-2025">2024-2025</option>
+                                <option value="2023-2024" selected>2023-2024</option>
+                                <option value="2022-2023">2022-2023</option>
+                                <option value="2021-2022">2021-2022</option>
+                                <option value="2020-2021">2020-2021</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="sem-academic-year">Academic Year *</label>
-                            <input type="text" id="sem-academic-year" class="form-control" placeholder="e.g. 2025" required>
+                            <select id="sem-academic-year" class="form-control" onchange="App.handleSemesterAutoFill()" required>
+                                <option value="2026">2026</option>
+                                <option value="2025" selected>2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="sem-year-level">Year / Level *</label>
@@ -888,7 +899,14 @@
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label class="form-label" for="sem-period">Exam Held Period *</label>
-                            <input type="text" id="sem-period" class="form-control" placeholder="e.g. February-March 2026" required>
+                            <select id="sem-period" class="form-control" required>
+                                <option value="মার্চ-এপ্রিল/২০২৬" selected>মার্চ-এপ্রিল/২০২৬ (March-April 2026)</option>
+                                <option value="ফেব্রুয়ারি-মার্চ/২০২৬">ফেব্রুয়ারি-মার্চ/২০২৬ (February-March 2026)</option>
+                                <option value="জানুয়ারি-ফেব্রুয়ারি/২০২৬">জানুয়ারি-ফেব্রুয়ারি/২০২৬ (January-February 2026)</option>
+                                <option value="মে-জুন/২০২৬">মে-জুন/২০২৬ (May-June 2026)</option>
+                                <option value="সেপ্টেম্বর-অক্টোবর/২০২৫">সেপ্টেম্বর-অক্টোবর/২০২৫ (September-October 2025)</option>
+                                <option value="নভেম্বর-ডিসেম্বর/২০২৫">নভেম্বর-ডিসেম্বর/২০২৫ (November-December 2025)</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="sem-reg-count">Regular Examinees</label>
@@ -935,6 +953,50 @@
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label class="form-label" for="crs-semester-id">Semester *</label>
                             <select id="crs-semester-id" class="form-control" required></select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; background: #eff6ff; border: 1.5px solid #93c5fd; border-radius: 6px; padding: 10px;">
+                            <label class="form-label" for="crs-preset-select" style="font-weight: 700; color: #1e40af; margin-bottom: 6px;">
+                                ⚡ Quick Select Course from MBSTU Syllabus (ড্রপডাউন থেকে বাছাই করুন):
+                            </label>
+                            <select id="crs-preset-select" class="form-control" onchange="App.handleCoursePresetSelect(this.value)">
+                                <option value="">-- ড্রপডাউন থেকে কোর্স বাছাই করুন (অটোফিল হবে) অথবা নিচে লিখুন --</option>
+                                <optgroup label="১ম বর্ষ ১ম সেমিস্টার (1st Year 1st Semester)">
+                                    <option value="ICT-1101">ICT-1101: Structured Programming Language (3.00 Cr - Theory)</option>
+                                    <option value="ICT-1102">ICT-1102: Structured Programming Language Sessional (1.50 Cr - Lab)</option>
+                                    <option value="ICT-1103">ICT-1103: Discrete Mathematics (3.00 Cr - Theory)</option>
+                                    <option value="ICT-1105">ICT-1105: Electrical Circuits and Devices (3.00 Cr - Theory)</option>
+                                    <option value="ICT-1106">ICT-1106: Electrical Circuits Sessional (1.50 Cr - Lab)</option>
+                                </optgroup>
+                                <optgroup label="১ম বর্ষ ২য় সেমিস্টার (1st Year 2nd Semester)">
+                                    <option value="ICT-1201">ICT-1201: Object Oriented Programming (3.00 Cr - Theory)</option>
+                                    <option value="ICT-1202">ICT-1202: Object Oriented Programming Sessional (1.50 Cr - Lab)</option>
+                                    <option value="ICT-1203">ICT-1203: Data Structure and Algorithms (3.00 Cr - Theory)</option>
+                                    <option value="ICT-1204">ICT-1204: Data Structure and Algorithms Sessional (1.50 Cr - Lab)</option>
+                                </optgroup>
+                                <optgroup label="২য় বর্ষ ১ম সেমিস্টার (2nd Year 1st Semester)">
+                                    <option value="ICT-2101">ICT-2101: Digital Logic Design (3.00 Cr - Theory)</option>
+                                    <option value="ICT-2102">ICT-2102: Digital Logic Design Sessional (1.50 Cr - Lab)</option>
+                                    <option value="ICT-2103">ICT-2103: Computer Organization and Architecture (3.00 Cr - Theory)</option>
+                                    <option value="ICT-2111">ICT-2111: Continuous Assessment / Signals &amp; Systems (3.00 Cr - Theory)</option>
+                                </optgroup>
+                                <optgroup label="২য় বর্ষ ২য় সেমিস্টার (2nd Year 2nd Semester)">
+                                    <option value="ICT-2201">ICT-2201: Microprocessor and Assembly Language (3.00 Cr - Theory)</option>
+                                    <option value="ICT-2202">ICT-2202: Microprocessor and Assembly Sessional (1.50 Cr - Lab)</option>
+                                </optgroup>
+                                <optgroup label="৩য় বর্ষ ১ম ও ২য় সেমিস্টার">
+                                    <option value="ICT-3101">ICT-3101: Operating Systems and System Programming (3.00 Cr - Theory)</option>
+                                    <option value="ICT-3103">ICT-3103: Database Management Systems (3.00 Cr - Theory)</option>
+                                    <option value="ICT-3104">ICT-3104: DBMS Sessional (1.50 Cr - Lab)</option>
+                                    <option value="ICT-3201">ICT-3201: Computer Networks (3.00 Cr - Theory)</option>
+                                    <option value="ICT-3203">ICT-3203: Software Engineering (3.00 Cr - Theory)</option>
+                                </optgroup>
+                                <optgroup label="৪র্থ বর্ষ">
+                                    <option value="ICT-4101">ICT-4101: Artificial Intelligence &amp; Neural Networks (3.00 Cr - Theory)</option>
+                                    <option value="ICT-4201">ICT-4201: Cryptography &amp; Network Security (3.00 Cr - Theory)</option>
+                                    <option value="ICT-4200">ICT-4200: Project &amp; Thesis Defense (6.00 Cr - Lab)</option>
+                                </optgroup>
+                                <option value="custom">✏️ নতুন কোর্স (নিজে কোড ও টাইটেল লিখুন)</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="crs-code">Course Code *</label>
@@ -1115,9 +1177,36 @@
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label class="form-label" for="tchr-type">Faculty / Examiner Category *</label>
                             <select id="tchr-type" class="form-control" onchange="App.handleTeacherTypeChange(this.value)">
-                                <option value="internal">🏛️ Internal ICT Faculty Member (MBSTU)</option>
-                                <option value="external">🌐 External Examiner / Others (অন্যান্য বিশ্ববিদ্যালয়)</option>
+                                <option value="internal">🏛️ Internal ICT Faculty Member (ড্রপডাউন থেকে বাছাই করুন)</option>
+                                <option value="external">🌐 External Examiner / Others (হাত এ লিখুন)</option>
                             </select>
+                        </div>
+                        <div id="box-internal-teacher-preset" class="form-group" style="grid-column: 1 / -1; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 6px; padding: 10px;">
+                            <label class="form-label" for="tchr-preset-select" style="font-weight: 700; color: #166534; margin-bottom: 6px;">
+                                ⚡ Quick Select ICT Faculty (ড্রপডাউন থেকে শিক্ষক বাছাই করুন):
+                            </label>
+                            <select id="tchr-preset-select" class="form-control" onchange="App.handleInternalTeacherPresetSelect(this.value)">
+                                <option value="">-- ড্রপডাউন থেকে অভ্যন্তরীণ শিক্ষক বাছাই করুন (অটোফিল হবে) --</option>
+                                <option value="shahin">ড. মুহাম্মদ শাহীন উদ্দিন (Dr. Muhammad Shahin Uddin) — Professor</option>
+                                <option value="sajjad">ড. মো: সাজ্জাদ হোসেন (Dr. Md. Sazzad Hossain) — Professor</option>
+                                <option value="nargis">ড. নার্গিস আক্তার (Dr. Nargis Akter) — Associate Professor</option>
+                                <option value="monir">ড. মনির মোর্শেদ (Dr. Monir Morshed) — Associate Professor</option>
+                                <option value="ziaur">মো: জিয়াউর রহমান (Md. Ziaur Rahman) — Assistant Professor</option>
+                                <option value="mostofa">মোস্তফা কামাল (Mostofa Kamal) — Assistant Professor</option>
+                                <option value="khairul">মো: খায়রুল ইসলাম (Md. Khairul Islam) — Assistant Professor</option>
+                                <option value="abir">মো: আবির হোসেন (Md. Abir Hossain) — Assistant Professor</option>
+                                <option value="shakil">মো: শাকিল হোসেন (Md. Shakil Hossain) — Lecturer</option>
+                                <option value="taslima">তাসলিমা আক্তার (Taslima Akter) — Lecturer</option>
+                                <option value="custom">✏️ অন্যান্য অভ্যন্তরীণ শিক্ষক (নিজে নাম লিখুন)</option>
+                            </select>
+                        </div>
+                        <div id="box-external-examiner-hint" class="form-group" style="grid-column: 1 / -1; display: none; background: #eff6ff; border: 1.5px dashed #3b82f6; border-radius: 6px; padding: 10px;">
+                            <div style="font-weight: 700; color: #1e40af; font-size: 0.88rem;">
+                                ✍️ External Examiner / Others (বহিরাগত শিক্ষক — হাত এ লিখে এন্ট্রি দিন):
+                            </div>
+                            <div style="font-size: 0.78rem; color: #475569; margin-top: 3px;">
+                                বহিরাগত শিক্ষকের নাম, বিশ্ববিদ্যালয় ও পদবী নিচে হাত এ টাইপ করে পূরণ করুন।
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="tchr-name-bn">Name in Bengali *</label>
@@ -1233,6 +1322,26 @@
                                 <option value="Regular">Regular (নিয়মিত)</option>
                                 <option value="BL">BL - Backlog (ব্যাকলগ)</option>
                                 <option value="SC">SC - Special Carry (স্পেশাল ক্যারি)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 10px;">
+                            <label class="form-label" for="act-workload-preset" style="font-weight: 700; color: #1e40af; margin-bottom: 4px;">
+                                ⚡ Workload / Quantity (ড্রপডাউন থেকে কাজের পরিমাণ বাছাই করুন):
+                            </label>
+                            <select id="act-workload-preset" class="form-control" onchange="App.handleWorkloadPresetSelect(this.value)">
+                                <option value="">-- কাজের পরিমাণ বাছাই করুন (অথবা নিচে লিখুন) --</option>
+                                <option value="1">১টি প্রশ্নপত্র প্রণয়ন (Full Paper - ৩.০০ ক্রেডিট)</option>
+                                <option value="0.5">০.৫ (অর্ধেক প্রশ্নপত্র - ২.০০ ক্রেডিট)</option>
+                                <option value="4">৪টি প্রশ্ন (সেকশন প্রশ্ন প্রণয়ন / ৪টি CT)</option>
+                                <option value="16">১৬টি প্রশ্ন (সম্পূর্ণ প্রশ্ন সমীক্ষণ)</option>
+                                <option value="57">৫৭ জন (নিয়মিত খাতা মূল্যায়ন)</option>
+                                <option value="18">১৮ জন (ব্যাকলগ খাতা মূল্যায়ন)</option>
+                                <option value="11">১১ জন (স্পেশাল ক্যারি খাতা মূল্যায়ন)</option>
+                                <option value="86">৮৬ জন (ট্যাবুলেশন / মোট পরীক্ষার্থী)</option>
+                                <option value="3">৩টি ক্লাস টেস্ট (২ ক্রেডিট কোর্স)</option>
+                                <option value="2">২টি ক্লাস টেস্ট (১ ক্রেডিট কোর্স)</option>
+                                <option value="1_trip">১টি কুরিয়ার / বহন ট্রিপ (Carrier Allowance)</option>
+                                <option value="custom">✏️ কাস্টম পরিমাণ (নিজে টাইপ করুন)</option>
                             </select>
                         </div>
                         <div class="form-group" id="grp-act-workload">
@@ -1631,6 +1740,21 @@
                         <div class="form-group">
                             <label class="form-label" for="bl-credit">Course Credits</label>
                             <input type="number" id="bl-credit" class="form-control" value="3.00" step="0.5" readonly style="background:#f1f5f9;">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px;">
+                            <label class="form-label" for="bl-workload-preset" style="font-weight: 700; color: #166534; margin-bottom: 4px;">
+                                ⚡ Script / Candidate Count (ড্রপডাউন থেকে বাছাই করুন):
+                            </label>
+                            <select id="bl-workload-preset" class="form-control" onchange="App.handleBLWorkloadPreset(this.value)">
+                                <option value="">-- পরিমাণ বাছাই করুন (অথবা নিচে লিখুন) --</option>
+                                <option value="18">১৮ জন (Backlog Script Evaluation)</option>
+                                <option value="11">১১ জন (Special Carry Script Evaluation)</option>
+                                <option value="57">৫৭ জন (Full Batch Regular)</option>
+                                <option value="86">৮৬ জন (Tabulation)</option>
+                                <option value="4">৪টি প্রশ্ন / ৪টি CT</option>
+                                <option value="1">১টি প্রশ্নপত্র</option>
+                                <option value="custom">✏️ কাস্টম সংখ্যা</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="bl-workload" id="lbl-bl-workload">Script / Student Count *</label>

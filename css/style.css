@@ -1580,3 +1580,10 @@ body {
         font-family: 'SutonnyMJ', 'SutonnyOMJ', 'Nikosh', 'NikoshBAN', 'SolaimanLipi', 'Kalpurush', 'Noto Serif Bengali', serif !important;
     }
 }
+
+.dropdown:hover .dropdown-menu {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}

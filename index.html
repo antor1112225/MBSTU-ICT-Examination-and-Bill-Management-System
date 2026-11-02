@@ -7,7 +7,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=20261103_v4">
 </head>
 <body>
 
@@ -259,14 +259,13 @@
             <div class="content-card">
                 <div class="card-header">
                     <div class="card-title">📚 Course Management &amp; Activity Breakdown (Scope: <span id="courses-scope-text">Consolidated</span>)</div>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('courses-actions-dropdown', event)">
-                            ⚡ Course Actions
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="App.openModal('modal-course')">
+                            ➕ Add New Course
                         </button>
-                        <div id="courses-actions-dropdown" class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="App.openModal('modal-course')">➕ Add New Course</button>
-                            <button type="button" class="dropdown-item" onclick="App.printCourseSummaryTable()">🖨️ Print Course Summary</button>
-                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.printCourseSummaryTable()">
+                            🖨️ Print Course Summary
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -309,14 +308,13 @@
                             <option value="internal">🏫 Filter: Internal ICT</option>
                             <option value="external">🌐 Filter: External (Others)</option>
                         </select>
-                        <div class="dropdown">
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('teacher-actions-dropdown', event)">
-                                ➕ Add Faculty / Examiner
+                        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="App.openModal('modal-teacher')">
+                                🏫 Add Internal Faculty
                             </button>
-                            <div id="teacher-actions-dropdown" class="dropdown-menu">
-                                <button type="button" class="dropdown-item" onclick="App.openModal('modal-teacher')">🏫 Add Internal Faculty Member</button>
-                                <button type="button" class="dropdown-item" onclick="App.openAddExternalTeacherModal()">🌐 Add External Examiner (Others)</button>
-                            </div>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="App.openAddExternalTeacherModal()">
+                                🌐 Add External Examiner (Others)
+                            </button>
                         </div>
                         <!-- Hidden anchors for button filter compatibility -->
                         <span style="display:none;">
@@ -353,15 +351,16 @@
             <div class="content-card">
                 <div class="card-header">
                     <div class="card-title">📝 Dynamic Examination Activity Management (Scope: <span id="activities-scope-text">Consolidated</span>)</div>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('activity-actions-dropdown', event)">
-                            ⚡ Activity Actions
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="App.openModal('modal-activity')">
+                            ➕ Log Activity Record
                         </button>
-                        <div id="activity-actions-dropdown" class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="App.openModal('modal-activity')">➕ Log Activity Record</button>
-                            <button type="button" class="dropdown-item" onclick="App.openModal('modal-custom-activity')">⚙️ Add Custom Activity Type</button>
-                            <button type="button" class="dropdown-item" onclick="App.printActivityLedger()">🖨️ Print Activity Ledger</button>
-                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.openModal('modal-custom-activity')">
+                            ⚙️ Add Custom Activity
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.printActivityLedger()">
+                            🖨️ Print Activity Ledger
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -415,15 +414,16 @@
                             <option value="Paid">Paid</option>
                         </select>
                     </div>
-                    <div class="dropdown" style="align-self: flex-end;">
-                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('ledger-actions-dropdown', event)">
-                            ⚡ Ledger Actions
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; width: 100%;">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="App.prepareSlipForSelectedTeacher()">
+                            📄 Generate Bill Slip &rarr;
                         </button>
-                        <div id="ledger-actions-dropdown" class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="App.prepareSlipForSelectedTeacher()">📄 Generate Bill Slip &rarr;</button>
-                            <button type="button" class="dropdown-item" onclick="App.printTeacherLedger()">🖨️ Print Ledger</button>
-                            <button type="button" class="dropdown-item" onclick="App.exportTeacherLedgerCSV()">📊 Export CSV</button>
-                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.printTeacherLedger()">
+                            🖨️ Print Ledger
+                        </button>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.exportTeacherLedgerCSV()">
+                            📊 Export CSV
+                        </button>
                     </div>
                 </div>
             </div>
@@ -523,14 +523,13 @@
                         <select id="dossier-semester-select" class="form-control" style="max-width: 480px;" onchange="App.handleDossierSemesterChange(this.value)">
                         </select>
                     </div>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('dossier-actions-dropdown', event)">
-                            ⚡ Dossier Actions
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary" onclick="App.openEditDossierModal()">
+                            ✏️ Edit Dossier Details
                         </button>
-                        <div id="dossier-actions-dropdown" class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="App.openEditDossierModal()">✏️ Edit Dossier Details</button>
-                            <button type="button" class="dropdown-item" onclick="App.printModerationDossier()">🖨️ Print Dossier PDF</button>
-                        </div>
+                        <button type="button" class="btn btn-outline" onclick="App.printModerationDossier()">
+                            🖨️ Print Dossier PDF
+                        </button>
                     </div>
                 </div>
             </div>
@@ -570,14 +569,13 @@
             <div class="content-card">
                 <div class="card-header">
                     <div class="card-title">📄 Official Bill Slips &amp; Chairman Sanctions (Scope: <span id="bills-scope-text">Consolidated</span>)</div>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('bill-actions-dropdown', event)">
-                            ⚡ Bill Actions
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="App.openModal('modal-bill')">
+                            ➕ Prepare New Bill Slip
                         </button>
-                        <div id="bill-actions-dropdown" class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="App.openModal('modal-bill')">➕ Prepare New Bill Slip</button>
-                            <button type="button" class="dropdown-item" onclick="App.printConsolidatedBillStatement()">🖨️ 7. Consolidated Bill Statement</button>
-                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.printConsolidatedBillStatement()">
+                            🖨️ Consolidated Bill Statement
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -656,14 +654,13 @@
                         <input type="text" id="quick-carrier-voucher" placeholder="Voucher / Memo No" style="width: 145px; padding: 4px 6px; font-size: 0.82rem; border: 1px solid #93c5fd; border-radius: 4px;" title="Carrier Voucher Number" onchange="App.handleQuickCarrierChange()">
                     </div>
 
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" onclick="App.toggleDropdown('printslip-actions-dropdown', event)">
-                            🖨️ Print &amp; Duties
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary btn-sm" onclick="window.print()">
+                            🖨️ প্রিন্ট করুন (Print A4 Official Bill)
                         </button>
-                        <div id="printslip-actions-dropdown" class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="window.print()">🖨️ প্রিন্ট করুন (Print A4 Official Bill)</button>
-                            <button type="button" class="dropdown-item" onclick="App.openBLSCDutyModal()">➕ Add Backlog / Special Carry Duty</button>
-                        </div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="App.openBLSCDutyModal()">
+                            ➕ Add Backlog / Special Carry Duty
+                        </button>
                     </div>
                 </div>
             </div>
@@ -823,17 +820,19 @@
                     <p style="margin-bottom: 16px; color: var(--text-muted);">
                         This system operates 100% offline using your browser's local storage. To ensure data safety across computers or after clearing browser cache, create periodic JSON backups.
                     </p>
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-primary dropdown-toggle" onclick="App.toggleDropdown('backup-actions-dropdown', event)">
-                            💾 Database Operations
+                    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" class="btn btn-primary" onclick="App.exportFullJSONBackup()">
+                            ⬇️ Export JSON Backup
                         </button>
-                        <div id="backup-actions-dropdown" class="dropdown-menu">
-                            <button type="button" class="dropdown-item" onclick="App.exportFullJSONBackup()">⬇️ Export Full JSON Database Backup</button>
-                            <button type="button" class="dropdown-item" onclick="document.getElementById('file-import-json').click()">⬆️ Import JSON Database Backup</button>
-                            <button type="button" class="dropdown-item" onclick="App.exportAllCSVs()">📊 Export Consolidated Financial CSVs</button>
-                            <div class="dropdown-divider"></div>
-                            <button type="button" class="dropdown-item text-danger" onclick="App.confirmResetAllData()">⚠️ Factory Reset Database</button>
-                        </div>
+                        <button type="button" class="btn btn-outline" onclick="document.getElementById('file-import-json').click()">
+                            ⬆️ Import JSON Backup
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="App.exportAllCSVs()">
+                            📊 Export Financial CSVs
+                        </button>
+                        <button type="button" class="btn btn-outline text-danger" onclick="App.confirmResetAllData()">
+                            ⚠️ Factory Reset Database
+                        </button>
                     </div>
                     <input type="file" id="file-import-json" accept=".json" style="display: none;" onchange="App.importFullJSONBackup(event)">
                 </div>
@@ -1956,6 +1955,6 @@
     <div id="print-report-container" class="print-report-container" style="display: none;"></div>
 
     <!-- Application Script -->
-    <script src="js/app.js"></script>
+    <script src="js/app.js?v=20261103_v4"></script>
 </body>
 </html>

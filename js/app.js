@@ -1431,30 +1431,123 @@ const App = {
         if (!crsId) return;
 
         const course = this.state.courses.find(c => c.id === crsId);
-        if (course && course.assignedInternalTeacherId) {
-            document.getElementById('act-teacher-id').value = course.assignedInternalTeacherId;
-        }
-        if (course && course.studentCount) {
-            document.getElementById('act-workload').value = course.studentCount;
+        if (course) {
+            if (course.assignedInternalTeacherId) {
+                const tSelect = document.getElementById('act-teacher-id');
+                if (tSelect) tSelect.value = course.assignedInternalTeacherId;
+            }
+            const catVal = document.getElementById('act-category') ? document.getElementById('act-category').value : '1';
+            const catNum = parseInt(catVal);
+            const workloadEl = document.getElementById('act-workload');
+            const rateEl = document.getElementById('act-rate');
+
+            // Smart Course-aware calculations
+            if (catNum === 13) { // Class Test rule based on course credit
+                const cr = Number(course.credit) || 3.0;
+                if (workloadEl) workloadEl.value = cr >= 3.0 ? 4 : (cr >= 2.0 ? 3 : 2);
+                if (rateEl) rateEl.value = 1350;
+            } else if (catNum === 1) { // Question Setting
+                const cr = Number(course.credit) || 3.0;
+                if (cr < 3.0) {
+                    if (workloadEl) workloadEl.value = 0.5;
+                } else {
+                    if (workloadEl) workloadEl.value = 1;
+                }
+            } else if (catNum === 3) { // Answer script evaluation
+                if (workloadEl && course.studentCount) {
+                    workloadEl.value = course.studentCount;
+                }
+            }
         }
         this.calculateActivityPreview();
     },
 
     calculateActivityPreview() {
-        const method = document.getElementById('act-calc-method').value;
+        const catVal = document.getElementById('act-category') ? document.getElementById('act-category').value : '1';
+        const method = document.getElementById('act-calc-method') ? document.getElementById('act-calc-method').value : 'qty_rate';
         const workload = parseFloat(document.getElementById('act-workload').value) || 1;
         const rate = parseFloat(document.getElementById('act-rate').value) || 0;
         const manual = parseFloat(document.getElementById('act-manual-amount').value) || 0;
+        const candType = document.getElementById('act-candidate-type') ? document.getElementById('act-candidate-type').value : 'Regular';
 
         let total = 0;
-        if (method === 'qty_rate') total = workload * rate;
-        else if (method === 'fixed') total = rate;
-        else if (method === 'manual') total = manual;
+        let formula = '';
+        let ruleText = '';
+
+        const catNum = parseInt(catVal);
+
+        if (method === 'manual') {
+            total = manual;
+            formula = `ম্যানুয়াল সরাসরি এন্ট্রি: ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+            ruleText = 'বিশেষ অনুমোদিত বা নির্দিষ্ট পরিমাণ';
+        } else if (method === 'fixed') {
+            total = rate;
+            formula = `নির্দিষ্ট বিধি সম্মত ভাতা: ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+            ruleText = 'মাভাবিপ্রবি পরীক্ষার নির্ধারিত নির্দিষ্ট রেট';
+        } else {
+            // High quality accurate MBSTU statutory calculation
+            if (catNum === 1) { // প্রশ্নপত্র প্রণয়ন
+                if (workload <= 0.5) {
+                    total = 2000;
+                    formula = `হাফ পেপার (২.০০/১.৫০ ক্রেডিট) = ৳ ২,০০০.০০`;
+                    ruleText = 'মাভাবিপ্রবি বিধি: হাফ পেপার ২.০০/১.৫০ ক্রেডিট প্রশ্ন প্রণয়ন ২০০০/- টাকা';
+                } else {
+                    total = workload * rate;
+                    formula = `${this.toBanglaDigits(workload)}টি প্রশ্নপত্র × ৳ ${rate.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} = ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+                    ruleText = 'মাভাবিপ্রবি বিধি: ফুল পেপার ৩.০০ ক্রেডিট প্রশ্ন প্রণয়ন ৪০০০/- টাকা';
+                }
+            } else if (catNum === 2) { // প্রশ্নপত্র সমীক্ষণ / মডারেশন
+                total = workload * rate;
+                formula = `${this.toBanglaDigits(workload)} জন সদস্যের অংশ × ৳ ${rate.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} = ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+                ruleText = 'মাভাবিপ্রবি বিধি: ১৬টি প্রশ্নের মডারেশন পুল চারজন সদস্যের সমান অংশ (৳ ১৬০০/-)';
+            } else if (catNum === 3) { // উত্তরপত্র মূল্যায়ন
+                const rawTotal = workload * rate;
+                const minCharge = 500;
+                if (rawTotal > 0 && rawTotal < minCharge) {
+                    total = minCharge;
+                    formula = `${this.toBanglaDigits(workload)}টি খাতা × ৳ ${rate.toLocaleString('bn-BD')} = ৳ ${rawTotal.toLocaleString('bn-BD')} (ন্যূনতম চার্জ ৳ ৫০০ প্রযোজ্য)`;
+                    ruleText = 'মাভাবিপ্রবি বিধি: প্রতি খাতা ১২০/- টাকা; ন্যূনতম ফি ৫০০/- টাকা';
+                } else {
+                    total = rawTotal;
+                    formula = `${this.toBanglaDigits(workload)}টি খাতা (${candType}) × ৳ ${rate.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} = ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+                    ruleText = 'মাভাবিপ্রবি বিধি: প্রতি উত্তরপত্র ১২০/- টাকা';
+                }
+            } else if (catNum === 13) { // ক্লাস টেস্ট
+                total = workload * rate;
+                formula = `${this.toBanglaDigits(workload)}টি ক্লাস টেস্ট মূল্যায়ন × ৳ ${rate.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} = ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+                ruleText = 'মাভাবিপ্রবি বিধি: ৩ ক্রেডিটে ৪টি CT (৳ ৫৪০০/-), ২ ক্রেডিটে ৩টি CT (৳ ৪০৫০/-)';
+            } else if (catNum === 6) { // টেবুলেশন
+                total = workload * rate;
+                formula = `${this.toBanglaDigits(workload)} জন পরীক্ষার্থী × ৳ ${rate.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} = ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+                ruleText = 'মাভাবিপ্রবি বিধি: প্রতি পরীক্ষার্থী ৭৫/- টাকা টেবুলেশন পারিশ্রমিক';
+            } else if (catNum === 7) { // স্ক্রুটিনি
+                total = workload * rate;
+                formula = `${this.toBanglaDigits(workload)}টি স্ক্রিপ্ট × ৳ ${rate.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} = ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+                ruleText = 'মাভাবিপ্রবি বিধি: প্রতি উত্তরপত্র স্ক্রুটিনি ২৫/- টাকা';
+            } else if (catNum === 4 || catNum === 5) { // ভাইভা / প্র্যাক্টিক্যাল
+                total = workload * rate;
+                formula = `${this.toBanglaDigits(workload)} জন পরীক্ষার্থী × ৳ ${rate.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} = ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+                ruleText = 'মাভাবিপ্রবি বিধি: বোর্ড সদস্য পারিশ্রমিক (প্রতি পরীক্ষার্থী ১০০/- টাকা)';
+            } else {
+                total = workload * rate;
+                formula = `${this.toBanglaDigits(workload)} × ৳ ${rate.toLocaleString('bn-BD', { minimumFractionDigits: 2 })} = ৳ ${total.toLocaleString('bn-BD', { minimumFractionDigits: 2 })}`;
+                ruleText = 'মাভাবিপ্রবি অনুমোদিত পরীক্ষার হিসাব বিধি';
+            }
+        }
 
         const previewEl = document.getElementById('act-calc-preview');
         if (previewEl) {
-            previewEl.textContent = '৳' + total.toLocaleString('bn-BD', { minimumFractionDigits: 2 });
+            previewEl.textContent = '৳ ' + total.toLocaleString('bn-BD', { minimumFractionDigits: 2 });
         }
+        const formulaEl = document.getElementById('act-calc-formula-text');
+        if (formulaEl) {
+            formulaEl.textContent = formula;
+        }
+        const ruleEl = document.getElementById('act-calc-rule-badge');
+        if (ruleEl) {
+            ruleEl.textContent = '✓ ' + ruleText;
+        }
+
         return total;
     },
 
@@ -7785,6 +7878,46 @@ const App = {
         if (elType) elType.value = p.type;
         if (elStudents) elStudents.value = p.students;
         if (elTests) elTests.value = p.tests;
+    },
+
+    handleSmartDutyPreset(presetKey) {
+        if (!presetKey || presetKey === 'custom') return;
+
+        const catSelect = document.getElementById('act-category');
+        const workloadInput = document.getElementById('act-workload');
+        const workloadPreset = document.getElementById('act-workload-preset');
+        const rateInput = document.getElementById('act-rate');
+        const candTypeSelect = document.getElementById('act-candidate-type');
+        const calcMethodSelect = document.getElementById('act-calc-method');
+
+        const presets = {
+            q_set_full: { cat: '1', workload: 1, rate: 4000, cand: 'Regular', method: 'qty_rate' },
+            q_set_half: { cat: '1', workload: 0.5, rate: 4000, cand: 'Regular', method: 'qty_rate' },
+            q_mod_member: { cat: '2', workload: 1, rate: 1600, cand: 'Regular', method: 'fixed' },
+            eval_reg_57: { cat: '3', workload: 57, rate: 120, cand: 'Regular', method: 'qty_rate' },
+            eval_bl_18: { cat: '3', workload: 18, rate: 120, cand: 'BL', method: 'qty_rate' },
+            eval_sc_11: { cat: '3', workload: 11, rate: 120, cand: 'SC', method: 'qty_rate' },
+            viva_57: { cat: '4', workload: 57, rate: 100, cand: 'Regular', method: 'qty_rate' },
+            lab_57: { cat: '5', workload: 57, rate: 100, cand: 'Regular', method: 'qty_rate' },
+            tab_86: { cat: '6', workload: 86, rate: 75, cand: 'Regular', method: 'qty_rate' },
+            scrutiny_57: { cat: '7', workload: 57, rate: 25, cand: 'Regular', method: 'qty_rate' },
+            ct_4: { cat: '13', workload: 4, rate: 1350, cand: 'Regular', method: 'qty_rate' },
+            ct_3: { cat: '13', workload: 3, rate: 1350, cand: 'Regular', method: 'qty_rate' },
+            carrier_trip: { cat: '14', workload: 1, rate: 800, cand: 'Regular', method: 'qty_rate' }
+        };
+
+        const p = presets[presetKey];
+        if (!p) return;
+
+        if (catSelect) catSelect.value = p.cat;
+        if (workloadInput) workloadInput.value = p.workload;
+        if (workloadPreset) workloadPreset.value = p.workload.toString();
+        if (rateInput) rateInput.value = p.rate;
+        if (candTypeSelect) candTypeSelect.value = p.cand;
+        if (calcMethodSelect) calcMethodSelect.value = p.method;
+
+        this.handleCalculationMethodChange();
+        this.calculateActivityPreview();
     },
 
     handleWorkloadPresetSelect(val) {

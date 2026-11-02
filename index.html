@@ -1262,6 +1262,38 @@
                 <div class="modal-body">
                     <input type="hidden" id="act-id">
                     <div class="form-grid">
+                        <!-- ⚡ Smart One-Click Duty Preset Dropdown -->
+                        <div class="form-group" style="grid-column: 1 / -1; background: #eff6ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 12px; box-shadow: 0 2px 6px rgba(59,130,246,0.12);">
+                            <label class="form-label" for="act-smart-preset" style="font-weight: 800; color: #1e40af; font-size: 0.92rem; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between;">
+                                <span>⚡ Smart One-Click Duty Preset (এক ক্লিকে সহজ ইনপুট):</span>
+                                <span class="badge badge-primary" style="font-size: 0.72rem; padding: 3px 8px;">Auto-Calculation Enabled</span>
+                            </label>
+                            <select id="act-smart-preset" class="form-control" style="font-weight: 600; border: 1.5px solid #2563eb;" onchange="App.handleSmartDutyPreset(this.value)">
+                                <option value="">-- এক ক্লিকে সহজ ইনপুট নির্বাচন করুন (ক্যাটাগরি, কাজের পরিমাণ ও হিসাব অটোমেটিক হবে) --</option>
+                                <optgroup label="১. প্রশ্নপত্র প্রণয়ন ও সমীক্ষণ">
+                                    <option value="q_set_full">📝 ০১. প্রশ্নপত্র প্রণয়ন (Full Paper ৩.০০ ক্রেডিট) — ৳ ৪,০০০/-</option>
+                                    <option value="q_set_half">📝 ০১. প্রশ্নপত্র প্রণয়ন (Half Paper ২.০০ ক্রেডিট) — ৳ ২,০০০/-</option>
+                                    <option value="q_mod_member">🔍 ০২. প্রশ্নপত্র সমীক্ষণ / মডারেশন (সদস্যের অংশ) — ৳ ১,৬০০/-</option>
+                                </optgroup>
+                                <optgroup label="২. উত্তরপত্র / খাতা মূল্যায়ন">
+                                    <option value="eval_reg_57">✍️ ০৩. নিয়মিত খাতা মূল্যায়ন (৫৭টি স্ক্রিপ্ট × ৳১২০) — ৳ ৬,৮৪০/-</option>
+                                    <option value="eval_bl_18">✍️ ০৩. ব্যাকলগ (BL) খাতা মূল্যায়ন (১৮টি স্ক্রিপ্ট × ৳১২০) — ৳ ২,১৬০/-</option>
+                                    <option value="eval_sc_11">✍️ ০৩. স্পেশাল ক্যারি (SC) খাতা (১১টি স্ক্রিপ্ট × ৳১২০) — ৳ ১,৩২০/-</option>
+                                </optgroup>
+                                <optgroup label="৩. মৌখিক ও ব্যবহারিক পরীক্ষা">
+                                    <option value="viva_57">🗣️ ০৪. মৌখিক পরীক্ষা / ভাইভা বোর্ড (৫৭ জন পরীক্ষার্থী × ৳১০০) — ৳ ৫,৭০০/-</option>
+                                    <option value="lab_57">🧪 ০৫. ব্যবহারিক / ল্যাব পরীক্ষা মূল্যায়ন (৫৭ জন × ৳১০০) — ৳ ৫,৭০০/-</option>
+                                </optgroup>
+                                <optgroup label="৪. ফলাফল প্রস্তুতি, নিরীক্ষা ও ধারাবাহিক মূল্যায়ন">
+                                    <option value="tab_86">📊 ০৬. ট্যাবুলেশন কার্য (৮৬ জন পরীক্ষার্থী × ৳৭৫) — ৳ ৬,৪৫০/-</option>
+                                    <option value="scrutiny_57">🔎 ০৭. স্ক্রুটিনি ও নিরীক্ষা কার্য (৫৭টি স্ক্রিপ্ট × ৳২৫) — ৳ ১,৪২৫/-</option>
+                                    <option value="ct_4">🎓 ১৩. ক্লাস টেস্ট মূল্যায়ন (৪টি CT - ৩.০০ ক্রেডিট) — ৳ ৫,৪০০/-</option>
+                                    <option value="ct_3">🎓 ১৩. ক্লাস টেস্ট মূল্যায়ন (৩টি CT - ২.০০ ক্রেডিট) — ৳ ৪,০৫০/-</option>
+                                    <option value="carrier_trip">📦 ১৪. প্রশ্ন ও খাতা বহন / কুরিয়ার ভাতা (১ ট্রিপ) — ৳ ৮০০/-</option>
+                                </optgroup>
+                                <option value="custom">✏️ অন্যান্য কাস্টম ডিউটি (নিজে পরিমাণ ও রেট লিখুন)</option>
+                            </select>
+                        </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label class="form-label" for="act-category">Activity Category *</label>
                             <select id="act-category" class="form-control" onchange="App.handleActivityCategoryChange()" required></select>
@@ -1356,9 +1388,28 @@
                             <label class="form-label" for="act-manual-amount">Manual Total Amount (৳) *</label>
                             <input type="number" id="act-manual-amount" class="form-control" value="0" step="0.01" oninput="App.calculateActivityPreview()">
                         </div>
-                        <div class="form-group" style="grid-column: 1 / -1; background: #f1f5f9; padding: 10px; border-radius: 4px;">
-                            <span style="font-size: 0.8rem; font-weight: 700; color: #475569;">Calculated Amount Preview:</span>
-                            <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary); font-family: monospace;" id="act-calc-preview">৳ ০.০০</div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <div id="act-calc-card" style="background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 8px; padding: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+                                    <div>
+                                        <span style="font-size: 0.78rem; font-weight: 700; color: #166534; text-transform: uppercase; display: flex; align-items: center; gap: 5px;">
+                                            <span>🧮 মাভাবিপ্রবি বিধি অনুযায়ী স্বয়ংক্রিয় হিসাব বিবরণী:</span>
+                                        </span>
+                                        <div id="act-calc-formula-text" style="font-size: 0.95rem; font-weight: 700; color: #15803d; margin-top: 4px; font-family: var(--font-bengali), 'SutonnyMJ', serif;">
+                                            ১টি প্রশ্নপত্র × ৳ ৪,০০০.০০ = ৳ ৪,০০০.০০
+                                        </div>
+                                        <div id="act-calc-rule-badge" style="font-size: 0.76rem; color: #047857; margin-top: 4px;">
+                                            ✓ মাভাবিপ্রবি বিধি: ফুল পেপার ৩.০০ ক্রেডিট প্রশ্ন প্রণয়ন ৪০০০/- টাকা
+                                        </div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 0.74rem; color: #166534; font-weight: 700;">মোট প্রাপ্য টাকার অঙ্ক</div>
+                                        <div id="act-calc-preview" style="font-size: 1.5rem; font-weight: 800; color: #1e3a8a; font-family: var(--font-bengali), 'SutonnyMJ', serif;">
+                                            ৳ ৪,০০০.০০
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group" style="grid-column: 1 / -1;">
                             <label class="form-label" for="act-notes">Reference / Notes</label>
